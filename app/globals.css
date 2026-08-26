@@ -121,3 +121,29 @@ a { color: var(--gold); }
 }
 
 .term { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: .92em; color: var(--gold); }
+
+/* 다르게 읽은 사람들 */
+.others-title { font-size: 1.5rem; margin: 0 0 .75rem; color: var(--gold); }
+.others-note { color: var(--paper-dim); font-size: .85rem; margin: 0 0 3rem; line-height: 1.75; }
+.other { margin-bottom: 3.25rem; }
+.other-page { font-size: .75rem; letter-spacing: .14em; color: var(--bronze); margin: 0 0 .4rem; }
+.other-prompt { color: var(--paper-dim); margin: 0 0 1.25rem; }
+.other-label {
+  margin: 0 0 .6rem;
+  color: var(--gold);
+  font-size: .95rem;
+  border-left: 2px solid var(--amber);
+  padding-left: .8rem;
+}
+.other-body { margin: 0; padding-left: .8rem; }
+.other-mine { margin-top: 1.5rem; padding-left: .8rem; }
+.other-mine summary {
+  cursor: pointer;
+  color: var(--bronze);
+  font-size: .82rem;
+  list-style: none;
+  margin-bottom: .9rem;
+}
+.other-mine summary::before { content: "▸ "; }
+.other-mine[open] summary::before { content: "▾ "; }
+.other-mine .other-label { border-left-color: var(--bronze); color: var(--paper-dim); }

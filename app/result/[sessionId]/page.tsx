@@ -64,10 +64,15 @@ export default async function ResultPage({
 
       <Prose paragraphs={r.paragraphs.slice(1)} />
 
-      {/* Ungeziefer 반전. 제목의 "바퀴벌레"를 회수하는 장치이므로 맨 마지막에 둔다. */}
+      {/* Ungeziefer 반전. 제목의 "바퀴벌레"를 회수하는 장치이므로 진단문의 맨 마지막에 둔다. */}
       <section className="reveal">
         <Prose paragraphs={r.ending_reveal} className="" />
       </section>
+
+      {/* ③ 사각지대를 읽은 다음에야 반대쪽을 보러 갈 이유가 생긴다 (spec §8). */}
+      <Link className="next" href={`/result/${sessionId}/others`}>
+        다르게 읽은 사람들
+      </Link>
     </main>
   );
 }

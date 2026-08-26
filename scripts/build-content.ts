@@ -24,7 +24,9 @@ const CHECK_ONLY = process.argv.includes("--check");
 const SLUGS = ["metamorphosis.ko"];
 
 const errors: string[] = [];
+const warnings: string[] = [];
 const fail = (msg: string) => errors.push(msg);
+const warn = (msg: string) => warnings.push(msg);
 
 /* ---------- md 파서 ---------- */
 
@@ -127,6 +129,46 @@ function toParagraphs(lines: string[]): string[] {
 
 /* ---------- 검증 ---------- */
 
+interface ResultsFile {
+  proximity_threshold: number;
+  types: Record<string, { name: string; draft?: boolean; paragraphs: string[] }>;
+  choice_quotes: Record<string, string>;
+  seed_arguments: Record<string, { draft?: boolean; body: string }>;
+}
+
+/**
+ * 결과 콘텐츠 검증. 진단문 3단락, 선택지 16개분의 인용문과 논거가 다 있어야 한다.
+ * draft는 실패가 아니라 경고 — 골격만 세워둔 상태로도 앱은 돌아가야 하니까.
+ */
+function validateResults(src: WorkSource, res: ResultsFile) {
+  const choiceIds = src.pages.flatMap((p) => p.question?.choices.map((c) => c.id) ?? []);
+
+  for (const key of Object.keys(src.types)) {
+    const t = res.types[key];
+    if (!t) {
+      fail(`results.json에 유형 "${key}" 진단문이 없다`);
+      continue;
+    }
+    if (t.name !== src.types[key].name) {
+      fail(`유형 "${key}" 이름 불일치: ${src.types[key].name} vs ${t.name}`);
+    }
+    // spec §8 — ③ 사각지대가 없으면 진단문이 칭찬으로 읽힌다
+    if (t.paragraphs.length !== 3) {
+      fail(`유형 "${key}" 진단문이 3단락이 아니다 (현재 ${t.paragraphs.length}단락)`);
+    }
+    if (t.draft) warn(`유형 "${key}" 진단문이 아직 draft다`);
+  }
+
+  for (const id of choiceIds) {
+    if (!res.choice_quotes[id]?.trim()) fail(`choice_quotes에 "${id}"가 없다`);
+    const arg = res.seed_arguments[id];
+    if (!arg?.body?.trim()) fail(`seed_arguments에 "${id}"가 없다 (spec §9)`);
+    else if (arg.draft) warn(`seed_arguments "${id}"가 아직 draft다`);
+  }
+
+  if (!(res.proximity_threshold > 0)) fail("proximity_threshold가 0 이하다");
+}
+
 function validate(src: WorkSource, mdPages: MdPage[], manifest: Record<string, unknown>) {
   const at = (n: number) => `[${src.slug} p${n}]`;
 
@@ -219,7 +261,12 @@ for (const slug of SLUGS) {
   const mdPages = parsePages(sections);
   const endingReveal = parseEndingReveal(sections);
 
+  const results: ResultsFile = JSON.parse(
+    readFileSync(join(ROOT, `content/${slug}.results.json`), "utf8"),
+  );
+
   validate(src, mdPages, manifest);
+  validateResults(src, results);
 
   const pages: BuiltPage[] = src.pages.map((p) => ({
     ...p,
@@ -243,6 +290,11 @@ for (const slug of SLUGS) {
   console.log(
     `${slug}: ${pages.length}장, 문항 ${src.pages.filter((p) => p.question).length}개${CHECK_ONLY ? " (검증만)" : " → content/.build/"}`,
   );
+}
+
+if (warnings.length) {
+  console.warn(`\n미완 콘텐츠 (${warnings.length}건)`);
+  for (const w of warnings) console.warn("  - " + w);
 }
 
 if (errors.length) {

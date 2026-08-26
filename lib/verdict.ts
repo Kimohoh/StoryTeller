@@ -72,3 +72,46 @@ export function buildResult(slug: string, sessionId: string): ResultPayload {
     total: work.pages.filter((p) => p.question).length,
   };
 }
+
+/**
+ * 「다르게 읽은 사람들」 (spec §9 cold start).
+ *
+ * 통계가 0인 초기에 분포를 보여줄 수 없고, 가짜 데이터로 채우면 들키는 순간 끝난다.
+ * 대신 선택지마다 미리 써둔 논거를 대화 상대로 세운다. 유저 코멘트가 쌓이면
+ * 그 아래로 밀린다. 화면에서 편집부가 쓴 글이라는 걸 감추지 않는다.
+ */
+export interface OtherSide {
+  question_id: string;
+  page_no: number;
+  prompt: string;
+  /** 내가 고르지 않은 쪽 */
+  other: { label: string; body: string };
+  /** 내가 고른 쪽 */
+  mine: { label: string; body: string } | null;
+}
+
+export function buildOthers(slug: string, sessionId: string): OtherSide[] {
+  const work = loadWork(slug);
+  const results = loadResults(slug);
+  const picked = new Map(getAnswers(sessionId).map((a) => [a.question_id, a.choice_id]));
+
+  const out: OtherSide[] = [];
+  for (const page of work.pages) {
+    const q = page.question;
+    if (!q) continue;
+    const mineId = picked.get(q.id);
+    const mineChoice = q.choices.find((c) => c.id === mineId) ?? null;
+    const otherChoice = q.choices.find((c) => c.id !== mineId);
+    if (!otherChoice) continue;
+
+    const arg = (id: string) => results.seed_arguments[id]?.body ?? "";
+    out.push({
+      question_id: q.id,
+      page_no: page.no,
+      prompt: q.prompt,
+      other: { label: otherChoice.label, body: arg(otherChoice.id) },
+      mine: mineChoice ? { label: mineChoice.label, body: arg(mineChoice.id) } : null,
+    });
+  }
+  return out;
+}

@@ -7,14 +7,32 @@
 
 ## 돌리기
 
+Node 20 이상이 필요하다.
+
 ```bash
+git clone https://github.com/Kimohoh/StoryTeller.git
+cd StoryTeller
+git checkout claude/spec-app-structure-vzwaxh
+
 npm install
 npm run content:build   # md + json → content/.build/, 동시에 정합성 검증
 npm run db:seed         # 빌드 산출물 → SQLite (data/storyteller.sqlite)
-npm run dev
+npm run dev             # http://localhost:3000
 ```
 
-`npm test`는 채점 로직 단위 테스트, `npm run content:check`는 파일을 쓰지 않고 검증만 한다.
+`content/.build/`와 `data/`는 커밋되지 않는 파생물이라, 처음 받으면 위 두 스크립트를
+반드시 한 번 돌려야 한다. 콘텐츠를 고친 뒤에는 `content:build`만 다시 돌리면 되고,
+축이나 가중치를 고쳤다면 `db:seed`까지 다시 돌린다.
+
+| 명령 | 하는 일 |
+|---|---|
+| `npm run dev` | 개발 서버 |
+| `npm test` | 채점 로직 단위 테스트 |
+| `npm run content:check` | 파일을 쓰지 않고 콘텐츠 검증만 |
+| `npm run db:rescore` | 가중치를 바꾼 뒤 유형이 바뀌는 사람 수를 미리 본다 (`-- --apply`로 반영) |
+
+화면은 셋이다. `/` 표지 → `/read/metamorphosis/1‥9` 읽기 → `/result/<세션id>` 결과,
+그리고 결과 아래 링크로 `/result/<세션id>/others` 「다르게 읽은 사람들」.
 
 ## 구조
 
@@ -65,7 +83,6 @@ md의 `## N. 제목` 단위로 본문을 뽑고, 두 파일이 같이 갖고 있
 
 ## 아직 없는 것
 
-- 선택지별 "이렇게 고른 사람의 논거" 16개 — 같은 파일의 `seed_arguments`.
-  유저 코멘트로 위장하지 않는다. `comments` 테이블에 넣지 말 것 (spec §9).
-- 코멘트 기능 전체 (작성·열람·유형 필터). 스키마만 있다.
+- 코멘트 기능 (작성·열람·유형 필터). 스키마만 있다. cold start 논거 16개는
+  `/result/<세션id>/others`에 이미 붙어 있고, 유저 코멘트가 생기면 그 아래로 밀린다.
 - 4페이지(장부) 삽화 재작업 — 8장 중 상징 밀도가 가장 낮다.
