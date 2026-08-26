@@ -11,3 +11,6 @@ content/.build/
 data/
 *.sqlite
 *.sqlite-journal
+
+# 파생물 — npm run preview로 다시 뽑는다
+preview/

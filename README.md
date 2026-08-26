@@ -30,9 +30,19 @@ npm run dev             # http://localhost:3000
 | `npm test` | 채점 로직 단위 테스트 |
 | `npm run content:check` | 파일을 쓰지 않고 콘텐츠 검증만 |
 | `npm run db:rescore` | 가중치를 바꾼 뒤 유형이 바뀌는 사람 수를 미리 본다 (`-- --apply`로 반영) |
+| `npm run preview` | 콘텐츠 검수용 단일 HTML을 `preview/`에 뽑는다 (아래 참조) |
 
 화면은 셋이다. `/` 표지 → `/read/metamorphosis/1‥9` 읽기 → `/result/<세션id>` 결과,
 그리고 결과 아래 링크로 `/result/<세션id>/others` 「다르게 읽은 사람들」.
+
+### 검수용 프리뷰
+
+`npm run preview`는 본문·문항·삽화·진단문·논거를 전부 인라인한 HTML 한 장을 만든다.
+서버도 DB도 없이 열리므로 폰에 보내 콘텐츠만 보기에 좋다. 콘텐츠를 고치면
+`content:build` 다음에 다시 뽑아야 하고, 손으로 고치면 안 된다.
+
+**제품이 아니다.** 채점표가 페이지 안에 들어 있어 소스를 보면 축이 드러나고, 답은
+어디에도 저장되지 않는다. 공개 배포하면 spec §2가 깨진다.
 
 ## 구조
 
