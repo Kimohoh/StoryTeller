@@ -1,0 +1,123 @@
+/* 팔레트는 삽화와 같다. docs/image-prompts.md 「공통 스타일 블록」 */
+:root {
+  --ink:      #1B1917;
+  --ink-2:    #2A241E;
+  --amber:    #C4903D;
+  --gold:     #E5BE72;
+  --bronze:   #5C4C33;
+  --paper:    #E8E1D5;
+  --paper-dim:#A79B88;
+  --measure:  34rem;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: "Noto Serif KR", "Apple SD Gothic Neo", "Nanum Myeongjo", serif;
+  font-size: 17px;
+  line-height: 1.9;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--gold); }
+
+.wrap {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+}
+
+.illustration svg { width: 100%; height: auto; display: block; border-radius: 2px; }
+.illustration { margin: 0 0 2.5rem; }
+.illustration figcaption { font-size: .75rem; color: var(--paper-dim); margin-top: .5rem; }
+
+.page-title {
+  font-size: .8rem;
+  letter-spacing: .18em;
+  color: var(--bronze);
+  text-transform: none;
+  margin: 0 0 1.75rem;
+}
+
+.prose p { margin: 0 0 1.4em; }
+.prose em { color: var(--paper-dim); font-style: italic; }
+
+/* 질문. 본문과 분명히 구분되되, 시험지처럼 보이면 안 된다. */
+.question {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--ink-2);
+}
+.question-prompt { margin: 0 0 1.5rem; color: var(--gold); }
+
+.choice {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: var(--paper);
+  border: 1px solid var(--ink-2);
+  border-radius: 3px;
+  padding: 1rem 1.1rem;
+  margin-bottom: .75rem;
+  font: inherit;
+  line-height: 1.6;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.choice:hover:not(:disabled) { border-color: var(--bronze); background: #201C18; }
+.choice[data-picked="true"] { border-color: var(--amber); color: var(--gold); }
+.choice:disabled { cursor: default; opacity: .55; }
+
+/* 진행 표시. 숫자만. 무엇을 재고 있는지 암시하는 문구는 절대 넣지 않는다 (spec §2). */
+.progress { display: flex; gap: .35rem; margin-bottom: 2.5rem; }
+.progress i { flex: 1; height: 2px; background: var(--ink-2); }
+.progress i[data-done="true"] { background: var(--bronze); }
+
+.next {
+  display: inline-block;
+  margin-top: 2.5rem;
+  padding: .8rem 1.6rem;
+  border: 1px solid var(--bronze);
+  border-radius: 3px;
+  color: var(--gold);
+  text-decoration: none;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.cover h1 { font-size: 1.9rem; line-height: 1.5; margin: 0 0 .75rem; }
+.cover .sub { color: var(--paper-dim); margin: 0 0 3rem; }
+.note { color: var(--paper-dim); font-size: .85rem; }
+
+/* 결과 */
+.verdict-type { font-size: 2.2rem; margin: 0 0 .25rem; color: var(--gold); }
+.verdict-near { color: var(--paper-dim); margin: 0 0 2.5rem; }
+.verdict-quote {
+  border-left: 2px solid var(--amber);
+  padding-left: 1.1rem;
+  margin: 2.5rem 0;
+  color: var(--gold);
+}
+.reveal {
+  margin-top: 5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--ink-2);
+  color: var(--paper-dim);
+}
+.reveal p:first-child { color: var(--paper); }
+.draft-banner {
+  border: 1px dashed var(--bronze);
+  color: var(--paper-dim);
+  padding: .9rem 1rem;
+  border-radius: 3px;
+  font-size: .85rem;
+  margin-bottom: 2rem;
+}
+
+.term { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: .92em; color: var(--gold); }

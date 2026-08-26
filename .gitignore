@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# 파생물 — md/json에서 빌드된다
+content/.build/
+
+# 로컬 DB
+data/
+*.sqlite
+*.sqlite-journal

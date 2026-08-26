@@ -1,0 +1,58 @@
+{
+  "p1_morning": {
+    "type": "svg",
+    "src": "metamorphosis/p1_morning.svg",
+    "alt": "새벽 침실. 창의 회색빛은 약하고, 침대 위 낮고 긴 형체 위로 가느다란 다리들이 허공을 향해 있다. 화면에서 유일하게 밝은 것은 머리맡의 자명종이다.",
+    "credit": null,
+    "version": 1
+  },
+  "p2_manager": {
+    "type": "svg",
+    "src": "metamorphosis/p2_manager.svg",
+    "alt": "닫힌 문이 화면을 채운다. 문 아래로 새어 나온 빛의 띠를 세 개의 그림자가 끊고 있다. 오른쪽 어둠 속, 문에서 먼 곳에 낮고 긴 형체가 있다.",
+    "credit": null,
+    "version": 1
+  },
+  "p3_door_opens": {
+    "type": "svg",
+    "src": "metamorphosis/p3_door_opens.svg",
+    "alt": "열린 문에서 쏟아진 빛 웅덩이 안에 낮고 긴 형체가 드러나 있다. 문 너머는 비어 있다.",
+    "credit": null,
+    "version": 1
+  },
+  "p4_ledger": {
+    "type": "svg",
+    "src": "metamorphosis/p4_ledger.svg",
+    "alt": "매달린 램프의 좁은 빛 원뿔 아래 펼쳐진 장부와 동전 무더기. 왼쪽 가장자리, 빛 바깥에 낮고 긴 형체가 있다. 벽의 액자는 그늘에 잠겼다.",
+    "credit": null,
+    "version": 1
+  },
+  "p5_furniture": {
+    "type": "svg",
+    "src": "metamorphosis/p5_furniture.svg",
+    "alt": "거의 빈 방. 가구가 있던 자리에 벽지가 바래지 않은 얼룩만 남았고 바닥에는 끌린 자국이 두 줄 나 있다. 왼쪽 벽에 하나 남은 액자를 낮고 긴 형체가 몸으로 덮고 있다.",
+    "credit": null,
+    "version": 1
+  },
+  "p6_apple": {
+    "type": "svg",
+    "src": "metamorphosis/p6_apple.svg",
+    "alt": "거의 완전한 어둠. 바닥에 엎드린 낮고 긴 형체의 등에 썩어가는 붉은 사과가 박혀 있다. 오른쪽 문은 손가락 하나 너비로만 열려 있다.",
+    "credit": null,
+    "version": 1
+  },
+  "p7_violin": {
+    "type": "svg",
+    "src": "metamorphosis/p7_violin.svg",
+    "alt": "오른쪽 문간의 빛에서 가느다란 호선이 어두운 방으로 퍼져 나간다. 빛 안쪽에는 등을 돌린 빈 의자 셋. 낮고 긴 형체가 앞으로 기어나와 앞부분만 빛을 받고 있다.",
+    "credit": null,
+    "version": 1
+  },
+  "p8_declaration": {
+    "type": "svg",
+    "src": "metamorphosis/p8_declaration.svg",
+    "alt": "빛의 칼날 하나가 화면을 가른다. 밝은 쪽에는 얼굴 없는 세 사람의 실루엣이 나란히 서 있고, 어두운 쪽에는 낮고 긴 형체가 혼자 있다.",
+    "credit": null,
+    "version": 1
+  }
+}

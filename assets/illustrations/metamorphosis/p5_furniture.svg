@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <rect width="400" height="300" fill="#1B1917"/>
+  <!-- 오른쪽 문에서 들어오는 빛 -->
+  <rect x="336" y="40" width="64" height="222" fill="#C4903D" opacity=".55"/>
+  <path d="M336 62 L336 262 L188 262 L262 150 Z" fill="#C4903D" opacity=".13"/>
+  <!-- 가구가 있던 자리: 벽지가 안 바랜 옅은 얼룩 (점선 대신) -->
+  <g fill="#2A241E" opacity=".75">
+    <rect x="52" y="120" width="66" height="118"/>
+    <rect x="140" y="168" width="86" height="70"/>
+    <rect x="246" y="186" width="52" height="52"/>
+  </g>
+  <!-- 바닥에 끌린 자국 둘 -->
+  <g stroke="#2A241E" stroke-width="5" stroke-linecap="round" opacity=".9">
+    <path d="M112 250 q104 12 214 6"/>
+    <path d="M188 264 q84 6 148 2"/>
+  </g>
+  <!-- 남은 액자 하나. 덩어리가 몸으로 덮고 있다 -->
+  <rect x="42" y="52" width="88" height="70" fill="#3A342C" stroke="#5C4C33" stroke-width="3"/>
+  <path d="M44 74 q42-24 84 0 q-42 40-84 0 z" fill="#100E0C"/>
+  <g stroke="#100E0C" stroke-width="3.2" stroke-linecap="round" fill="none">
+    <path d="M56 66 q-10-10-12-18"/><path d="M116 66 q10-10 12-18"/>
+    <path d="M60 92 q-12 10-14 20"/><path d="M114 92 q12 10 14 20"/>
+  </g>
+</svg>

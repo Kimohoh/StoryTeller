@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <rect width="400" height="300" fill="#1B1917"/>
+  <!-- 3페이지의 문이 여기선 손가락 하나 너비다 -->
+  <rect x="352" y="34" width="7" height="234" fill="#E5BE72" opacity=".85"/>
+  <rect x="359" y="34" width="20" height="234" fill="#C4903D" opacity=".07"/>
+  <!-- 불 꺼진 액자: 검은 사각형 -->
+  <rect x="34" y="58" width="46" height="38" fill="#151311" stroke="#221E1A" stroke-width="2"/>
+  <!-- 바닥의 덩어리, 주변에 먼지와 부스러기 -->
+  <path d="M96 250 q106-34 206 0 z" fill="#131110"/>
+  <g stroke="#131110" stroke-width="3.2" stroke-linecap="round" fill="none">
+    <path d="M126 242 q-16 8-30 8"/><path d="M158 234 q-12 14-28 18"/>
+    <path d="M250 232 q12 14 28 18"/><path d="M282 240 q14 8 28 10"/>
+  </g>
+  <!-- 등에 박힌 사과. 전 시리즈에서 붉은색은 이 하나뿐 -->
+  <circle cx="200" cy="232" r="15" fill="#8E2A20"/>
+  <path d="M188 228 q12-9 24 0 q-12 5-24 0 z" fill="#5E1A14"/>
+  <path d="M200 218 q3-8 9-10" stroke="#3A342C" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <!-- 먼지 -->
+  <g fill="#5C4C33" opacity=".4">
+    <circle cx="318" cy="120" r="1.6"/><circle cx="332" cy="168" r="1.2"/>
+    <circle cx="306" cy="196" r="1.4"/><circle cx="340" cy="96" r="1"/>
+    <circle cx="86" cy="212" r="1.4"/><circle cx="322" cy="248" r="1.2"/>
+  </g>
+</svg>
