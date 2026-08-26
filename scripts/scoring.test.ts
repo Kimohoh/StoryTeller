@@ -73,3 +73,26 @@ test("인용은 진단된 유형 방향으로 가장 강하게 기운 선택을 
   // 반대 사분면이면 같은 답들 중 그 방향에 가장 덜 어긋나는 것이 뽑힌다
   assert.notEqual(pickQuotedChoice(rules, answers, types.window)?.choice_id, "q4a");
 });
+
+test("인용문 동점은 가장 오래 망설인 문항으로 가른다", () => {
+  // q2(w1.0)와 q4(w1.2) 중 q4가 이기지만, q2·q4가 같은 무게라면 dwell이 가른다
+  const tied: ScoringRule[] = [
+    { question_id: "qA", axis: "A", weight: 1.2, choices: [{ id: "qAa", value: 1 }, { id: "qAb", value: -1 }] },
+    { question_id: "qB", axis: "A", weight: 1.2, choices: [{ id: "qBa", value: 1 }, { id: "qBb", value: -1 }] },
+  ];
+  const answers = [
+    { question_id: "qA", choice_id: "qAa", dwell_ms: 2000 },
+    { question_id: "qB", choice_id: "qBa", dwell_ms: 9000 },
+  ];
+  assert.equal(pickQuotedChoice(tied, answers, types.violin)?.choice_id, "qBa");
+
+  // 순서를 뒤집어도 오래 망설인 쪽이 뽑힌다 — 배열 순서에 의존하지 않는다
+  assert.equal(pickQuotedChoice(tied, [...answers].reverse(), types.violin)?.choice_id, "qBa");
+
+  // dwell이 없으면 첫 최고점으로 떨어진다
+  const noDwell = [
+    { question_id: "qA", choice_id: "qAa" },
+    { question_id: "qB", choice_id: "qBa" },
+  ];
+  assert.equal(pickQuotedChoice(tied, noDwell, types.violin)?.choice_id, "qAa");
+});

@@ -17,6 +17,8 @@ export interface ScoringRule {
 export interface AnswerRef {
   question_id: string;
   choice_id: string;
+  /** 그 문항에 머문 시간. 인용문 동점을 가를 때 쓴다. */
+  dwell_ms?: number | null;
 }
 
 export type Coordinate = Record<AxisKey, number>;
@@ -102,7 +104,10 @@ export function diagnose(
 
 /**
  * 진단문에 박을 인용 한 줄을 고른다 (spec §8).
- * 진단된 유형 방향으로 가장 강하게 기운 선택 하나. 일반론 열 줄보다 본인 얘기처럼 읽힌다.
+ *
+ * 진단된 유형 방향으로 가장 강하게 기운 선택 하나. 그런데 가중치 1.2짜리가 셋이라
+ * 점수만 보면 동점이 흔하고, 그러면 모두가 같은 줄을 받아 "본인 얘기" 효과가 죽는다.
+ * 동점은 가장 오래 망설인 문항으로 가른다 — 실제로 값을 치른 선택이 그 사람 얘기에 가깝다.
  */
 export function pickQuotedChoice(
   rules: ScoringRule[],
@@ -112,6 +117,7 @@ export function pickQuotedChoice(
   const center = typeCenter(primaryType);
   let best: AnswerRef | null = null;
   let bestScore = -Infinity;
+  let bestDwell = -Infinity;
 
   for (const a of answers) {
     const rule = rules.find((r) => r.question_id === a.question_id);
@@ -120,8 +126,10 @@ export function pickQuotedChoice(
     if (!choice) continue;
     // 유형 중심과 같은 방향이면 양수, 반대면 음수
     const score = choice.value * rule.weight * Math.sign(center[rule.axis]);
-    if (score > bestScore) {
+    const dwell = a.dwell_ms ?? 0;
+    if (score > bestScore || (score === bestScore && dwell > bestDwell)) {
       bestScore = score;
+      bestDwell = dwell;
       best = a;
     }
   }

@@ -61,7 +61,7 @@ export function recordAnswer(
 
 export function getAnswers(sessionId: string): AnswerRef[] {
   return getDb()
-    .prepare("SELECT question_id, choice_id FROM answers WHERE session_id = ?")
+    .prepare("SELECT question_id, choice_id, dwell_ms FROM answers WHERE session_id = ?")
     .all(sessionId) as AnswerRef[];
 }
 

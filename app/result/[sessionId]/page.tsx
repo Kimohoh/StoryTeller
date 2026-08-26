@@ -56,9 +56,13 @@ export default async function ResultPage({
         </p>
       ) : null}
 
-      <Prose paragraphs={r.paragraphs} />
+      {/* 인용은 ①「당신이 읽은 방식」 바로 뒤에 박는다. 진단문 끝에 붙이면
+          일반론을 다 읽은 뒤의 부록처럼 읽히고, 본인 얘기라는 감각이 죽는다. */}
+      <Prose paragraphs={r.paragraphs.slice(0, 1)} />
 
       {r.quote ? <p className="verdict-quote">{r.quote}.</p> : null}
+
+      <Prose paragraphs={r.paragraphs.slice(1)} />
 
       {/* Ungeziefer 반전. 제목의 "바퀴벌레"를 회수하는 장치이므로 맨 마지막에 둔다. */}
       <section className="reveal">
