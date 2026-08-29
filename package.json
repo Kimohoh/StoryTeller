@@ -15,7 +15,8 @@
     "test": "node --import tsx --test scripts/*.test.ts",
     "preview": "tsx scripts/build-preview.ts",
     "illustration": "tsx scripts/replace-illustration.ts",
-    "brief": "tsx scripts/build-brief-page.ts"
+    "brief": "tsx scripts/build-brief-page.ts",
+    "illustration:batch": "tsx scripts/batch-illustrations.ts"
   },
   "dependencies": {
     "better-sqlite3": "^11.8.1",

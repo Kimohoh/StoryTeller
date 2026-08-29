@@ -31,7 +31,8 @@ npm run dev             # http://localhost:3000
 | `npm run content:check` | 파일을 쓰지 않고 콘텐츠 검증만 |
 | `npm run db:rescore` | 가중치를 바꾼 뒤 유형이 바뀌는 사람 수를 미리 본다 (`-- --apply`로 반영) |
 | `npm run preview` | 콘텐츠 검수용 단일 HTML을 `preview/`에 뽑는다 (아래 참조) |
-| `npm run illustration` | 삽화 현재 상태 보기 / 교체 (아래 참조) |
+| `npm run illustration` | 삽화 현재 상태 보기 / 한 장 교체 (아래 참조) |
+| `npm run illustration:batch` | `incoming/`에 올린 파일을 한 번에 교체 |
 | `npm run brief` | 일러스트레이터에게 보낼 의뢰서 페이지를 뽑는다 |
 
 화면은 셋이다. `/` 표지 → `/read/metamorphosis/1‥9` 읽기 → `/result/<세션id>` 결과,
@@ -98,7 +99,16 @@ npm run illustration                                          # 현재 상태
 npm run illustration -- p4_ledger ~/받은/장부.png --alt "새 설명"
 ```
 
-스크립트가 4:3 비율·해상도·용량을 검사하고, manifest의 `type`·`src`·`version`을 갱신한다.
+여러 장이면 `incoming/`에 `변신_1.png` … `변신_9.png`로 올린 뒤 한 번에 처리한다.
+GitHub 웹에서 그 폴더에 직접 드래그해 올려도 되므로 로컬 설치가 필요 없다.
+
+```bash
+npm run illustration:batch -- --dry-run    # 무엇이 어디로 갈지 먼저 본다
+npm run illustration:batch -- --clean      # 교체하고 원본은 지운다
+```
+
+설명문은 `assets/illustrations/pending-alt.json`에서 읽는다. 그림이 바뀌면 이 파일부터 고친다.
+스크립트가 9:16 비율·해상도·용량을 검사하고, manifest의 `type`·`src`·`version`을 갱신한다.
 `--alt`는 필수다 — 그림이 바뀌면 그림을 설명하는 문장도 바뀌어야 한다. 의뢰 문서는
 `docs/illustration-brief.md`이고 `npm run brief`로 보낼 수 있는 페이지가 나온다.
 
