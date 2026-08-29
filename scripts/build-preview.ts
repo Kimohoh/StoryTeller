@@ -26,12 +26,24 @@ const manifest = JSON.parse(
   readFileSync(join(ROOT, "assets/illustrations/manifest.json"), "utf8"),
 );
 
-const illustrations: Record<string, { svg: string; alt: string }> = {};
-for (const [key, e] of Object.entries(manifest) as [string, { src: string; alt: string }][]) {
-  illustrations[key] = {
-    svg: readFileSync(join(ROOT, "assets/illustrations", e.src), "utf8").trim(),
-    alt: e.alt,
-  };
+const MIME: Record<string, string> = { png: "image/png", jpg: "image/jpeg", webp: "image/webp" };
+
+// svg는 인라인, 그 외는 data URI. 프리뷰는 파일 한 장이라 밖을 참조할 수 없다.
+const illustrations: Record<string, { html: string; alt: string }> = {};
+for (const [key, e] of Object.entries(manifest) as [string, { type: string; src: string; alt: string }][]) {
+  const path = join(ROOT, "assets/illustrations", e.src);
+  if (e.type === "svg") {
+    illustrations[key] = { html: readFileSync(path, "utf8").trim(), alt: e.alt };
+  } else {
+    const mime = MIME[e.type];
+    if (!mime) throw new Error(`프리뷰가 모르는 삽화 형식: ${e.type} (${key})`);
+    const b64 = readFileSync(path).toString("base64");
+    const alt = e.alt.replace(/"/g, "&quot;");
+    illustrations[key] = {
+      html: `<img src="data:${mime};base64,${b64}" alt="${alt}">`,
+      alt: e.alt,
+    };
+  }
 }
 
 const data = {
@@ -143,7 +155,8 @@ button, .btn {
 .progress i.done { background: var(--bronze); }
 
 figure.illustration { margin: 0 0 2.25rem; }
-figure.illustration svg { width: 100%; height: auto; display: block; }
+figure.illustration svg,
+figure.illustration img { width: 100%; height: auto; display: block; }
 
 .question { margin-top: 3rem; padding-top: 1.9rem; border-top: 1px solid var(--ink-2); }
 .question .prompt { color: var(--gold); margin: 0 0 1.35rem; }
@@ -313,7 +326,7 @@ figure.illustration svg { width: 100%; height: auto; display: block; }
     h += "</div>";
 
     if (ill) {
-      h += '<figure class="illustration" role="img" aria-label="' + esc(ill.alt) + '">' + ill.svg + "</figure>";
+      h += '<figure class="illustration" role="img" aria-label="' + esc(ill.alt) + '">' + ill.html + "</figure>";
     }
     if (p.title) h += '<p class="eyebrow">' + p.no + ". " + esc(p.title) + "</p>";
     h += '<div class="prose">' + proseOf(p.body) + "</div>";

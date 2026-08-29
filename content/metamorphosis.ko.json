@@ -20,10 +20,34 @@
     }
   },
   "types": {
-    "violin": { "name": "바이올린", "axis": { "A": "pos", "B": "pos" } },
-    "timetable": { "name": "시간표", "axis": { "A": "pos", "B": "neg" } },
-    "frame": { "name": "액자", "axis": { "A": "neg", "B": "pos" } },
-    "window": { "name": "창문", "axis": { "A": "neg", "B": "neg" } }
+    "violin": {
+      "name": "바이올린",
+      "axis": {
+        "A": "pos",
+        "B": "pos"
+      }
+    },
+    "timetable": {
+      "name": "시간표",
+      "axis": {
+        "A": "pos",
+        "B": "neg"
+      }
+    },
+    "frame": {
+      "name": "액자",
+      "axis": {
+        "A": "neg",
+        "B": "pos"
+      }
+    },
+    "window": {
+      "name": "창문",
+      "axis": {
+        "A": "neg",
+        "B": "neg"
+      }
+    }
   },
   "pages": [
     {
@@ -36,8 +60,16 @@
         "weight": 1.0,
         "prompt": "이 아침, 당신의 머릿속을 먼저 채우는 것은?",
         "choices": [
-          { "id": "q1a", "label": "왜 하필 나에게 이런 일이 일어났는지부터 생각한다", "value": 1 },
-          { "id": "q1b", "label": "이 몸으로 침대에서 내려갈 방법부터 궁리한다", "value": -1 }
+          {
+            "id": "q1a",
+            "label": "왜 하필 나에게 이런 일이 일어났는지부터 생각한다",
+            "value": 1
+          },
+          {
+            "id": "q1b",
+            "label": "이 몸으로 침대에서 내려갈 방법부터 궁리한다",
+            "value": -1
+          }
         ]
       }
     },
@@ -51,8 +83,16 @@
         "weight": 1.0,
         "prompt": "문 너머 그 목소리를 들으며, 당신은?",
         "choices": [
-          { "id": "q2a", "label": "어떻게든 해명할 말을 만들어야 한다고 생각한다", "value": 1 },
-          { "id": "q2b", "label": "저 인간은 지금 무슨 소리를 하고 있나 생각한다", "value": -1 }
+          {
+            "id": "q2a",
+            "label": "어떻게든 해명할 말을 만들어야 한다고 생각한다",
+            "value": 1
+          },
+          {
+            "id": "q2b",
+            "label": "저 인간은 지금 무슨 소리를 하고 있나 생각한다",
+            "value": -1
+          }
         ]
       }
     },
@@ -66,8 +106,16 @@
         "weight": 1.0,
         "prompt": "말이 전달되지 않는다는 걸 알았을 때, 당신은?",
         "choices": [
-          { "id": "q3a", "label": "그래도 계속 말을 건다", "value": 1 },
-          { "id": "q3b", "label": "입을 다문다", "value": -1 }
+          {
+            "id": "q3a",
+            "label": "그래도 계속 말을 건다",
+            "value": 1
+          },
+          {
+            "id": "q3b",
+            "label": "입을 다문다",
+            "value": -1
+          }
         ]
       }
     },
@@ -81,8 +129,16 @@
         "weight": 1.2,
         "prompt": "당신은 그 돈을 어떻게 보는가?",
         "choices": [
-          { "id": "q4a", "label": "내가 나서서 떠맡은 일이다. 아무도 시키지 않았다", "value": 1 },
-          { "id": "q4b", "label": "나를 쓴 것이다. 알면서 말하지 않은 것이다", "value": -1 }
+          {
+            "id": "q4a",
+            "label": "내가 나서서 떠맡은 일이다. 아무도 시키지 않았다",
+            "value": 1
+          },
+          {
+            "id": "q4b",
+            "label": "나를 쓴 것이다. 알면서 말하지 않은 것이다",
+            "value": -1
+          }
         ]
       }
     },
@@ -96,8 +152,16 @@
         "weight": 1.2,
         "prompt": "마지막 남은 액자 앞에서, 당신은?",
         "choices": [
-          { "id": "q5a", "label": "벽에 붙어 그림을 몸으로 덮는다", "value": 1 },
-          { "id": "q5b", "label": "빈 방을 받아들인다", "value": -1 }
+          {
+            "id": "q5a",
+            "label": "벽에 붙어 그림을 몸으로 덮는다",
+            "value": 1
+          },
+          {
+            "id": "q5b",
+            "label": "빈 방을 받아들인다",
+            "value": -1
+          }
         ]
       }
     },
@@ -111,8 +175,16 @@
         "weight": 1.0,
         "prompt": "이 문틈을 어떻게 읽는가?",
         "choices": [
-          { "id": "q6a", "label": "내가 짐이 되었다", "value": 1 },
-          { "id": "q6b", "label": "저들이 변했다", "value": -1 }
+          {
+            "id": "q6a",
+            "label": "내가 짐이 되었다",
+            "value": 1
+          },
+          {
+            "id": "q6b",
+            "label": "저들이 변했다",
+            "value": -1
+          }
         ]
       }
     },
@@ -126,8 +198,16 @@
         "weight": 1.0,
         "prompt": "당신은?",
         "choices": [
-          { "id": "q7a", "label": "기어나간다", "value": 1 },
-          { "id": "q7b", "label": "방에 머문다", "value": -1 }
+          {
+            "id": "q7a",
+            "label": "기어나간다",
+            "value": 1
+          },
+          {
+            "id": "q7b",
+            "label": "방에 머문다",
+            "value": -1
+          }
         ]
       }
     },
@@ -141,17 +221,25 @@
         "weight": 1.2,
         "prompt": "그레테의 말에 대해, 당신은?",
         "choices": [
-          { "id": "q8a", "label": "동생 말이 맞다", "value": 1 },
-          { "id": "q8b", "label": "아니다", "value": -1 }
+          {
+            "id": "q8a",
+            "label": "동생 말이 맞다",
+            "value": 1
+          },
+          {
+            "id": "q8b",
+            "label": "아니다",
+            "value": -1
+          }
         ]
       }
     },
     {
       "no": 9,
       "title": "",
-      "illustration_key": null,
+      "illustration_key": "p9_tram",
       "question": null,
-      "note": "결말. 질문 없음. 8번 답한 직후 그냥 흘려보낼 것."
+      "note": "결말. 질문 없음. 8번 답한 직후 그냥 흘려보낼 것. 시리즈에서 유일한 실외 삽화."
     }
   ]
 }

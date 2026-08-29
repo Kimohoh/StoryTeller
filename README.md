@@ -31,6 +31,8 @@ npm run dev             # http://localhost:3000
 | `npm run content:check` | 파일을 쓰지 않고 콘텐츠 검증만 |
 | `npm run db:rescore` | 가중치를 바꾼 뒤 유형이 바뀌는 사람 수를 미리 본다 (`-- --apply`로 반영) |
 | `npm run preview` | 콘텐츠 검수용 단일 HTML을 `preview/`에 뽑는다 (아래 참조) |
+| `npm run illustration` | 삽화 현재 상태 보기 / 교체 (아래 참조) |
+| `npm run brief` | 일러스트레이터에게 보낼 의뢰서 페이지를 뽑는다 |
 
 화면은 셋이다. `/` 표지 → `/read/metamorphosis/1‥9` 읽기 → `/result/<세션id>` 결과,
 그리고 결과 아래 링크로 `/result/<세션id>/others` 「다르게 읽은 사람들」.
@@ -89,10 +91,20 @@ md의 `## N. 제목` 단위로 본문을 뽑고, 두 파일이 같이 갖고 있
 
 **삽화 교체는 manifest 한 줄이다.** 콘텐츠 JSON은 키만 안다. `<Illustration k="p3_door_opens" />`
 하나로 호출하고, `type`이 svg면 인라인, 아니면 `<img>`로 나간다. `version`을 올리면 URL이 바뀌어
-캐시가 깨진다.
+캐시가 깨진다. 외부에서 받은 파일은 이렇게 넣는다:
+
+```bash
+npm run illustration                                          # 현재 상태
+npm run illustration -- p4_ledger ~/받은/장부.png --alt "새 설명"
+```
+
+스크립트가 4:3 비율·해상도·용량을 검사하고, manifest의 `type`·`src`·`version`을 갱신한다.
+`--alt`는 필수다 — 그림이 바뀌면 그림을 설명하는 문장도 바뀌어야 한다. 의뢰 문서는
+`docs/illustration-brief.md`이고 `npm run brief`로 보낼 수 있는 페이지가 나온다.
 
 ## 아직 없는 것
 
 - 코멘트 기능 (작성·열람·유형 필터). 스키마만 있다. cold start 논거 16개는
   `/result/<세션id>/others`에 이미 붙어 있고, 유저 코멘트가 생기면 그 아래로 밀린다.
-- 4페이지(장부) 삽화 재작업 — 8장 중 상징 밀도가 가장 낮다.
+- 삽화 9장 전부 임시본이다. 의뢰서는 `docs/illustration-brief.md`에 있고,
+  4페이지(장부)가 상징 밀도가 가장 낮아 가장 크게 바뀌어야 한다.
