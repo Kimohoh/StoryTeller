@@ -1,65 +1,65 @@
 {
   "p1_morning": {
-    "type": "svg",
-    "src": "metamorphosis/p1_morning.svg",
-    "alt": "새벽 침실. 창의 회색빛은 약하고, 침대 위 낮고 긴 형체 위로 가느다란 다리들이 허공을 향해 있다. 화면에서 유일하게 밝은 것은 머리맡의 자명종이다.",
+    "type": "webp",
+    "src": "metamorphosis/p1_morning.webp",
+    "alt": "새벽 침실. 오른쪽 위 4분할 창에 빗줄기가 흐르고, 왼쪽 벽에는 첨탑이 담긴 작은 액자가 걸려 있다. 침대 위에 낮고 긴 검은 형체가 누워 있고 가느다란 다리 여럿이 허공을 향해 굽어 있다. 머리맡 탁자의 놋쇠 자명종만 환하다.",
     "credit": null,
-    "version": 1
+    "version": 3
   },
   "p2_manager": {
-    "type": "svg",
-    "src": "metamorphosis/p2_manager.svg",
-    "alt": "닫힌 문이 화면을 채운다. 문 아래로 새어 나온 빛의 띠를 세 개의 그림자가 끊고 있다. 오른쪽 어둠 속, 문에서 먼 곳에 낮고 긴 형체가 있다.",
+    "type": "webp",
+    "src": "metamorphosis/p2_manager.webp",
+    "alt": "닫힌 나무 문이 화면 왼쪽을 채우고, 문 아래로 새어 나온 빛의 띠를 세 사람의 그림자가 끊고 있다. 오른쪽 어둠 속 바닥에 낮고 긴 검은 형체가 있고, 벽에는 첨탑 액자가 걸려 있다.",
     "credit": null,
-    "version": 1
+    "version": 3
   },
   "p3_door_opens": {
-    "type": "svg",
-    "src": "metamorphosis/p3_door_opens.svg",
-    "alt": "열린 문에서 쏟아진 빛 웅덩이 안에 낮고 긴 형체가 드러나 있다. 문 너머는 비어 있다.",
+    "type": "webp",
+    "src": "metamorphosis/p3_door_opens.webp",
+    "alt": "오른쪽 문이 활짝 열려 흰 빛이 쏟아지고, 그 빛이 바닥을 대각선으로 가르며 침대까지 닿는다. 침대 위에는 낮고 긴 검은 형체와 가느다란 다리들이 있고, 왼쪽에 첨탑 액자와 빗줄기가 흐르는 4분할 창이 보인다.",
     "credit": null,
-    "version": 1
+    "version": 3
   },
   "p4_ledger": {
-    "type": "svg",
-    "src": "metamorphosis/p4_ledger.svg",
-    "alt": "매달린 램프의 좁은 빛 원뿔 아래 펼쳐진 장부와 동전 무더기. 왼쪽 가장자리, 빛 바깥에 낮고 긴 형체가 있다. 벽의 액자는 그늘에 잠겼다.",
+    "type": "webp",
+    "src": "metamorphosis/p4_ledger.webp",
+    "alt": "천장에서 내려온 갓등이 좁은 빛 원뿔을 만들고, 그 아래 탁자에 괘선이 그어진 장부가 펼쳐져 있으며 옆에 금빛 동전이 두 무더기 쌓여 있다. 왼쪽 어둠에서 낮고 긴 검은 형체의 가느다란 다리만 빛 가장자리에 걸쳐 있다.",
     "credit": null,
-    "version": 1
+    "version": 3
   },
   "p5_furniture": {
-    "type": "svg",
-    "src": "metamorphosis/p5_furniture.svg",
-    "alt": "거의 빈 방. 가구가 있던 자리에 벽지가 바래지 않은 얼룩만 남았고 바닥에는 끌린 자국이 두 줄 나 있다. 왼쪽 벽에 하나 남은 액자를 낮고 긴 형체가 몸으로 덮고 있다.",
+    "type": "webp",
+    "src": "metamorphosis/p5_furniture.webp",
+    "alt": "가구가 모두 빠져나간 빈 방. 바닥에 가구가 있던 자리의 옅은 자국이 남아 있다. 왼쪽 벽에 하나 남은 액자를 낮고 긴 검은 형체가 몸으로 덮고 있고, 가느다란 다리들이 액자 테두리를 붙잡고 있다. 오른쪽 문과 창으로 빛이 들어온다.",
     "credit": null,
-    "version": 1
+    "version": 3
   },
   "p6_apple": {
-    "type": "svg",
-    "src": "metamorphosis/p6_apple.svg",
-    "alt": "거의 완전한 어둠. 바닥에 엎드린 낮고 긴 형체의 등에 썩어가는 붉은 사과가 박혀 있다. 오른쪽 문은 손가락 하나 너비로만 열려 있다.",
+    "type": "webp",
+    "src": "metamorphosis/p6_apple.webp",
+    "alt": "거의 완전한 어둠. 침대 위에 낮고 긴 검은 형체가 엎드려 있고 그 등에 썩어가는 붉은 사과가 박혀 있다. 오른쪽 문은 손가락 하나 너비로만 열려 가느다란 빛의 선이 새어 든다. 왼쪽 벽의 액자는 불 꺼진 검은 사각형이다.",
     "credit": null,
-    "version": 1
+    "version": 3
   },
   "p7_violin": {
-    "type": "svg",
-    "src": "metamorphosis/p7_violin.svg",
-    "alt": "오른쪽 문간의 빛에서 가느다란 호선이 어두운 방으로 퍼져 나간다. 빛 안쪽에는 등을 돌린 빈 의자 셋. 낮고 긴 형체가 앞으로 기어나와 앞부분만 빛을 받고 있다.",
+    "type": "webp",
+    "src": "metamorphosis/p7_violin.webp",
+    "alt": "오른쪽 문이 열려 따뜻한 빛이 들어오고, 그 안쪽에 빈 의자 셋이 놓여 있다. 문에서 청동색 동심 호선이 소리처럼 퍼져 나온다. 침대 위의 낮고 긴 검은 형체가 가느다란 다리를 빛 쪽으로 뻗고 있다. 왼쪽에는 어두운 창과 머리맡의 자명종이 있다.",
     "credit": null,
-    "version": 1
+    "version": 3
   },
   "p8_declaration": {
-    "type": "svg",
-    "src": "metamorphosis/p8_declaration.svg",
-    "alt": "빛의 칼날 하나가 화면을 가른다. 밝은 쪽에는 얼굴 없는 세 사람의 실루엣이 나란히 서 있고, 어두운 쪽에는 낮고 긴 형체가 혼자 있다.",
+    "type": "webp",
+    "src": "metamorphosis/p8_declaration.webp",
+    "alt": "화면을 세로로 가르는 빛의 선 하나. 오른쪽 밝은 쪽에 얼굴 없는 세 사람이 나란히 서 있고, 왼쪽 어둠에는 침대 위의 낮고 긴 검은 형체와 가느다란 다리들이 있다. 벽에는 첨탑 액자, 머리맡에는 자명종이 있다.",
     "credit": null,
-    "version": 1
+    "version": 3
   },
   "p9_tram": {
-    "type": "svg",
-    "src": "metamorphosis/p9_tram.svg",
-    "alt": "교외로 가는 전차 안. 커다란 4분할 창으로 봄 햇빛이 들어오고, 앉아 있는 두 사람 곁에서 한 사람이 먼저 일어나 몸을 펴고 있다. 얼굴은 보이지 않는다.",
+    "type": "webp",
+    "src": "metamorphosis/p9_tram.webp",
+    "alt": "교외로 가는 전차 안. 커다란 창밖으로 봄 들판과 꽃 핀 나무, 흰 구름이 보인다. 천장 봉에 가죽 손잡이 셋이 걸려 있고, 앉아 있는 두 사람 사이에서 한 사람이 일어나 손잡이를 향해 두 팔을 뻗으며 몸을 편다. 얼굴은 보이지 않는다.",
     "credit": null,
-    "version": 1
+    "version": 3
   }
 }
