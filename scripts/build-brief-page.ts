@@ -14,18 +14,27 @@ const md = readFileSync(join(ROOT, "docs/illustration-brief.md"), "utf8");
 const work: WorkBuild = JSON.parse(
   readFileSync(join(ROOT, "content/.build/metamorphosis.ko.build.json"), "utf8"),
 );
-const manifest: Record<string, { src: string; alt: string }> = JSON.parse(
+const manifest: Record<string, { type: string; src: string; alt: string }> = JSON.parse(
   readFileSync(join(ROOT, "assets/illustrations/manifest.json"), "utf8"),
 );
+const MIME: Record<string, string> = { png: "image/png", jpg: "image/jpeg", webp: "image/webp" };
 
 const keyForPage = new Map(work.pages.map((p) => [p.no, p.illustration_key]));
-const svgFor = (no: number) => {
+
+/** svg는 인라인, 그 외는 data URI. 이 문서는 파일 한 장으로 전달된다. */
+const artFor = (no: number) => {
   const key = keyForPage.get(no);
   if (!key) return null;
-  return {
-    key,
-    svg: readFileSync(join(ROOT, "assets/illustrations", manifest[key].src), "utf8").trim(),
-  };
+  const e = manifest[key];
+  const path = join(ROOT, "assets/illustrations", e.src);
+  if (e.type === "svg") {
+    return { key, html: readFileSync(path, "utf8").trim(), replaced: false };
+  }
+  const mime = MIME[e.type];
+  if (!mime) throw new Error(`의뢰서가 모르는 삽화 형식: ${e.type} (${key})`);
+  const alt = e.alt.replace(/"/g, "&quot;");
+  const b64 = readFileSync(path).toString("base64");
+  return { key, html: `<img src="data:${mime};base64,${b64}" alt="${alt}">`, replaced: true };
 };
 
 /* ---------- 최소 마크다운 ---------- */
@@ -167,10 +176,10 @@ for (const s of sections) {
   const no = Number(pageMatch[1]);
   const title = pageMatch[2].replace(/\s*\(신규\)$/, "");
   const isNew = /\(신규\)/.test(pageMatch[2]);
-  const art = svgFor(no);
+  const art = artFor(no);
   if (art) {
     thumbs.push(
-      `<a class="thumb" href="#p${no}" aria-label="${no}페이지 ${esc(title)}"><span class="n">${no}</span>${art.svg}</a>`,
+      `<a class="thumb${art.replaced ? " done" : ""}" href="#p${no}" aria-label="${no}페이지 ${esc(title)}"><span class="n">${no}</span>${art.html}</a>`,
     );
   }
 
@@ -192,7 +201,7 @@ for (const s of sections) {
     ${art ? `<code class="key">${art.key}</code>` : ""}
   </div>
   <div class="page-body">
-    <figure class="art">${art ? art.svg : ""}<figcaption>현재 임시본 — 이것을 교체한다</figcaption></figure>
+    <figure class="art">${art ? art.html : ""}<figcaption>${art?.replaced ? "교체 완료" : "현재 임시본 — 이것을 교체한다"}</figcaption></figure>
     <div class="brief">${right}</div>
   </div>
 </section>`;
@@ -259,12 +268,14 @@ ul.check li::before {
 .strip-note { color: var(--dim); font-size: .85rem; margin: 0 0 .9rem; }
 .strip { display: flex; gap: .4rem; overflow-x: auto; padding-bottom: .5rem; margin-bottom: 4rem; }
 .thumb {
-  flex: 0 0 auto; width: 104px; position: relative; display: block;
+  flex: 0 0 auto; height: 148px; position: relative; display: block;
   border: 1px solid var(--line); border-radius: 2px; overflow: hidden;
   transition: border-color .15s ease;
 }
 .thumb:hover, .thumb:focus-visible { border-color: var(--amber); }
-.thumb svg { display: block; width: 100%; height: auto; }
+.thumb.done { border-color: var(--bronze); }
+/* 임시본(4:3)과 교체본(9:16)이 한동안 섞인다. 높이를 맞추면 비율 차이가 그대로 보인다. */
+.thumb svg, .thumb img { display: block; height: 100%; width: auto; }
 .thumb .n {
   position: absolute; left: 5px; top: 3px; z-index: 1;
   font-family: var(--mono); font-size: .62rem; color: var(--bronze);
@@ -291,7 +302,10 @@ ul.check li::before {
   .art { position: sticky; top: 1.5rem; }
 }
 .art { margin: 0; }
-.art svg { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 2px; }
+.art svg, .art img {
+  display: block; width: 100%; height: auto;
+  border: 1px solid var(--line); border-radius: 2px;
+}
 .art figcaption {
   font-family: var(--mono); font-size: .68rem; letter-spacing: .08em;
   color: var(--bronze); margin-top: .5rem;

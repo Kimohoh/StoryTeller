@@ -31,7 +31,18 @@ a { color: var(--gold); }
   padding: 3rem 1.5rem 6rem;
 }
 
-.illustration svg { width: 100%; height: auto; display: block; border-radius: 2px; }
+/* 삽화는 9:16 세로 카드다. svg 임시본(4:3)과 교체본이 한동안 섞이므로 둘 다 받는다.
+   max-height가 없으면 세로 카드가 뷰포트를 두 배 넘겨 본문이 화면 밖으로 밀린다. */
+.illustration svg,
+.illustration img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 78vh;
+  object-fit: contain;
+  margin-inline: auto;
+  border-radius: 2px;
+}
 .illustration { margin: 0 0 2.5rem; }
 .illustration figcaption { font-size: .75rem; color: var(--paper-dim); margin-top: .5rem; }
 

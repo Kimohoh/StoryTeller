@@ -156,7 +156,10 @@ button, .btn {
 
 figure.illustration { margin: 0 0 2.25rem; }
 figure.illustration svg,
-figure.illustration img { width: 100%; height: auto; display: block; }
+figure.illustration img {
+  display: block; width: 100%; height: auto;
+  max-height: 78vh; object-fit: contain; margin-inline: auto;
+}
 
 .question { margin-top: 3rem; padding-top: 1.9rem; border-top: 1px solid var(--ink-2); }
 .question .prompt { color: var(--gold); margin: 0 0 1.35rem; }
@@ -464,4 +467,11 @@ figure.illustration img { width: 100%; height: auto; display: block; }
 mkdirSync(join(ROOT, "preview"), { recursive: true });
 const out = join(ROOT, "preview/metamorphosis.preview.html");
 writeFileSync(out, html);
-console.log(`preview/metamorphosis.preview.html — ${(html.length / 1024).toFixed(0)}KB`);
+const kb = html.length / 1024;
+console.log(`preview/metamorphosis.preview.html — ${kb.toFixed(0)}KB`);
+if (kb > 6000) {
+  console.warn(
+    `  경고: ${(kb / 1024).toFixed(1)}MB다. 삽화를 data URI로 넣기 때문에 원본이 클수록 무겁다.\n` +
+    "  폰에서 열 문서이니 삽화를 가로 1080px 정도로 줄여 다시 뽑는 편이 낫다.",
+  );
+}

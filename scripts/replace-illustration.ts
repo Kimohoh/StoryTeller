@@ -27,6 +27,21 @@ interface Entry {
   version: number;
 }
 
+/**
+ * 목표 비율. 9:16 세로 카드로 간다 — 모바일 한 화면을 채우는 형식이다.
+ * 다른 비율로 뽑은 파일을 넣을 때는 --ratio 9:16 처럼 넘긴다.
+ */
+const DEFAULT_RATIO = 9 / 16;
+/** 세로 카드 기준. 본문 칼럼이 최대 544px이므로 1080이면 2배수를 넘긴다. */
+const MIN_WIDTH = 1080;
+
+function parseRatio(spec: string | null): number {
+  if (!spec) return DEFAULT_RATIO;
+  const m = /^(\d+(?:\.\d+)?)[:x/](\d+(?:\.\d+)?)$/.exec(spec.trim());
+  if (!m) return NaN;
+  return Number(m[1]) / Number(m[2]);
+}
+
 const TYPES: Record<string, string> = {
   ".png": "png", ".jpg": "jpg", ".jpeg": "jpg", ".webp": "webp", ".svg": "svg",
 };
@@ -104,7 +119,7 @@ const flag = (name: string) => {
   return i >= 0 ? (argv[i + 1] ?? "") : null;
 };
 const has = (name: string) => argv.includes(`--${name}`);
-const positional = argv.filter((a, i) => !a.startsWith("--") && !argv[i - 1]?.match(/^--(alt|credit)$/));
+const positional = argv.filter((a, i) => !a.startsWith("--") && !argv[i - 1]?.match(/^--(alt|credit|ratio)$/));
 
 if (positional.length === 0) {
   list(manifest);
@@ -137,13 +152,19 @@ const dim = dimensions(buf, ext);
 const sizeKb = statSync(file).size / 1024;
 const warnings: string[] = [];
 
+const wantRatio = parseRatio(flag("ratio"));
+if (Number.isNaN(wantRatio)) fail("--ratio는 9:16 형식으로 준다");
+
 if (dim) {
   const ratio = dim.w / dim.h;
-  if (Math.abs(ratio - 4 / 3) > 0.02) {
-    warnings.push(`비율이 4:3이 아니다 — ${dim.w}×${dim.h} (${ratio.toFixed(3)}:1). 8장이 나란히 놓일 때 어긋난다.`);
+  if (Math.abs(ratio - wantRatio) > 0.02) {
+    const want = flag("ratio") ?? "9:16";
+    warnings.push(
+      `비율이 ${want}가 아니다 — ${dim.w}×${dim.h} (${ratio.toFixed(3)}). 아홉 장이 나란히 놓일 때 어긋난다.`,
+    );
   }
-  if (dim.w < 1200 && type !== "svg") {
-    warnings.push(`가로 ${dim.w}px — 고해상도 화면에서 뭉갠다. 1600px 이상 권장.`);
+  if (dim.w < MIN_WIDTH && type !== "svg") {
+    warnings.push(`가로 ${dim.w}px — 고해상도 화면에서 뭉갠다. ${MIN_WIDTH}px 이상 권장.`);
   }
 }
 if (sizeKb > 1500) warnings.push(`${sizeKb.toFixed(0)}KB — 모바일에서 무겁다. 압축을 권한다.`);
