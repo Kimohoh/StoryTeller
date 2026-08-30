@@ -189,8 +189,14 @@ function validate(
   const at = (n: number) => `[${src.slug} p${n}]`;
 
   if (!src.public_domain) fail(`${src.slug}: public_domain이 false다 (spec §2 저작권)`);
-  if (src.author_died > 1955) {
-    fail(`${src.slug}: author_died=${src.author_died} — 퍼블릭 도메인 여부를 확인할 것`);
+  // 한국 기준. 2013년 개정 저작권법 부칙에 따라 1962년 이전 사망 작가는 사후 50년이
+  // 적용되어 이미 만료됐고, 그 뒤는 사후 70년이다.
+  const thisYear = new Date().getFullYear();
+  if (src.author_died > 1962 && src.author_died + 70 >= thisYear) {
+    fail(
+      `${src.slug}: author_died=${src.author_died} — 사후 70년이 지나지 않았다. ` +
+        "퍼블릭 도메인 여부를 확인할 것 (spec §2 저작권)",
+    );
   }
 
   if (mdPages.length !== src.pages.length) {

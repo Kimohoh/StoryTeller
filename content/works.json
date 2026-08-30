@@ -4,10 +4,20 @@
   "works": [
     {
       "slug": "metamorphosis",
-      "locales": ["ko"],
+      "locales": [
+        "ko"
+      ],
       "order": 1,
       "status": "published",
       "_status": "published | draft — draft는 서재에 안 뜨고 직접 URL로만 열린다"
+    },
+    {
+      "slug": "the-stranger",
+      "locales": [
+        "ko"
+      ],
+      "order": 2,
+      "status": "draft"
     }
   ]
 }

@@ -41,6 +41,15 @@ for (const [slug, manifest] of Object.entries(allManifests)) {
   const beforeKb = statSync(src).size / 1024;
   const meta = await sharp(src).metadata();
 
+  // 이미 줄여둔 것을 다시 인코딩하면 화질만 한 번 더 깎인다.
+  // webp이면서 목표 너비 이하이면 건드리지 않는다.
+  if (e.type === "webp" && (meta.width ?? 0) <= MAX_WIDTH) {
+    console.log(
+      `${key.padEnd(16)} ${meta.width}×${meta.height} webp ${beforeKb.toFixed(0)}KB  —  이미 줄어 있다, 건너뜀`,
+    );
+    continue;
+  }
+
   const pipeline = sharp(src).webp({ quality: QUALITY });
   if ((meta.width ?? 0) > MAX_WIDTH) pipeline.resize({ width: MAX_WIDTH });
   const buf = await pipeline.toBuffer();
@@ -65,7 +74,7 @@ for (const [slug, manifest] of Object.entries(allManifests)) {
 }
 
 if (changed === 0) {
-  console.log("줄일 것이 없다 — 전부 svg다.");
+  console.log("\n줄일 것이 없다 — 전부 벡터이거나 이미 줄어 있다.");
   process.exit(0);
 }
 
