@@ -136,5 +136,77 @@
       "credit": null,
       "version": 2
     }
+  },
+  "sisyphus": {
+    "p1_alarm": {
+      "type": "svg",
+      "src": "sisyphus/p1_alarm.svg",
+      "alt": "동트기 전 어두운 침실. 침대에 누운 사람이 실루엣으로만 보이고, 바닥의 휴대폰 화면이 유일한 광원으로 천장에 사각형 빛을 던진다. 오른쪽 위에 아직 캄캄한 4분할 창.",
+      "credit": null,
+      "version": 1
+    },
+    "p2_crack": {
+      "type": "svg",
+      "src": "sisyphus/p2_crack.svg",
+      "alt": "똑같은 문들이 반복되며 어둠 속으로 멀어지는 사무실 복도. 복도 한가운데 한 사람만 방향을 잃고 옆을 보며 멈춰 서 있고, 그 옆 벽에 아주 가느다란 금이 하나 올라가 있다.",
+      "credit": null,
+      "version": 1
+    },
+    "p3_silence": {
+      "type": "svg",
+      "src": "sisyphus/p3_silence.svg",
+      "alt": "화면 대부분을 채운 거대하고 아무 무늬도 없는 어두운 벽. 왼쪽 아래에 작은 사람이 벽을 마주 보고 서 있고, 호박색 빛은 사람의 윤곽만 훑을 뿐 벽에서는 아무것도 반사되지 않는다.",
+      "credit": null,
+      "version": 1
+    },
+    "p4_leap": {
+      "type": "svg",
+      "src": "sisyphus/p4_leap.svg",
+      "alt": "화면을 세로로 가르는 어두운 틈. 왼쪽 가장자리에서 여러 사람이 팔을 앞으로 뻗은 채 허공에 떠 있고, 건너편 땅은 그려져 있지 않다. 위에서 내려온 빛이 뛰는 사람들만 비춘다.",
+      "credit": null,
+      "version": 1
+    },
+    "p5_exit": {
+      "type": "svg",
+      "src": "sisyphus/p5_exit.svg",
+      "alt": "밤의 사무실. 책상은 빈 사각형이고 의자는 모두 비어 있다. 오른쪽 끝 문이 열려 그 너머가 밝지만 빛은 방 안까지 들어오지 않는다. 한 사람이 꺼진 모니터 앞에 앉아 문 쪽을 보고 있다.",
+      "credit": null,
+      "version": 1
+    },
+    "p6_three": {
+      "type": "svg",
+      "src": "sisyphus/p6_three.svg",
+      "alt": "어두운 공간에 떨어져 선 세 사람. 각자 자기 몫의 작은 따뜻한 빛을 받고 있고 빛끼리 겹치지 않는다. 자세는 서로 다르지만 직업을 알려주는 소품은 없다. 가로로 고르게 놓여 누구도 중심이 아니다.",
+      "credit": null,
+      "version": 1
+    },
+    "p7_sisyphus": {
+      "type": "svg",
+      "src": "sisyphus/p7_sisyphus.svg",
+      "alt": "화면을 왼쪽 아래에서 오른쪽 위로 가르는 가파른 민둥 비탈. 아래쪽에 작은 사람이 허리를 굽혀 커다란 둥근 바위를 밀어 올린다. 위쪽은 넓게 트인 하늘이고, 정상은 화면 맨 위 가장자리에 겨우 걸쳐 있다.",
+      "credit": null,
+      "version": 1
+    },
+    "p8_descent": {
+      "type": "svg",
+      "src": "sisyphus/p8_descent.svg",
+      "alt": "같은 비탈. 바위는 이미 화면 아래쪽에 멈춰 있고, 사람은 허리를 펴고 팔을 늘어뜨린 채 그쪽으로 걸어 내려온다. 등 뒤로 긴 그림자가 비탈 위쪽으로 뻗는다. 하늘은 넓게 열려 있고 정상은 비어 있다.",
+      "credit": null,
+      "version": 1
+    },
+    "p9_summit": {
+      "type": "svg",
+      "src": "sisyphus/p9_summit.svg",
+      "alt": "멀리서 본 언덕 전체. 높이가 다른 두 지점에 아주 작은 사람이 하나씩 있어 한 사람은 올라가고 한 사람은 내려온다. 같은 사람의 두 순간이다. 언덕 전체에 넓은 빛이 깔려 있고 정상 표시나 깃발은 없다.",
+      "credit": null,
+      "version": 1
+    },
+    "p10_tuesday": {
+      "type": "svg",
+      "src": "sisyphus/p10_tuesday.svg",
+      "alt": "첫 장면과 같은 어두운 침실. 같은 각도, 침대 위의 같은 사람, 바닥의 같은 휴대폰, 같은 4분할 창. 구도가 동일하며 천장의 사각형 빛만 아주 조금 크다.",
+      "credit": null,
+      "version": 1
+    }
   }
 }

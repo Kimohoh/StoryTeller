@@ -203,7 +203,7 @@ function validate(
     fail(`페이지 수 불일치: md ${mdPages.length}장 vs json ${src.pages.length}장`);
   }
 
-  const axisOrder: AxisKey[] = [];
+  const axisOrder: { axis: AxisKey; pair: string | null }[] = [];
 
   for (const page of src.pages) {
     const md = mdPages.find((p) => p.no === page.no);
@@ -254,7 +254,7 @@ function validate(
       } else if (q.pair_id || q.phase) {
         fail(`${at(page.no)} ${q.id} C축이 아닌데 pair_id/phase가 있다`);
       }
-      axisOrder.push(q.axis);
+      axisOrder.push({ axis: q.axis, pair: q.pair_id ?? null });
     });
   }
 
@@ -283,15 +283,19 @@ function validate(
   // spec §4 — 한 축이 몰리면 사람들이 앞 답에 맞춰 일관성을 만들어 좌표가 뭉개진다.
   // 축이 셋이 되면서 완전 교차는 못 지키므로, 셋 연속을 막고 둘 연속은 경고만 한다.
   for (let i = 2; i < axisOrder.length; i++) {
-    if (axisOrder[i] === axisOrder[i - 1] && axisOrder[i] === axisOrder[i - 2]) {
-      fail(`${axisOrder[i]}축 문항이 세 번 연속이다 (${i - 1}~${i + 1}번째) — 앞 답에 맞춘 일관성이 생긴다 (spec §4)`);
+    const a = axisOrder[i].axis;
+    if (a === axisOrder[i - 1].axis && a === axisOrder[i - 2].axis) {
+      fail(`${a}축 문항이 세 번 연속이다 (${i - 1}~${i + 1}번째) — 앞 답에 맞춘 일관성이 생긴다 (spec §4)`);
       break;
     }
   }
   for (let i = 1; i < axisOrder.length; i++) {
-    if (axisOrder[i] === axisOrder[i - 1]) {
-      warn(`${axisOrder[i]}축 문항이 연속이다 (${i}~${i + 1}번째) — 가능하면 사이에 다른 축을 넣을 것`);
-    }
+    const cur = axisOrder[i];
+    const prev = axisOrder[i - 1];
+    if (cur.axis !== prev.axis) continue;
+    // C가 붙어도 페어가 다르면 서로 무관한 판단이다 — 앞 답에 맞출 대상이 없다.
+    if (cur.axis === "C" && cur.pair !== prev.pair) continue;
+    warn(`${cur.axis}축 문항이 연속이다 (${i}~${i + 1}번째) — 가능하면 사이에 다른 축을 넣을 것`);
   }
 
   // 유형 4종이 사분면을 하나씩 덮는지

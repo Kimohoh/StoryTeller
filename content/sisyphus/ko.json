@@ -1,0 +1,264 @@
+{
+  "slug": "sisyphus",
+  "title": "아! 내일도 모레도 출근이야?",
+  "subtitle": "알베르 카뮈 『시지프 신화』",
+  "public_domain": true,
+  "author_died": 1960,
+  "_public_domain": "카뮈는 1960년 사망. 2013년 개정 저작권법 부칙에 따라 1962년 이전 사망 작가는 사후 50년이 적용되어 이미 만료됐다. 『이방인』과 같은 근거다. 원저는 철학 에세이이므로 논증만 빌리고 장면과 문장은 전부 새로 썼다. 국내 출판 번역본은 쓰지 않는다.",
+  "scoring_version": 1,
+  "_axes": "content/axes.json 참조. C축은 pair_id/phase로 전후를 묶는다. c1: q2↔q8, c2: q5↔q9.",
+  "types": {
+    "slope": {
+      "name": "비탈",
+      "axis": {
+        "A": "pos",
+        "B": "pos"
+      }
+    },
+    "boulder": {
+      "name": "바위",
+      "axis": {
+        "A": "pos",
+        "B": "neg"
+      }
+    },
+    "summit": {
+      "name": "정상",
+      "axis": {
+        "A": "neg",
+        "B": "pos"
+      }
+    },
+    "footprints": {
+      "name": "발자국",
+      "axis": {
+        "A": "neg",
+        "B": "neg"
+      }
+    }
+  },
+  "pages": [
+    {
+      "no": 1,
+      "title": "월요일 6시 40분",
+      "illustration_key": "p1_alarm",
+      "question": {
+        "id": "sisyphus-q1",
+        "axis": "B",
+        "weight": 1.0,
+        "prompt": "어제와 같은 하루가 또 시작됐다. 지금 이 반복은?",
+        "choices": [
+          {
+            "id": "sisyphus-q1a",
+            "label": "무언가 쌓이고 있다",
+            "value": 1
+          },
+          {
+            "id": "sisyphus-q1b",
+            "label": "그냥 지나가고 있다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 2,
+      "title": "무대가 무너지는 날",
+      "illustration_key": "p2_crack",
+      "question": {
+        "id": "sisyphus-q2",
+        "axis": "C",
+        "weight": 1.0,
+        "pair_id": "c1",
+        "phase": "pre",
+        "prompt": "커서가 깜빡이는 그 자리에서, 당신은?",
+        "choices": [
+          {
+            "id": "sisyphus-q2a",
+            "label": "손을 놓고 그대로 앉아 있는다",
+            "value": 1
+          },
+          {
+            "id": "sisyphus-q2b",
+            "label": "다시 숫자를 채워 넣는다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 3,
+      "title": "묻는 쪽과 답하지 않는 쪽",
+      "illustration_key": "p3_silence",
+      "question": {
+        "id": "sisyphus-q3",
+        "axis": "A",
+        "weight": 1.0,
+        "prompt": "아무리 물어도 답이 돌아오지 않을 때, 그건?",
+        "choices": [
+          {
+            "id": "sisyphus-q3a",
+            "label": "내가 아직 못 찾은 것이다",
+            "value": 1
+          },
+          {
+            "id": "sisyphus-q3b",
+            "label": "처음부터 답이 없는 것이다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 4,
+      "title": "뛰어넘기",
+      "illustration_key": "p4_leap",
+      "question": {
+        "id": "sisyphus-q4",
+        "axis": "B",
+        "weight": 1.0,
+        "prompt": "답이 없는 자리에 답을 세워둔 그 사람들을, 당신은?",
+        "choices": [
+          {
+            "id": "sisyphus-q4a",
+            "label": "그것도 하나의 답이다",
+            "value": 1
+          },
+          {
+            "id": "sisyphus-q4b",
+            "label": "답이 아니라 질문을 지운 것이다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 5,
+      "title": "그만두면 되는가",
+      "illustration_key": "p5_exit",
+      "question": {
+        "id": "sisyphus-q5",
+        "axis": "C",
+        "weight": 1.0,
+        "pair_id": "c2",
+        "phase": "pre",
+        "prompt": "그 문 앞에서, 당신은?",
+        "choices": [
+          {
+            "id": "sisyphus-q5a",
+            "label": "짐을 챙겨 일어선다",
+            "value": 1
+          },
+          {
+            "id": "sisyphus-q5b",
+            "label": "앉은 자리에 그대로 있는다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 6,
+      "title": "세 사람",
+      "illustration_key": "p6_three",
+      "question": {
+        "id": "sisyphus-q6",
+        "axis": "A",
+        "weight": 1.0,
+        "prompt": "오래가 아니라 많이 쪽으로 사는 그 사람들은?",
+        "choices": [
+          {
+            "id": "sisyphus-q6a",
+            "label": "각자 그렇게 정한 것이다",
+            "value": 1
+          },
+          {
+            "id": "sisyphus-q6b",
+            "label": "다른 수가 없어서 그렇게 된 것이다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 7,
+      "title": "시지프",
+      "illustration_key": "p7_sisyphus",
+      "question": {
+        "id": "sisyphus-q7",
+        "axis": "B",
+        "weight": 1.0,
+        "prompt": "끝나지 않는 이 노동에?",
+        "choices": [
+          {
+            "id": "sisyphus-q7a",
+            "label": "뜻이 있다",
+            "value": 1
+          },
+          {
+            "id": "sisyphus-q7b",
+            "label": "뜻은 없다. 노동이 있을 뿐이다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 8,
+      "title": "내려가는 길",
+      "illustration_key": "p8_descent",
+      "question": {
+        "id": "sisyphus-q8",
+        "axis": "C",
+        "weight": 1.0,
+        "pair_id": "c1",
+        "phase": "post",
+        "prompt": "답이 나오지 않는 줄 알면서 계속 묻고 있는 사람을, 당신은 어떻게 보는가?",
+        "choices": [
+          {
+            "id": "sisyphus-q8a",
+            "label": "계속 물을 만한 것을 묻고 있다",
+            "value": 1
+          },
+          {
+            "id": "sisyphus-q8b",
+            "label": "물어도 소용없는 것을 묻고 있다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 9,
+      "title": "행복하다고 상상해야 한다",
+      "illustration_key": "p9_summit",
+      "question": {
+        "id": "sisyphus-q9",
+        "axis": "C",
+        "weight": 1.0,
+        "pair_id": "c2",
+        "phase": "post",
+        "prompt": "매일 같은 자리로 돌아가는 사람을, 당신은 어떻게 보는가?",
+        "choices": [
+          {
+            "id": "sisyphus-q9a",
+            "label": "아직 여기서 나가지 못한 사람이다",
+            "value": 1
+          },
+          {
+            "id": "sisyphus-q9b",
+            "label": "나가고 말고와는 다른 것을 하고 있는 사람이다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 10,
+      "title": "화요일 6시 40분",
+      "illustration_key": "p10_tuesday",
+      "question": null,
+      "note": "결말. 질문 없음. 1페이지와 같은 아침이며 한 문장만 다르다."
+    }
+  ]
+}
