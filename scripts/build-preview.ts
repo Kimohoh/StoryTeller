@@ -214,6 +214,22 @@ figure.illustration img {
 .other-mine[open] summary::before { content: "▾ "; }
 .other-mine .other-label { border-left-color: var(--bronze); color: var(--paper-dim); }
 
+/* C축 — 4분면과 나란히 두지 않는다 */
+.caxis { margin-top: 3.25rem; padding-top: 2rem; border-top: 1px solid var(--ink-2); }
+.caxis-lead { margin: 0 0 1.5rem; color: var(--gold); }
+.caxis-evidence { list-style: none; padding: 0; margin: 0 0 1.75rem; }
+.caxis-evidence li {
+  border-left: 2px solid var(--ink-2); padding: .2rem 0 .2rem 1rem;
+  margin-bottom: 1.4rem; display: grid; gap: .3rem; font-size: .93rem; line-height: 1.7;
+}
+.caxis-evidence li[data-changed="true"] { border-left-color: var(--amber); }
+.caxis-side b {
+  font-weight: 400; font-family: var(--mono); font-size: .72rem;
+  letter-spacing: .06em; color: var(--bronze); margin-right: .5rem;
+}
+.caxis-arrow { color: var(--bronze); font-size: .8rem; line-height: 1; }
+.caxis-note { color: var(--paper-dim); font-size: .85rem; line-height: 1.8; margin: 0; }
+
 /* 프리뷰 고지 */
 .preview-note {
   margin-top: 4rem; padding-top: 1.5rem;
@@ -244,12 +260,16 @@ figure.illustration img {
     .replace(new RegExp(BT + "([^" + BT + "]+)" + BT, "g"), '<span class="term">$1</span>');
   const proseOf = (paras) => paras.map((p) => "<p>" + inline(p) + "</p>").join("");
 
-  const questions = D.pages.filter((p) => p.question).map((p) => p.question);
-  const rules = questions.map((q) => ({ id: q.id, axis: q.axis, weight: q.weight, choices: q.choices }));
+  const questions = D.pages.flatMap((p) => p.questions || []);
+  const rules = questions.map((q) => ({
+    id: q.id, axis: q.axis, weight: q.weight, choices: q.choices,
+    pair_id: q.pair_id || null, phase: q.phase || null,
+  }));
 
   function coordinate() {
     const num = { A: 0, B: 0 }, den = { A: 0, B: 0 };
     for (const r of rules) {
+      if (r.axis === "C") continue;          // C는 재는 방식이 다르다
       const a = answers.get(r.id);
       if (!a) continue;
       const c = r.choices.find((x) => x.id === a.choice_id);
@@ -272,11 +292,36 @@ figure.illustration img {
              near: all[1].distance - all[0].distance < D.proximity_threshold };
   }
 
+  /** C축 — 전후 응답이 달라졌는지로 잰다. 페어가 둘 미만이면 내지 않는다. */
+  function cAxis() {
+    const byPair = {};
+    for (const r of rules) {
+      if (r.axis !== "C" || !r.pair_id || !r.phase) continue;
+      const a = answers.get(r.id);
+      if (!a) continue;
+      const c = r.choices.find((x) => x.id === a.choice_id);
+      if (!c) continue;
+      const page = D.pages.find((p) => (p.questions || []).some((q) => q.id === r.id));
+      (byPair[r.pair_id] = byPair[r.pair_id] || {})[r.phase] =
+        { value: c.value, label: c.label, page_no: page ? page.no : 0 };
+    }
+    const pairs = [];
+    for (const id of Object.keys(byPair).sort()) {
+      const s = byPair[id];
+      if (!s.pre || !s.post) continue;
+      pairs.push({ pre: s.pre, post: s.post, changed: s.pre.value !== s.post.value });
+    }
+    if (pairs.length < 2) return null;
+    const changed = pairs.filter((p) => p.changed).length;
+    return { pairs, changed, total: pairs.length };
+  }
+
   /** 유형 방향으로 가장 강하게 기운 선택. 동점은 가장 오래 망설인 문항으로 가른다. */
   function quotedChoice(primaryKey) {
     const center = centerOf(D.types[primaryKey]);
     let best = null, bestScore = -Infinity, bestDwell = -Infinity;
     for (const r of rules) {
+      if (r.axis === "C") continue;
       const a = answers.get(r.id);
       if (!a) continue;
       const c = r.choices.find((x) => x.id === a.choice_id);
@@ -334,14 +379,17 @@ figure.illustration img {
     if (p.title) h += '<p class="eyebrow">' + p.no + ". " + esc(p.title) + "</p>";
     h += '<div class="prose">' + proseOf(p.body) + "</div>";
 
-    if (p.question) {
-      const picked = answers.get(p.question.id);
-      h += '<section class="question"><p class="prompt">' + esc(p.question.prompt) + "</p>";
-      for (const c of p.question.choices) {
-        const on = picked && picked.choice_id === c.id ? " picked" : "";
-        h += '<button class="choice' + on + '" data-choice="' + c.id + '">' + esc(c.label) + "</button>";
+    const qs = p.questions || [];
+    if (qs.length) {
+      for (const q of qs) {
+        const picked = answers.get(q.id);
+        h += '<section class="question" data-q="' + q.id + '"><p class="prompt">' + esc(q.prompt) + "</p>";
+        for (const c of q.choices) {
+          const on = picked && picked.choice_id === c.id ? " picked" : "";
+          h += '<button class="choice' + on + '" data-q="' + q.id + '" data-choice="' + c.id + '">' + esc(c.label) + "</button>";
+        }
+        h += "</section>";
       }
-      h += "</section>";
     } else {
       h += '<button class="next" id="go">' + (hasNext ? "계속" : "다 읽었습니다") + "</button>";
     }
@@ -350,14 +398,14 @@ figure.illustration img {
 
     app.querySelectorAll("[data-choice]").forEach((btn) => {
       btn.onclick = () => {
-        answers.set(p.question.id, {
-          choice_id: btn.dataset.choice,
-          dwell_ms: Date.now() - shownAt,
-        });
-        app.querySelectorAll("[data-choice]").forEach((b) => {
+        answers.set(btn.dataset.q, { choice_id: btn.dataset.choice, dwell_ms: Date.now() - shownAt });
+        app.querySelectorAll('[data-q="' + btn.dataset.q + '"][data-choice]').forEach((b) => {
           b.disabled = true;
           b.classList.toggle("picked", b === btn);
         });
+        shownAt = Date.now();
+        // 이 페이지의 문항을 다 답해야 넘어간다
+        if (!qs.every((q) => answers.has(q.id))) return;
         setTimeout(() => (hasNext ? page(no + 1) : result()), 260);
       };
     });
@@ -408,6 +456,25 @@ figure.illustration img {
     h += '<div class="prose">' + proseOf(copy.paragraphs.slice(0, 1)) + "</div>";
     if (quote) h += '<p class="verdict-quote">' + esc(quote) + ".</p>";
     h += '<div class="prose">' + proseOf(copy.paragraphs.slice(1)) + "</div>";
+    const ca = cAxis();
+    if (ca) {
+      const kept = ca.total - ca.changed;
+      const lead = ca.changed === ca.total
+        ? "당신은 물음이 다시 왔을 때 답을 바꿨습니다."
+        : kept === ca.total
+          ? "당신은 물음이 다시 왔을 때 처음 답을 지켰습니다."
+          : ca.total + "번 중 " + ca.changed + "번, 당신은 답을 바꿨습니다.";
+      h += '<section class="caxis"><p class="caxis-lead">' + esc(lead) + "</p><ul class=\"caxis-evidence\">";
+      for (const p of ca.pairs) {
+        h += '<li data-changed="' + p.changed + '">' +
+          '<span class="caxis-side"><b>' + p.pre.page_no + "페이지</b> " + esc(p.pre.label) + "</span>" +
+          '<span class="caxis-arrow">↓</span>' +
+          '<span class="caxis-side"><b>' + p.post.page_no + "페이지</b> " + esc(p.post.label) + "</span></li>";
+      }
+      h += "</ul><p class=\"caxis-note\">같은 사실 앞에서 물음의 각도만 바뀌었습니다. 새로 알게 된 것은 없었습니다. " +
+        "바꾸는 쪽과 지키는 쪽 중 어느 것도 더 나은 태도는 아닙니다 — 다만 그때 무엇을 하는지가 사람마다 다릅니다.</p></section>";
+    }
+
     h += '<section class="reveal">' + proseOf(D.ending_reveal) + "</section>";
     h += '<button class="next" id="others">다르게 읽은 사람들</button>';
     h += previewNote() + "</div>";
@@ -422,16 +489,16 @@ figure.illustration img {
     h += '<p class="others-note">아직 아무도 쓰지 않았습니다. 아래는 편집부가 미리 써둔, 반대쪽을 고른 사람의 말입니다. 읽은 사람들의 글이 쌓이면 그 아래로 내려갑니다.</p>';
 
     for (const p of D.pages) {
-      if (!p.question) continue;
-      const mineId = (answers.get(p.question.id) || {}).choice_id;
-      const mine = p.question.choices.find((c) => c.id === mineId);
-      const other = p.question.choices.find((c) => c.id !== mineId);
+      for (const q of p.questions || []) {
+      const mineId = (answers.get(q.id) || {}).choice_id;
+      const mine = q.choices.find((c) => c.id === mineId);
+      const other = q.choices.find((c) => c.id !== mineId);
       if (!other) continue;
       const body = (id) => (D.seed_arguments[id] || {}).body || "";
 
       h += '<section class="other">';
       h += '<p class="eyebrow">' + p.no + "페이지</p>";
-      h += '<p class="prompt">' + esc(p.question.prompt) + "</p>";
+      h += '<p class="prompt">' + esc(q.prompt) + "</p>";
       h += '<p class="other-label">' + esc(other.label) + "</p>";
       h += '<p class="other-body">' + esc(body(other.id)) + "</p>";
       if (mine) {
@@ -440,6 +507,7 @@ figure.illustration img {
         h += '<p class="other-body">' + esc(body(mine.id)) + "</p></details>";
       }
       h += "</section>";
+      }
     }
     h += '<button class="next" id="back">결과로 돌아가기</button>';
     h += previewNote() + "</div>";
