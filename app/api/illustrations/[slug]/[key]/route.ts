@@ -9,12 +9,12 @@ const MIME: Record<string, string> = {
   webp: "image/webp",
 };
 
-export async function GET(_: Request, ctx: { params: Promise<{ key: string }> }) {
-  const { key } = await ctx.params;
-  const e = entry(key);
+export async function GET(_: Request, ctx: { params: Promise<{ slug: string; key: string }> }) {
+  const { slug, key } = await ctx.params;
+  const e = entry(slug, key);
   if (!e) return new Response("not found", { status: 404 });
 
-  // manifest가 가리키는 파일만 읽는다. 키에 담긴 경로는 쓰지 않는다.
+  // manifest가 가리키는 파일만 읽는다. URL에 담긴 값은 경로로 쓰지 않는다.
   const buf = readFileSync(join(process.cwd(), "assets/illustrations", e.src));
   return new Response(new Uint8Array(buf), {
     headers: {

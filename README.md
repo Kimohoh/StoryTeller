@@ -35,8 +35,18 @@ npm run dev             # http://localhost:3000
 | `npm run illustration:batch` | `incoming/`에 올린 파일을 한 번에 교체 |
 | `npm run brief` | 일러스트레이터에게 보낼 의뢰서 페이지를 뽑는다 |
 
-화면은 셋이다. `/` 표지 → `/read/metamorphosis/1‥9` 읽기 → `/result/<세션id>` 결과,
-그리고 결과 아래 링크로 `/result/<세션id>/others` 「다르게 읽은 사람들」.
+화면 흐름: `/` 서재 → `/w/<슬러그>` 표지 → `/read/<슬러그>/1‥N` 읽기 →
+`/result/<세션id>` 결과 → `/result/<세션id>/others` 「다르게 읽은 사람들」.
+
+### 작품 하나 더 붙이기
+
+1. `content/<슬러그>/ko.md` 정본과 `ko.json` 구조, `ko.results.json` 진단문을 쓴다
+2. `assets/illustrations/manifest.json`에 `"<슬러그>": { ... }`를 더한다
+3. `content/works.json`에 한 줄 더한다
+4. `npm run content:build && npm run db:seed`
+
+코드는 건드리지 않는다. 삽화 키는 작품 안에서만 유일하면 되므로 작품마다
+`p1_*`을 다시 써도 부딪히지 않는다.
 
 ### 검수용 프리뷰
 
@@ -50,13 +60,15 @@ npm run dev             # http://localhost:3000
 ## 구조
 
 ```
-content/metamorphosis.ko.md           각색 정본. 사람이 읽고 고친다.
-content/metamorphosis.ko.json         페이지·문항·축·가중치·삽화 키
-content/metamorphosis.ko.results.json 진단문·인용문·cold start 논거  ← 결과 화면 전용
-content/.build/                       위 둘을 합친 파생물. 커밋하지 않는다.
+content/works.json                    작품 레지스트리. 슬러그를 코드에 박지 않는다.
+content/axes.json                     앱 공통 축 A·B. 작품이 늘어도 공유한다 (spec §3).
+content/<slug>/<locale>.md            각색 정본. 사람이 읽고 고친다.
+content/<slug>/<locale>.json          페이지·문항·가중치·삽화 키
+content/<slug>/<locale>.results.json  진단문·인용문·cold start 논거  ← 결과 화면 전용
+content/.build/<slug>/<locale>.json   위를 합친 파생물. 커밋하지 않는다.
 
-assets/illustrations/manifest.json    삽화 키 → 실제 에셋 매핑
-assets/illustrations/metamorphosis/   임시 SVG 8장
+assets/illustrations/manifest.json    작품 → 삽화 키 → 실제 에셋
+assets/illustrations/<slug>/          작품별 에셋
 
 db/schema.sql                         spec §7 스키마
 lib/scoring.ts                        채점. 순수 함수. 서버·클라 공용
@@ -83,6 +95,15 @@ md의 `## N. 제목` 단위로 본문을 뽑고, 두 파일이 같이 갖고 있
 좌표는 `answers` + 현재 `questions.axis/weight`에서 유도된다. 가중치를 바꾼 뒤
 `npm run db:rescore`를 돌리면 유형이 바뀌는 사람 수를 먼저 보여주고, `--apply`를 붙여야 반영된다.
 `comments.axis_x/axis_y`는 스냅샷이므로 재계산이 건드리지 않는다.
+
+**축은 작품이 아니라 앱의 것이다.** `content/axes.json` 하나에 A·B를 정의하고 작품별
+파일은 참조만 한다. 그래야 여러 작품을 읽을수록 좌표가 정밀해진다 (spec §3).
+누적 좌표는 완독한 세션들의 답을 한 통에 모아 그때그때 계산한다 — 여기서도 저장하는 건
+좌표가 아니라 원본 선택이다.
+
+**결과는 서버가 진실, 기기는 사본.** 로그인이 없으므로 서버는 익명 쿠키로만 사람을
+알아본다. 쿠키가 지워지면 지난 결과로 돌아갈 길이 없어지므로 기기에 요약(sessionId 포함)을
+한 벌 더 남긴다. 결과 URL은 그대로 공유 링크가 된다.
 
 **진단문은 특정 선택을 단정하지 않는다.** 경계 근처 사람은 여덟 문항 중 두세 개를 반대로
 골랐고, 고르지 않은 답을 골랐다고 쓰면 진단문 전체의 신뢰가 무너진다. 그래서 ①단락은

@@ -158,3 +158,39 @@ a { color: var(--gold); }
 .other-mine summary::before { content: "▸ "; }
 .other-mine[open] summary::before { content: "▾ "; }
 .other-mine .other-label { border-left-color: var(--bronze); color: var(--paper-dim); }
+
+/* 서재 */
+.shelf-head { margin-bottom: 3rem; }
+.shelf-head h1 { font-size: 1.6rem; margin: 0 0 .6rem; }
+.shelf { list-style: none; margin: 0 0 3.5rem; padding: 0; display: grid; gap: 1.5rem; }
+.shelf-item {
+  display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 1.1rem;
+  align-items: start; text-decoration: none; color: inherit;
+  border: 1px solid var(--ink-2); border-radius: 3px; padding: .9rem;
+  transition: border-color .15s;
+}
+.shelf-item:hover { border-color: var(--bronze); }
+/* Illustration은 넘긴 className만 갖는다 — .illustration 규칙이 여기엔 안 걸린다 */
+.shelf-art { margin: 0; }
+.shelf-art img, .shelf-art svg {
+  display: block; width: 100%; height: auto; border-radius: 2px;
+}
+.shelf-text h2 { font-size: 1.05rem; margin: 0 0 .3rem; color: var(--gold); }
+.shelf-text .sub { color: var(--paper-dim); font-size: .88rem; margin: 0 0 .5rem; }
+.shelf-text .meta { color: var(--bronze); font-size: .78rem; margin: 0; }
+
+.cover-art { max-width: 220px; margin-bottom: 2rem; }
+
+.accum { border-top: 1px solid var(--ink-2); padding-top: 2rem; margin-top: 2rem; }
+.accum h2 { font-size: 1rem; margin: 0 0 .5rem; color: var(--gold); }
+.local-list { list-style: none; padding: 0; margin: .5rem 0 0; }
+.local-list li { margin-bottom: .4rem; font-size: .9rem; }
+
+.actions { margin-top: 2.5rem; }
+.actions-note { color: var(--bronze); font-size: .78rem; margin: .75rem 0 0; line-height: 1.7; }
+.quiet-link {
+  display: inline-block; margin-top: 2.5rem;
+  color: var(--bronze); font-size: .85rem; text-decoration: none;
+  border-bottom: 1px solid var(--ink-2);
+}
+.quiet-link:hover { color: var(--gold); }

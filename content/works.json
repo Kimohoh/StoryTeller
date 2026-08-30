@@ -1,0 +1,13 @@
+{
+  "_note": "작품 레지스트리. 스크립트와 앱이 여기서 목록을 읽는다 — 슬러그를 코드에 박지 않는다.",
+  "default_locale": "ko",
+  "works": [
+    {
+      "slug": "metamorphosis",
+      "locales": ["ko"],
+      "order": 1,
+      "status": "published",
+      "_status": "published | draft — draft는 서재에 안 뜨고 직접 URL로만 열린다"
+    }
+  ]
+}

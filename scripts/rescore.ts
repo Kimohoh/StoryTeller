@@ -16,20 +16,17 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeCoordinate, diagnose, type ScoringRule } from "../lib/scoring";
 import type { WorkBuild } from "../lib/content-types";
+import { works, resolveLocale, buildPath, sourcePath } from "../lib/works";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const APPLY = process.argv.includes("--apply");
-const SLUG = process.argv.find((a) => !a.startsWith("-") && a.includes("."))
-  ? "metamorphosis.ko"
-  : "metamorphosis.ko";
+const argv = process.argv.slice(2);
+const APPLY = argv.includes("--apply");
+const SLUG = argv.find((a) => !a.startsWith("-")) ?? works().works[0].slug;
+const LOCALE = resolveLocale(SLUG, undefined);
 
 const db = new Database(process.env.STORYTELLER_DB ?? join(ROOT, "data/storyteller.sqlite"));
-const build: WorkBuild = JSON.parse(
-  readFileSync(join(ROOT, `content/.build/${SLUG}.build.json`), "utf8"),
-);
-const results = JSON.parse(
-  readFileSync(join(ROOT, `content/${SLUG.replace(/\.ko$/, ".ko")}.results.json`), "utf8"),
-);
+const build: WorkBuild = JSON.parse(readFileSync(buildPath(SLUG, LOCALE), "utf8"));
+const results = JSON.parse(readFileSync(sourcePath(SLUG, LOCALE, "results.json"), "utf8"));
 
 const work = db.prepare("SELECT id, scoring_version FROM works WHERE slug = ?").get(build.slug) as
   | { id: number; scoring_version: number }

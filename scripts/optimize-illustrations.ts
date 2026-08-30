@@ -26,13 +26,15 @@ const MAX_WIDTH = 1080;
 const QUALITY = 82;
 
 const dryRun = process.argv.includes("--dry-run");
-const manifest: Record<string, Entry> = JSON.parse(readFileSync(MANIFEST, "utf8"));
+const allManifests: Record<string, Record<string, Entry>> = JSON.parse(readFileSync(MANIFEST, "utf8"));
 
 let before = 0;
 let after = 0;
 let changed = 0;
 
-for (const [key, e] of Object.entries(manifest)) {
+for (const [slug, manifest] of Object.entries(allManifests)) {
+  if (slug.startsWith("_")) continue;
+  for (const [key, e] of Object.entries(manifest)) {
   if (e.type === "svg") continue;                       // 벡터는 이미 가볍다
 
   const src = join(ASSETS, e.src);
@@ -59,6 +61,7 @@ for (const [key, e] of Object.entries(manifest)) {
   writeFileSync(join(ASSETS, nextSrc), buf);
   if (nextSrc !== e.src) unlinkSync(src);
   manifest[key] = { ...e, type: "webp", src: nextSrc, version: e.version + 1 };
+  }
 }
 
 if (changed === 0) {
@@ -74,6 +77,6 @@ console.log(
 if (dryRun) {
   console.log("dry-run — 실제로 쓰려면 --dry-run 빼고 다시.");
 } else {
-  writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + "\n");
+  writeFileSync(MANIFEST, JSON.stringify(allManifests, null, 2) + "\n");
   console.log("다음: npm run content:check && npm run preview && npm run brief");
 }

@@ -14,17 +14,17 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { WorkBuild } from "../lib/content-types";
+import { works, resolveLocale, buildPath, sourcePath } from "../lib/works";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SLUG = "metamorphosis.ko";
+const SLUG = process.argv.slice(2).find((a) => !a.startsWith("-")) ?? works().works[0].slug;
+const LOCALE = resolveLocale(SLUG, undefined);
 
-const work: WorkBuild = JSON.parse(
-  readFileSync(join(ROOT, `content/.build/${SLUG}.build.json`), "utf8"),
-);
-const results = JSON.parse(readFileSync(join(ROOT, `content/${SLUG}.results.json`), "utf8"));
+const work: WorkBuild = JSON.parse(readFileSync(buildPath(SLUG, LOCALE), "utf8"));
+const results = JSON.parse(readFileSync(sourcePath(SLUG, LOCALE, "results.json"), "utf8"));
 const manifest = JSON.parse(
   readFileSync(join(ROOT, "assets/illustrations/manifest.json"), "utf8"),
-);
+)[SLUG];
 
 const MIME: Record<string, string> = { png: "image/png", jpg: "image/jpeg", webp: "image/webp" };
 
@@ -465,10 +465,10 @@ figure.illustration img {
 `.replace("__DATA__", JSON.stringify(data).replace(/</g, "\\u003c"));
 
 mkdirSync(join(ROOT, "preview"), { recursive: true });
-const out = join(ROOT, "preview/metamorphosis.preview.html");
+const out = join(ROOT, `preview/${SLUG}.preview.html`);
 writeFileSync(out, html);
 const kb = html.length / 1024;
-console.log(`preview/metamorphosis.preview.html — ${kb.toFixed(0)}KB`);
+console.log(`preview/${SLUG}.preview.html — ${kb.toFixed(0)}KB`);
 if (kb > 6000) {
   console.warn(
     `  경고: ${(kb / 1024).toFixed(1)}MB다. 삽화를 data URI로 넣기 때문에 원본이 클수록 무겁다.\n` +

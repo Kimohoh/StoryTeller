@@ -3,8 +3,9 @@ import Link from "next/link";
 import { getSession } from "@/lib/session-repo";
 import { getDb } from "@/lib/db";
 import { buildResult } from "@/lib/verdict";
-import { workTypes } from "@/lib/work-repo";
+import { workTypes, loadWork } from "@/lib/work-repo";
 import { CoordinatePlot } from "@/components/CoordinatePlot";
+import { ResultActions } from "@/components/ResultActions";
 import { Prose } from "@/components/Prose";
 import { josa } from "@/lib/josa";
 
@@ -73,6 +74,17 @@ export default async function ResultPage({
       <Link className="next" href={`/result/${sessionId}/others`}>
         다르게 읽은 사람들
       </Link>
+
+      <ResultActions
+        slug={slug}
+        title={loadWork(slug).title}
+        sessionId={sessionId}
+        type={r.primary.name}
+        coordinate={r.coordinate}
+        completedAt={session.completed_at ?? new Date().toISOString()}
+      />
+
+      <Link className="quiet-link" href="/">서재로</Link>
     </main>
   );
 }

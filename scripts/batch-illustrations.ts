@@ -14,6 +14,7 @@ import { join, dirname, extname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { replaceEntry, parseRatio, TYPES, type Entry } from "../lib/illustration-file";
 import type { WorkBuild } from "../lib/content-types";
+import { works, resolveLocale, buildPath } from "../lib/works";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ASSETS = join(ROOT, "assets/illustrations");
@@ -25,20 +26,29 @@ const flag = (n: string) => {
   const i = argv.indexOf(`--${n}`);
   return i >= 0 ? argv[i + 1] : null;
 };
-const dir = join(ROOT, argv.find((a) => !a.startsWith("--") && argv[argv.indexOf(a) - 1] !== "--ratio") ?? "incoming");
+const dir = join(
+  ROOT,
+  argv.find((a, i) => !a.startsWith("--") && !argv[i - 1]?.match(/^--(ratio|work)$/)) ?? "incoming",
+);
 
 const die = (msg: string) => { console.error(`\n${msg}\n`); process.exit(1); };
 
 if (!existsSync(dir)) die(`폴더가 없다: ${dir}`);
 
-const manifest: Record<string, Entry> = JSON.parse(readFileSync(MANIFEST, "utf8"));
+/** 어느 작품의 삽화인가. 작품이 하나면 생략해도 된다. */
+const SLUG = flag("work") ?? works().works[0].slug;
+
+const allManifests: Record<string, Record<string, Entry>> = JSON.parse(readFileSync(MANIFEST, "utf8"));
+const manifest = allManifests[SLUG];
+if (!manifest) die(`manifest에 작품이 없다: ${SLUG}`);
+
 const altFile = join(ASSETS, "pending-alt.json");
 const alts: Record<string, string> = existsSync(altFile)
-  ? JSON.parse(readFileSync(altFile, "utf8"))
+  ? (JSON.parse(readFileSync(altFile, "utf8"))[SLUG] ?? {})
   : {};
 
 const work: WorkBuild = JSON.parse(
-  readFileSync(join(ROOT, "content/.build/metamorphosis.ko.build.json"), "utf8"),
+  readFileSync(buildPath(SLUG, resolveLocale(SLUG, undefined)), "utf8"),
 );
 /** 페이지 번호 → 삽화 키. 콘텐츠가 진실이므로 여기서 가져온다. */
 const keyByPage = new Map<number, string>(
@@ -104,7 +114,7 @@ if (dryRun) {
   process.exit(0);
 }
 
-writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + "\n");
+writeFileSync(MANIFEST, JSON.stringify(allManifests, null, 2) + "\n");
 console.log(`\n${done}장 교체 완료.`);
 
 if (has("clean")) {

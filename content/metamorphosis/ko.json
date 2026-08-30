@@ -5,20 +5,7 @@
   "public_domain": true,
   "author_died": 1924,
   "scoring_version": 1,
-  "axes": {
-    "A": {
-      "label_internal": "책임의 소재",
-      "pos": "개인",
-      "neg": "바깥",
-      "reveal_to_user": "결과 화면에서만"
-    },
-    "B": {
-      "label_internal": "의미 부여",
-      "pos": "서사",
-      "neg": "사실",
-      "reveal_to_user": "결과 화면에서만"
-    }
-  },
+  "_axes": "content/axes.json 참조. 문항의 axis 값이 그 키를 가리킨다.",
   "types": {
     "violin": {
       "name": "바이올린",

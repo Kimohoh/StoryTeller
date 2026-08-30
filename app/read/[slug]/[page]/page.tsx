@@ -26,7 +26,7 @@ export default async function ReadPage({
   if (!current) notFound();
 
   const sessionId = await currentSessionId(slug);
-  if (!sessionId || !getSession(sessionId)) redirect("/");
+  if (!sessionId || !getSession(sessionId)) redirect(`/w/${slug}`);
 
   const answered = new Map(getAnswers(sessionId).map((a) => [a.question_id, a.choice_id]));
   const questionPages = payload.pages.filter((p) => p.question);
@@ -44,7 +44,7 @@ export default async function ReadPage({
         ))}
       </div>
 
-      <Illustration k={current.illustration_key} className="illustration" />
+      <Illustration work={slug} k={current.illustration_key} className="illustration" priority />
 
       {current.title ? (
         <p className="page-title">
@@ -81,7 +81,15 @@ export default async function ReadPage({
 
 export const dynamic = "force-dynamic";
 
-export function generateMetadata() {
-  const work = loadWork("metamorphosis");
-  return { title: work.title };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  try {
+    return { title: loadWork(slug).title };
+  } catch {
+    return {};
+  }
 }

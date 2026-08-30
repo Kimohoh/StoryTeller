@@ -1,5 +1,4 @@
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import type {
   WorkBuild,
   ReadingPayload,
@@ -9,6 +8,7 @@ import type {
 } from "./content-types";
 import type { ScoringRule } from "./scoring";
 import { getDb } from "./db";
+import { buildPath, sourcePath, resolveLocale } from "./works";
 
 export interface ResultsContent {
   slug: string;
@@ -22,28 +22,23 @@ export interface ResultsContent {
 const builds = new Map<string, WorkBuild>();
 const results = new Map<string, ResultsContent>();
 
-/** slug("metamorphosis") → 콘텐츠 파일 이름("metamorphosis.ko") */
-function fileFor(slug: string): string {
-  return `${slug}.ko`;
-}
-
-export function loadWork(slug: string): WorkBuild {
-  const cached = builds.get(slug);
+export function loadWork(slug: string, locale?: string): WorkBuild {
+  const l = resolveLocale(slug, locale);
+  const cacheKey = `${slug}/${l}`;
+  const cached = builds.get(cacheKey);
   if (cached && process.env.NODE_ENV === "production") return cached;
-  const w: WorkBuild = JSON.parse(
-    readFileSync(join(process.cwd(), `content/.build/${fileFor(slug)}.build.json`), "utf8"),
-  );
-  builds.set(slug, w);
+  const w: WorkBuild = JSON.parse(readFileSync(buildPath(slug, l), "utf8"));
+  builds.set(cacheKey, w);
   return w;
 }
 
-export function loadResults(slug: string): ResultsContent {
-  const cached = results.get(slug);
+export function loadResults(slug: string, locale?: string): ResultsContent {
+  const l = resolveLocale(slug, locale);
+  const cacheKey = `${slug}/${l}`;
+  const cached = results.get(cacheKey);
   if (cached && process.env.NODE_ENV === "production") return cached;
-  const r: ResultsContent = JSON.parse(
-    readFileSync(join(process.cwd(), `content/${fileFor(slug)}.results.json`), "utf8"),
-  );
-  results.set(slug, r);
+  const r: ResultsContent = JSON.parse(readFileSync(sourcePath(slug, l, "results.json"), "utf8"));
+  results.set(cacheKey, r);
   return r;
 }
 

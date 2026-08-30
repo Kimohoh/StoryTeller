@@ -12,16 +12,11 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import type {
-  WorkSource,
-  WorkBuild,
-  BuiltPage,
-  AxisKey,
-} from "../lib/content-types";
+import type { WorkSource, WorkBuild, BuiltPage, AxisKey } from "../lib/content-types";
+import { works, resolveLocale, sourcePath, buildPath, globalAxes } from "../lib/works";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK_ONLY = process.argv.includes("--check");
-const SLUGS = ["metamorphosis.ko"];
 
 const errors: string[] = [];
 const warnings: string[] = [];
@@ -169,7 +164,12 @@ function validateResults(src: WorkSource, res: ResultsFile) {
   if (!(res.proximity_threshold > 0)) fail("proximity_threshold가 0 이하다");
 }
 
-function validate(src: WorkSource, mdPages: MdPage[], manifest: Record<string, unknown>) {
+function validate(
+  src: WorkSource,
+  mdPages: MdPage[],
+  illustrations: Record<string, unknown>,
+  axes: Record<string, unknown>,
+) {
   const at = (n: number) => `[${src.slug} p${n}]`;
 
   if (!src.public_domain) fail(`${src.slug}: public_domain이 false다 (spec §2 저작권)`);
@@ -194,8 +194,8 @@ function validate(src: WorkSource, mdPages: MdPage[], manifest: Record<string, u
     }
     if (md.body.length === 0) fail(`${at(page.no)} md 본문이 비어 있다`);
 
-    if (page.illustration_key && !(page.illustration_key in manifest)) {
-      fail(`${at(page.no)} illustration_key "${page.illustration_key}"가 manifest에 없다`);
+    if (page.illustration_key && !(page.illustration_key in illustrations)) {
+      fail(`${at(page.no)} illustration_key "${page.illustration_key}"가 manifest의 ${src.slug}에 없다`);
     }
 
     const q = page.question;
@@ -225,7 +225,7 @@ function validate(src: WorkSource, mdPages: MdPage[], manifest: Record<string, u
       fail(`${at(page.no)} ${q.id} value는 -1과 +1 한 쌍이어야 한다 (현재 ${values.join(",")})`);
     }
     if (!(q.weight > 0)) fail(`${at(page.no)} ${q.id} weight가 0 이하다`);
-    if (!(q.axis in src.axes)) fail(`${at(page.no)} ${q.id} 미정의 축 "${q.axis}"`);
+    if (!(q.axis in axes)) fail(`${at(page.no)} ${q.id} 미정의 축 "${q.axis}" — content/axes.json에 없다`);
     axisOrder.push(q.axis);
   }
 
@@ -249,47 +249,54 @@ function validate(src: WorkSource, mdPages: MdPage[], manifest: Record<string, u
 /* ---------- 실행 ---------- */
 
 const manifestPath = join(ROOT, "assets/illustrations/manifest.json");
-const manifest: Record<string, unknown> = existsSync(manifestPath)
+const manifest: Record<string, Record<string, unknown>> = existsSync(manifestPath)
   ? JSON.parse(readFileSync(manifestPath, "utf8"))
   : (fail("assets/illustrations/manifest.json이 없다"), {});
 
-for (const slug of SLUGS) {
-  const src: WorkSource = JSON.parse(
-    readFileSync(join(ROOT, `content/${slug}.json`), "utf8"),
-  );
-  const sections = splitSections(readFileSync(join(ROOT, `content/${slug}.md`), "utf8"));
-  const mdPages = parsePages(sections);
-  const endingReveal = parseEndingReveal(sections);
+const axes = globalAxes();
 
-  const results: ResultsFile = JSON.parse(
-    readFileSync(join(ROOT, `content/${slug}.results.json`), "utf8"),
-  );
+for (const entry of works().works) {
+  for (const locale of entry.locales) {
+    const slug = entry.slug;
+    const resolved = resolveLocale(slug, locale);
+    const src: WorkSource = JSON.parse(readFileSync(sourcePath(slug, resolved, "json"), "utf8"));
+    const sections = splitSections(readFileSync(sourcePath(slug, resolved, "md"), "utf8"));
+    const mdPages = parsePages(sections);
+    const endingReveal = parseEndingReveal(sections);
 
-  validate(src, mdPages, manifest);
-  validateResults(src, results);
+    if (src.slug !== slug) fail(`${slug}/${resolved}.json의 slug가 "${src.slug}"다 — 폴더 이름과 달라선 안 된다`);
 
-  const pages: BuiltPage[] = src.pages.map((p) => ({
-    ...p,
-    body: toParagraphs(mdPages.find((m) => m.no === p.no)?.body ?? []),
-  }));
+    validate(src, mdPages, manifest[slug] ?? {}, axes);
 
-  const build: WorkBuild = {
-    ...src,
-    built_at: new Date().toISOString(),
-    ending_reveal: endingReveal,
-    pages,
-  };
+    const results: ResultsFile = JSON.parse(
+      readFileSync(sourcePath(slug, resolved, "results.json"), "utf8"),
+    );
+    validateResults(src, results);
 
-  if (!CHECK_ONLY) {
-    mkdirSync(join(ROOT, "content/.build"), { recursive: true });
-    writeFileSync(
-      join(ROOT, `content/.build/${slug}.build.json`),
-      JSON.stringify(build, null, 2) + "\n",
+    const pages: BuiltPage[] = src.pages.map((p) => ({
+      ...p,
+      body: toParagraphs(mdPages.find((m) => m.no === p.no)?.body ?? []),
+    }));
+
+    const build: WorkBuild = {
+      ...src,
+      locale: resolved,
+      axes,
+      built_at: new Date().toISOString(),
+      ending_reveal: endingReveal,
+      pages,
+    };
+
+    if (!CHECK_ONLY) {
+      const out = buildPath(slug, resolved);
+      mkdirSync(dirname(out), { recursive: true });
+      writeFileSync(out, JSON.stringify(build, null, 2) + "\n");
+    }
+    console.log(
+      `${slug}/${resolved}: ${pages.length}장, 문항 ${src.pages.filter((p) => p.question).length}개` +
+        (CHECK_ONLY ? " (검증만)" : " → content/.build/"),
     );
   }
-  console.log(
-    `${slug}: ${pages.length}장, 문항 ${src.pages.filter((p) => p.question).length}개${CHECK_ONLY ? " (검증만)" : " → content/.build/"}`,
-  );
 }
 
 if (warnings.length) {

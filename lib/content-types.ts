@@ -10,7 +10,7 @@
 
 export type AxisKey = "A" | "B";
 
-/** content/<slug>.json — 저작용. 서버에만 있고 통째로 나가는 일이 없다. */
+/** content/<slug>/<locale>.json — 저작용. 서버에만 있고 통째로 나가는 일이 없다. */
 export interface WorkSource {
   slug: string;
   title: string;
@@ -18,7 +18,7 @@ export interface WorkSource {
   public_domain: boolean;
   author_died: number;
   scoring_version: number;
-  axes: Record<AxisKey, AxisSource>;
+  /** 축은 작품이 아니라 앱의 것이다 — content/axes.json (spec §3) */
   types: Record<string, TypeSource>;
   pages: PageSource[];
 }
@@ -58,9 +58,12 @@ export interface ChoiceSource {
   value: number;
 }
 
-/** content/.build/<slug>.build.json — md 본문이 합쳐진 파생물. 커밋하지 않는다. */
+/** content/.build/<slug>/<locale>.json — md 본문이 합쳐진 파생물. 커밋하지 않는다. */
 export interface WorkBuild extends WorkSource {
+  locale: string;
   built_at: string;
+  /** 빌드 시점의 전역 축을 함께 굽는다 — 재계산이 그때 규칙을 알아야 한다 */
+  axes: Record<AxisKey, AxisSource>;
   /** md 「결과 화면 마지막 줄」 — Ungeziefer 반전. 결과 화면에서만 쓴다. */
   ending_reveal: string[];
   pages: BuiltPage[];

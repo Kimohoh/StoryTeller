@@ -16,12 +16,13 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join, dirname, extname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { replaceEntry, dimensions, parseRatio, TYPES, type Entry } from "../lib/illustration-file";
+import { works } from "../lib/works";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ASSETS = join(ROOT, "assets/illustrations");
 const MANIFEST = join(ASSETS, "manifest.json");
 
-const manifest: Record<string, Entry> = JSON.parse(readFileSync(MANIFEST, "utf8"));
+const allManifests: Record<string, Record<string, Entry>> = JSON.parse(readFileSync(MANIFEST, "utf8"));
 const argv = process.argv.slice(2);
 const flag = (name: string) => {
   const i = argv.indexOf(`--${name}`);
@@ -29,13 +30,19 @@ const flag = (name: string) => {
 };
 const has = (name: string) => argv.includes(`--${name}`);
 const positional = argv.filter(
-  (a, i) => !a.startsWith("--") && !argv[i - 1]?.match(/^--(alt|credit|ratio)$/),
+  (a, i) => !a.startsWith("--") && !argv[i - 1]?.match(/^--(alt|credit|ratio|work)$/),
 );
 const fail = (msg: string) => { console.error(`\n${msg}\n`); process.exit(1); };
+
+/** 어느 작품의 삽화인가. 작품이 하나면 생략해도 된다. */
+const SLUG = flag("work") ?? works().works[0].slug;
+const manifest = allManifests[SLUG];
+if (!manifest) fail(`manifest에 작품이 없다: ${SLUG}`);
 
 /* ---------- 인자 없이 부르면 현재 상태 ---------- */
 
 if (positional.length === 0) {
+  console.log(`작품: ${SLUG}`);
   console.log("키                 종류   v   치수         설명");
   console.log("─".repeat(78));
   for (const [key, e] of Object.entries(manifest)) {
@@ -49,6 +56,7 @@ if (positional.length === 0) {
   }
   console.log('\n교체:  npm run illustration -- <키> <파일경로> --alt "새 설명"');
   console.log("일괄:  npm run illustration:batch");
+  if (works().works.length > 1) console.log("다른 작품:  -- --work <슬러그>");
   process.exit(0);
 }
 
@@ -87,7 +95,7 @@ if (has("dry-run")) {
   process.exit(0);
 }
 
-writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + "\n");
+writeFileSync(MANIFEST, JSON.stringify(allManifests, null, 2) + "\n");
 console.log(`${key} 교체 완료`);
 console.log(`  ${r.from} (v${r.version - 1})  →  ${r.to} (v${r.version})`);
 if (r.dim) console.log(`  ${r.dim.w}×${r.dim.h}, ${r.sizeKb.toFixed(0)}KB`);

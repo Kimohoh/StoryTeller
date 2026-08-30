@@ -8,15 +8,17 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { WorkBuild } from "../lib/content-types";
+import { works, resolveLocale, buildPath } from "../lib/works";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const md = readFileSync(join(ROOT, "docs/illustration-brief.md"), "utf8");
+const SLUG = "metamorphosis";
 const work: WorkBuild = JSON.parse(
-  readFileSync(join(ROOT, "content/.build/metamorphosis.ko.build.json"), "utf8"),
+  readFileSync(buildPath(SLUG, resolveLocale(SLUG, undefined)), "utf8"),
 );
 const manifest: Record<string, { type: string; src: string; alt: string }> = JSON.parse(
   readFileSync(join(ROOT, "assets/illustrations/manifest.json"), "utf8"),
-);
+)[SLUG];
 const MIME: Record<string, string> = { png: "image/png", jpg: "image/jpeg", webp: "image/webp" };
 
 const keyForPage = new Map(work.pages.map((p) => [p.no, p.illustration_key]));

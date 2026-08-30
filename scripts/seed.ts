@@ -10,10 +10,9 @@ import { readFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { WorkBuild } from "../lib/content-types";
+import { works, resolveLocale, buildPath } from "../lib/works";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SLUGS = ["metamorphosis.ko"];
-
 mkdirSync(join(ROOT, "data"), { recursive: true });
 const db = new Database(process.env.STORYTELLER_DB ?? join(ROOT, "data/storyteller.sqlite"));
 db.exec(readFileSync(join(ROOT, "db/schema.sql"), "utf8"));
@@ -69,13 +68,17 @@ const seed = db.transaction((work: WorkBuild) => {
   return { workId, questions: order };
 });
 
-for (const slug of SLUGS) {
-  const path = join(ROOT, `content/.build/${slug}.build.json`);
-  if (!existsSync(path)) {
-    console.error(`${path} 없음 — npm run content:build 먼저 실행할 것`);
-    process.exit(1);
+for (const entry of works().works) {
+  for (const locale of entry.locales) {
+    const path = buildPath(entry.slug, resolveLocale(entry.slug, locale));
+    if (!existsSync(path)) {
+      console.error(`${path} 없음 — npm run content:build 먼저 실행할 것`);
+      process.exit(1);
+    }
+    const work: WorkBuild = JSON.parse(readFileSync(path, "utf8"));
+    const { workId, questions } = seed(work);
+    console.log(
+      `${work.slug}/${work.locale}: work #${workId}, 문항 ${questions}개 시드 완료 (scoring_version ${work.scoring_version})`,
+    );
   }
-  const work: WorkBuild = JSON.parse(readFileSync(path, "utf8"));
-  const { workId, questions } = seed(work);
-  console.log(`${work.slug}: work #${workId}, 문항 ${questions}개 시드 완료 (scoring_version ${work.scoring_version})`);
 }
