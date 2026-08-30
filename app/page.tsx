@@ -2,7 +2,7 @@ import Link from "next/link";
 import { publishedWorks } from "@/lib/works";
 import { loadWork } from "@/lib/work-repo";
 import { currentUserId } from "@/lib/user";
-import { readWorks, accumulatedCoordinate } from "@/lib/reader";
+import { readWorks, accumulatedCoordinate, accumulatedCAxis } from "@/lib/reader";
 import { Illustration } from "@/components/Illustration";
 import { LocalLibrary } from "@/components/LocalLibrary";
 
@@ -15,6 +15,8 @@ export default async function Library() {
   const { coordinate, works: readCount } = userId
     ? accumulatedCoordinate(userId)
     : { coordinate: { A: 0, B: 0 }, works: 0 };
+  // C는 측정된 작품들만 모아 계산한다 — 페어가 없는 작품은 셈에서 빠진다
+  const acc = userId ? accumulatedCAxis(userId) : { value: null, works: 0, pairs: 0, changed: 0 };
 
   const shelf = publishedWorks().map((entry) => {
     const work = loadWork(entry.slug);
@@ -63,6 +65,13 @@ export default async function Library() {
             가로 {coordinate.A.toFixed(2)}, 세로 {coordinate.B.toFixed(2)}.
             작품을 더 읽을수록 이 점은 조금씩 움직입니다.
           </p>
+
+          {acc.value !== null ? (
+            <p className="note accum-c">
+              그리고 물음이 다시 왔을 때, {acc.works}편에 걸친 {acc.pairs}번 중{" "}
+              <b>{acc.changed}번</b> 답을 바꿨습니다.
+            </p>
+          ) : null}
         </section>
       ) : null}
 

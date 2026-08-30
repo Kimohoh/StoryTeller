@@ -110,24 +110,46 @@
       "no": 4,
       "title": "밝혀지는 장부",
       "illustration_key": "p4_ledger",
-      "question": {
-        "id": "q4",
-        "axis": "A",
-        "weight": 1.2,
-        "prompt": "당신은 그 돈을 어떻게 보는가?",
-        "choices": [
-          {
-            "id": "q4a",
-            "label": "내가 나서서 떠맡은 일이다. 아무도 시키지 않았다",
-            "value": 1
-          },
-          {
-            "id": "q4b",
-            "label": "나를 쓴 것이다. 알면서 말하지 않은 것이다",
-            "value": -1
-          }
-        ]
-      }
+      "questions": [
+        {
+          "id": "q4",
+          "axis": "A",
+          "weight": 1.2,
+          "prompt": "당신은 그 돈을 어떻게 보는가?",
+          "choices": [
+            {
+              "id": "q4a",
+              "label": "내가 나서서 떠맡은 일이다. 아무도 시키지 않았다",
+              "value": 1
+            },
+            {
+              "id": "q4b",
+              "label": "나를 쓴 것이다. 알면서 말하지 않은 것이다",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "id": "mc1pre",
+          "axis": "C",
+          "weight": 1.0,
+          "pair_id": "mc1",
+          "phase": "pre",
+          "prompt": "그 돈을 알고도 말하지 않은 것을, 당신은?",
+          "choices": [
+            {
+              "id": "mc1prea",
+              "label": "숨긴 것이다",
+              "value": 1
+            },
+            {
+              "id": "mc1preb",
+              "label": "말할 자리가 없었을 뿐이다",
+              "value": -1
+            }
+          ]
+        }
+      ]
     },
     {
       "no": 5,
@@ -156,70 +178,136 @@
       "no": 6,
       "title": "등에 박힌 사과",
       "illustration_key": "p6_apple",
-      "question": {
-        "id": "q6",
-        "axis": "A",
-        "weight": 1.0,
-        "prompt": "이 문틈을 어떻게 읽는가?",
-        "choices": [
-          {
-            "id": "q6a",
-            "label": "내가 짐이 되었다",
-            "value": 1
-          },
-          {
-            "id": "q6b",
-            "label": "저들이 변했다",
-            "value": -1
-          }
-        ]
-      }
+      "questions": [
+        {
+          "id": "q6",
+          "axis": "A",
+          "weight": 1.0,
+          "prompt": "이 문틈을 어떻게 읽는가?",
+          "choices": [
+            {
+              "id": "q6a",
+              "label": "내가 짐이 되었다",
+              "value": 1
+            },
+            {
+              "id": "q6b",
+              "label": "저들이 변했다",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "id": "mc2pre",
+          "axis": "C",
+          "weight": 1.0,
+          "pair_id": "mc2",
+          "phase": "pre",
+          "prompt": "등에 사과를 던진 그 손을, 당신은?",
+          "choices": [
+            {
+              "id": "mc2prea",
+              "label": "알고 한 일이다",
+              "value": 1
+            },
+            {
+              "id": "mc2preb",
+              "label": "순간의 일이다",
+              "value": -1
+            }
+          ]
+        }
+      ]
     },
     {
       "no": 7,
       "title": "바이올린",
       "illustration_key": "p7_violin",
-      "question": {
-        "id": "q7",
-        "axis": "B",
-        "weight": 1.0,
-        "prompt": "당신은?",
-        "choices": [
-          {
-            "id": "q7a",
-            "label": "기어나간다",
-            "value": 1
-          },
-          {
-            "id": "q7b",
-            "label": "방에 머문다",
-            "value": -1
-          }
-        ]
-      }
+      "questions": [
+        {
+          "id": "q7",
+          "axis": "B",
+          "weight": 1.0,
+          "prompt": "당신은?",
+          "choices": [
+            {
+              "id": "q7a",
+              "label": "기어나간다",
+              "value": 1
+            },
+            {
+              "id": "q7b",
+              "label": "방에 머문다",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "id": "mc1post",
+          "axis": "C",
+          "weight": 1.0,
+          "pair_id": "mc1",
+          "phase": "post",
+          "prompt": "그 돈에 대해 끝내 입을 열지 않은 가족을, 지금은 어떻게 보는가?",
+          "choices": [
+            {
+              "id": "mc1posta",
+              "label": "그때 이미 숨긴 것이었다",
+              "value": 1
+            },
+            {
+              "id": "mc1postb",
+              "label": "그때는 말할 자리가 없었을 뿐이다",
+              "value": -1
+            }
+          ]
+        }
+      ]
     },
     {
       "no": 8,
       "title": "저것을 없애야 해요",
       "illustration_key": "p8_declaration",
-      "question": {
-        "id": "q8",
-        "axis": "A",
-        "weight": 1.2,
-        "prompt": "그레테의 말에 대해, 당신은?",
-        "choices": [
-          {
-            "id": "q8a",
-            "label": "동생 말이 맞다",
-            "value": 1
-          },
-          {
-            "id": "q8b",
-            "label": "아니다",
-            "value": -1
-          }
-        ]
-      }
+      "questions": [
+        {
+          "id": "q8",
+          "axis": "A",
+          "weight": 1.2,
+          "prompt": "그레테의 말에 대해, 당신은?",
+          "choices": [
+            {
+              "id": "q8a",
+              "label": "동생 말이 맞다",
+              "value": 1
+            },
+            {
+              "id": "q8b",
+              "label": "아니다",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "id": "mc2post",
+          "axis": "C",
+          "weight": 1.0,
+          "pair_id": "mc2",
+          "phase": "post",
+          "prompt": "사과를 던졌던 그 손을, 지금은 어떻게 보는가?",
+          "choices": [
+            {
+              "id": "mc2posta",
+              "label": "그때 이미 정해져 있었다",
+              "value": 1
+            },
+            {
+              "id": "mc2postb",
+              "label": "그때는 순간의 일이었다",
+              "value": -1
+            }
+          ]
+        }
+      ]
     },
     {
       "no": 9,

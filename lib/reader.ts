@@ -5,7 +5,14 @@
  * 좌표가 아니라 원본 선택이다 — 완료된 세션들의 답을 그때그때 모아 계산한다.
  */
 import { getDb } from "./db";
-import { computeCoordinate, type Coordinate, type ScoringRule, type AnswerRef } from "./scoring";
+import {
+  computeCoordinate,
+  computeCAxis,
+  C_MIN_PAIRS,
+  type Coordinate,
+  type ScoringRule,
+  type AnswerRef,
+} from "./scoring";
 import type { AxisKey } from "./content-types";
 
 export interface ReadWork {
@@ -33,6 +40,70 @@ export function readWorks(userId: string): ReadWork[] {
     .all(userId) as ReadWork[];
 }
 
+/** 한 세션의 채점 규칙과 답을 DB에서 모은다. 좌표와 C가 같은 재료를 쓴다. */
+function sessionRules(sessionId: string): { rules: ScoringRule[]; answers: AnswerRef[] } {
+  const db = getDb();
+  const rows = db
+    .prepare(
+      `SELECT a.question_id, a.choice_id, q.axis, q.weight, q.pair_id, q.phase
+         FROM answers a JOIN questions q ON q.id = a.question_id
+        WHERE a.session_id = ?`,
+    )
+    .all(sessionId) as {
+      question_id: string; choice_id: string; axis: AxisKey;
+      weight: number; pair_id: string | null; phase: "pre" | "post" | null;
+    }[];
+
+  const rules: ScoringRule[] = [];
+  const answers: AnswerRef[] = [];
+  for (const r of rows) {
+    rules.push({
+      question_id: r.question_id,
+      axis: r.axis,
+      weight: r.weight,
+      pair_id: r.pair_id,
+      phase: r.phase,
+      choices: db.prepare("SELECT id, value FROM choices WHERE question_id = ?").all(r.question_id) as
+        { id: string; value: number }[],
+    });
+    answers.push({ question_id: r.question_id, choice_id: r.choice_id });
+  }
+  return { rules, answers };
+}
+
+/**
+ * 작품을 넘나드는 C축 (이방인 지시서 §1-3).
+ *
+ * C가 측정된 작품들만 모아 계산한다 — 페어가 없는 작품은 셈에서 빠진다.
+ * 작품별로 값을 낸 뒤 평균하므로, 페어가 많은 작품이 더 크게 말하지 않는다.
+ */
+export function accumulatedCAxis(userId: string): {
+  value: number | null;
+  works: number;
+  pairs: number;
+  changed: number;
+} {
+  const values: number[] = [];
+  let pairs = 0;
+  let changed = 0;
+
+  for (const s of readWorks(userId)) {
+    const { rules, answers } = sessionRules(s.session_id);
+    const c = computeCAxis(rules, answers);
+    if (c.value === null) continue;      // 페어가 둘 미만인 작품은 빠진다
+    values.push(c.value);
+    pairs += c.pairs.length;
+    changed += c.changed;
+  }
+
+  return {
+    value: values.length ? values.reduce((a, b) => a + b, 0) / values.length : null,
+    works: values.length,
+    pairs,
+    changed,
+  };
+}
+
 /**
  * 누적 좌표.
  *
@@ -43,30 +114,14 @@ export function readWorks(userId: string): ReadWork[] {
  * 좌표는 여전히 파생값이다 (spec §6). 저장하는 것은 원본 선택뿐이다.
  */
 export function accumulatedCoordinate(userId: string): { coordinate: Coordinate; works: number } {
-  const db = getDb();
   const sessions = readWorks(userId);
   if (sessions.length === 0) return { coordinate: { A: 0, B: 0 }, works: 0 };
 
   const perWork: Coordinate[] = [];
 
   for (const s of sessions) {
-    const rows = db
-      .prepare(
-        `SELECT a.question_id, a.choice_id, q.axis, q.weight
-           FROM answers a JOIN questions q ON q.id = a.question_id
-          WHERE a.session_id = ?`,
-      )
-      .all(s.session_id) as { question_id: string; choice_id: string; axis: AxisKey; weight: number }[];
-    if (rows.length === 0) continue;
-
-    const rules: ScoringRule[] = [];
-    const answers: AnswerRef[] = [];
-    for (const r of rows) {
-      const choices = db.prepare("SELECT id, value FROM choices WHERE question_id = ?").all(r.question_id) as
-        { id: string; value: number }[];
-      rules.push({ question_id: r.question_id, axis: r.axis, weight: r.weight, choices });
-      answers.push({ question_id: r.question_id, choice_id: r.choice_id });
-    }
+    const { rules, answers } = sessionRules(s.session_id);
+    if (answers.length === 0) continue;
     perWork.push(computeCoordinate(rules, answers));
   }
 
