@@ -35,6 +35,11 @@
 누르면 된다. 겁낼 것 없다 — 이 문서에서 치는 명령은 전부 무언가를 받아오거나
 확인하는 것뿐이고, 지우는 건 하나도 없다.
 
+> **`#` 뒤에 붙은 설명은 같이 붙여넣지 않는다.** 맥의 zsh는 터미널에 직접 칠 때
+> `#`을 주석으로 보지 않아서, `npm install # 2~3분` 을 통째로 붙이면 npm이 `#`을
+> 패키지 이름으로 받아 `Invalid tag name "#"` 이 난다. 명령은 항상 한 줄에
+> 하나씩, 설명은 빼고 넣는다.
+
 ## 2. Node와 Git이 깔려 있는지 확인
 
 ```bash
@@ -81,8 +86,10 @@ cd StoryTeller
 없다. 확인만 한다.
 
 ```bash
-git branch --show-current      # claude/spec-app-structure-vzwaxh 가 나와야 한다
+git branch --show-current
 ```
+
+`claude/spec-app-structure-vzwaxh` 가 나오면 맞다.
 
 ## 5. 안티그래비티에서 이 폴더 열기
 
@@ -107,11 +114,15 @@ npm install
 
 ## 7. cloudflared 깔기
 
-```bash
-# macOS
-brew install cloudflared
+macOS:
 
-# Windows (PowerShell)
+```bash
+brew install cloudflared
+```
+
+Windows (PowerShell):
+
+```powershell
 winget install --id Cloudflare.cloudflared
 ```
 
@@ -120,8 +131,10 @@ https://github.com/cloudflare/cloudflared/releases 에서 직접 받는다
 (mac은 `.pkg`, 윈도우는 `.msi`). 깐 뒤에는 **역시 안티그래비티를 껐다 켠다.**
 
 ```bash
-cloudflared --version      # 버전이 나오면 됐다
+cloudflared --version
 ```
+
+버전 숫자가 나오면 됐다.
 
 ## 8. 터미널을 두 개 쓰는 법
 
@@ -133,18 +146,24 @@ cloudflared --version      # 버전이 나오면 됐다
 
 여기까지 됐으면 [deploy.md의 1.3](./deploy.md)으로 간다. 남은 건 네 줄이다.
 
+터미널 ①:
+
 ```bash
 npm run build
-ADMIN_TOKEN=아무거나-긴-문자열 npm start     # 터미널 ①
+ADMIN_TOKEN=아무거나-긴-문자열 npm start
 ```
+
+터미널 ②:
+
 ```bash
-cloudflared tunnel --url http://localhost:3000   # 터미널 ②
+cloudflared tunnel --url http://localhost:3000
 ```
 
 ## 처음에만 겪는 것들
 
 | 증상 | 조치 |
 |---|---|
+| `Invalid tag name "#"` / `invalid option: --id` | 명령 뒤의 `#` 설명까지 같이 붙여넣은 것이다. 설명을 빼고 명령만 다시 |
 | 깔았는데 `command not found` | 안티그래비티를 껐다 켠다. 대부분 이거다 |
 | `npm start` 할 때 방화벽 허용 창 | **허용**을 누른다 (안 하면 터널이 앱에 못 붙는다) |
 | 윈도우에서 `ADMIN_TOKEN=... npm start` 가 안 먹는다 | PowerShell은 문법이 다르다. `$env:ADMIN_TOKEN="값"` 을 먼저 치고 그 다음 줄에 `npm start` |

@@ -52,11 +52,15 @@
 | 2 | **Git** | macOS는 `xcode-select --install`, 윈도우는 https://git-scm.com |
 | 3 | **cloudflared** | 아래 |
 
-```bash
-# macOS
-brew install cloudflared
+macOS:
 
-# Windows (PowerShell)
+```bash
+brew install cloudflared
+```
+
+Windows (PowerShell):
+
+```powershell
 winget install --id Cloudflare.cloudflared
 ```
 
@@ -69,19 +73,23 @@ brew나 winget이 없으면 https://github.com/cloudflare/cloudflared/releases �
 세 개가 다 들어왔는지 확인:
 
 ```bash
-node -v            # v20.x 이상
+node -v
 git --version
 cloudflared --version
 ```
+
+Node는 `v20` 이상이어야 한다.
 
 ## 1.2 레포 내려받기 (한 번만)
 
 ```bash
 git clone https://github.com/Kimohoh/StoryTeller.git
 cd StoryTeller
-npm install        # 2~3분. 처음 한 번만 오래 걸린다
-                   # 기본 브랜치가 이미 claude/spec-app-structure-vzwaxh 라 브랜치는 안 바꿔도 된다
+npm install
 ```
+
+`npm install`은 2~3분 걸린다. 기본 브랜치가 이미
+`claude/spec-app-structure-vzwaxh`라 브랜치는 바꾸지 않아도 된다.
 
 ## 1.3 터미널 ① — 앱 띄우기
 
@@ -187,15 +195,8 @@ https://<터널주소>/admin/enter?token=<ADMIN_TOKEN에 넣은 값>
 
 ### 1. flyctl 설치와 로그인
 
-```bash
-# macOS
-brew install flyctl
-# 또는
-curl -L https://fly.io/install.sh | sh
-
-fly auth signup     # 계정이 없으면
-fly auth login      # 있으면
-```
+macOS는 `brew install flyctl`, 아니면 `curl -L https://fly.io/install.sh | sh`.
+깐 뒤 계정이 없으면 `fly auth signup`, 있으면 `fly auth login`.
 
 카드 등록이 필요하다. 이 구성의 예상 비용은 **월 2달러 안팎**이다
 (shared-cpu-1x 머신 약 $1.9 + 볼륨 1GB $0.15).
@@ -226,7 +227,7 @@ fly volumes create storyteller_data --region nrt --size 1
 
 ```bash
 fly deploy
-fly scale count 1     # 볼륨이 하나이므로 머신도 하나
+fly scale count 1
 fly secrets set ADMIN_TOKEN=아무거나-긴-문자열
 fly open
 ```
@@ -256,8 +257,8 @@ works·questions·choices를 upsert한다. 배포할 때마다 문항·축·가�
 ### ① 뜨는가
 
 ```bash
-fly status          # 머신 1대, started
-fly logs            # 부팅 로그에 에러가 없는지
+fly status
+fly logs
 ```
 
 브라우저로 열어 **서재에 작품이 보이면** 콘텐츠 빌드와 파일 복사가 맞은 것이다.
