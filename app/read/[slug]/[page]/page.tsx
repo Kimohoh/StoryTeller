@@ -5,7 +5,7 @@ import { currentSessionId } from "@/lib/session-cookie";
 import { getAnswers, getSession } from "@/lib/session-repo";
 import { Illustration } from "@/components/Illustration";
 import { Prose } from "@/components/Prose";
-import { ChoiceGroup } from "@/components/ChoiceGroup";
+import { QuestionBlock } from "@/components/QuestionBlock";
 import { PrefetchPages } from "@/components/PrefetchPages";
 
 export default async function ReadPage({
@@ -29,10 +29,11 @@ export default async function ReadPage({
   const sessionId = await currentSessionId(slug);
   if (!sessionId || !getSession(sessionId)) redirect(`/w/${slug}`);
 
-  const answered = new Map(getAnswers(sessionId).map((a) => [a.question_id, a.choice_id]));
-  const questionPages = payload.pages.filter((p) => p.question);
-  const isLastQuestion =
-    current.question?.id === questionPages[questionPages.length - 1].question!.id;
+  const answered = Object.fromEntries(
+    getAnswers(sessionId).map((a) => [a.question_id, a.choice_id]),
+  );
+  const allQuestions = payload.pages.flatMap((p) => p.questions);
+  const lastQuestionId = allQuestions.length ? allQuestions[allQuestions.length - 1].id : null;
   const nextNo = pageNo + 1;
   const hasNext = payload.pages.some((p) => p.no === nextNo);
 
@@ -59,18 +60,14 @@ export default async function ReadPage({
 
       <Prose paragraphs={current.body} />
 
-      {current.question ? (
-        <section className="question">
-          <p className="question-prompt">{current.question.prompt}</p>
-          <ChoiceGroup
-            sessionId={sessionId}
-            questionId={current.question.id}
-            choices={current.question.choices}
-            nextHref={hasNext ? `/read/${slug}/${nextNo}` : `/result/${sessionId}`}
-            isLast={Boolean(isLastQuestion)}
-            picked={answered.get(current.question.id) ?? null}
-          />
-        </section>
+      {current.questions.length > 0 ? (
+        <QuestionBlock
+          sessionId={sessionId}
+          questions={current.questions}
+          picked={answered}
+          nextHref={hasNext ? `/read/${slug}/${nextNo}` : `/result/${sessionId}`}
+          lastQuestionId={lastQuestionId}
+        />
       ) : hasNext ? (
         <Link className="next" href={`/read/${slug}/${nextNo}`}>
           계속

@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { WorkSource, WorkBuild, BuiltPage, AxisKey } from "../lib/content-types";
+import type { WorkSource, WorkBuild, BuiltPage, AxisKey, QuestionSource } from "../lib/content-types";
 import { works, resolveLocale, sourcePath, buildPath, globalAxes } from "../lib/works";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -30,11 +30,16 @@ interface MdSection {
   lines: string[];
 }
 
+interface MdQuestion {
+  prompt: string;
+  choices: string[];
+}
+
 interface MdPage {
   no: number;
   title: string;
   body: string[];
-  question: { prompt: string; choices: string[] } | null;
+  questions: MdQuestion[];
 }
 
 function splitSections(md: string): MdSection[] {
@@ -53,7 +58,7 @@ function splitSections(md: string): MdSection[] {
 }
 
 /** "> **Q1.** 이 아침…" + "> - **A.** …" 블록을 뜯는다. */
-function parseQuestionBlock(quote: string[]): MdPage["question"] {
+function parseQuestionBlock(quote: string[]): MdQuestion | null {
   if (quote.length === 0) return null;
   const stripped = quote.map((l) => l.replace(/^>\s?/, "").trim()).filter(Boolean);
   const promptLine = stripped.find((l) => /^\*\*Q\d+\.\*\*/.test(l));
@@ -75,18 +80,25 @@ function parsePages(sections: MdSection[]): MdPage[] {
     const rawTitle = m[2].trim();
     const title = /^\(.*\)$/.test(rawTitle) ? "" : rawTitle.replace(/^"|"$/g, "");
 
+    // 인용 블록은 여럿일 수 있다 — 한 페이지에 문항 둘이 오는 장면이 있다
     const body: string[] = [];
-    const quote: string[] = [];
+    const blocks: string[][] = [];
+    let current: string[] | null = null;
     for (const line of s.lines) {
       if (line.trim() === "---") break;
-      if (line.startsWith(">")) quote.push(line);
-      else if (quote.length === 0) body.push(line);
+      if (line.startsWith(">")) {
+        if (!current) { current = []; blocks.push(current); }
+        current.push(line);
+      } else {
+        current = null;
+        if (blocks.length === 0) body.push(line);
+      }
     }
     pages.push({
       no,
       title,
       body: trimBlank(body),
-      question: parseQuestionBlock(quote),
+      questions: blocks.map(parseQuestionBlock).filter((q): q is MdQuestion => q !== null),
     });
   }
   return pages;
@@ -136,7 +148,11 @@ interface ResultsFile {
  * draft는 실패가 아니라 경고 — 골격만 세워둔 상태로도 앱은 돌아가야 하니까.
  */
 function validateResults(src: WorkSource, res: ResultsFile) {
-  const choiceIds = src.pages.flatMap((p) => p.question?.choices.map((c) => c.id) ?? []);
+  const choiceIds = src.pages.flatMap((p) =>
+    ((p.questions ?? (p.question ? [p.question] : [])) as QuestionSource[]).flatMap((q) =>
+      q.choices.map((c) => c.id),
+    ),
+  );
 
   for (const key of Object.keys(src.types)) {
     const t = res.types[key];
@@ -198,42 +214,77 @@ function validate(
       fail(`${at(page.no)} illustration_key "${page.illustration_key}"가 manifest의 ${src.slug}에 없다`);
     }
 
-    const q = page.question;
-    if (!q) {
-      if (md.question) fail(`${at(page.no)} md엔 질문이 있는데 json엔 없다`);
+    const qs = questionsOf(page);
+    if (qs.length !== md.questions.length) {
+      fail(`${at(page.no)} 문항 개수 불일치: md ${md.questions.length}개 vs json ${qs.length}개`);
       continue;
     }
-    if (!md.question) {
-      fail(`${at(page.no)} json엔 질문이 있는데 md엔 없다`);
-      continue;
-    }
-    if (md.question.prompt !== q.prompt) {
-      fail(`${at(page.no)} ${q.id} 질문 문구 불일치:\n    md   "${md.question.prompt}"\n    json "${q.prompt}"`);
-    }
-    if (q.choices.length !== 2) fail(`${at(page.no)} ${q.id} 선택지가 2개가 아니다`);
-    if (md.question.choices.length !== q.choices.length) {
-      fail(`${at(page.no)} ${q.id} 선택지 개수 불일치`);
-    } else {
-      q.choices.forEach((c, i) => {
-        if (c.label !== md.question!.choices[i]) {
-          fail(`${at(page.no)} ${c.id} 선택지 문구 불일치:\n    md   "${md.question!.choices[i]}"\n    json "${c.label}"`);
-        }
-      });
-    }
-    const values = q.choices.map((c) => c.value).sort((a, b) => a - b);
-    if (values.join(",") !== "-1,1") {
-      fail(`${at(page.no)} ${q.id} value는 -1과 +1 한 쌍이어야 한다 (현재 ${values.join(",")})`);
-    }
-    if (!(q.weight > 0)) fail(`${at(page.no)} ${q.id} weight가 0 이하다`);
-    if (!(q.axis in axes)) fail(`${at(page.no)} ${q.id} 미정의 축 "${q.axis}" — content/axes.json에 없다`);
-    axisOrder.push(q.axis);
+
+    qs.forEach((q, qi) => {
+      const mq = md.questions[qi];
+      if (mq.prompt !== q.prompt) {
+        fail(`${at(page.no)} ${q.id} 질문 문구 불일치:\n    md   "${mq.prompt}"\n    json "${q.prompt}"`);
+      }
+      if (q.choices.length !== 2) fail(`${at(page.no)} ${q.id} 선택지가 2개가 아니다`);
+      if (mq.choices.length !== q.choices.length) {
+        fail(`${at(page.no)} ${q.id} 선택지 개수 불일치`);
+      } else {
+        q.choices.forEach((c, i) => {
+          if (c.label !== mq.choices[i]) {
+            fail(`${at(page.no)} ${c.id} 선택지 문구 불일치:\n    md   "${mq.choices[i]}"\n    json "${c.label}"`);
+          }
+        });
+      }
+      const values = q.choices.map((c) => c.value).sort((a, b) => a - b);
+      if (values.join(",") !== "-1,1") {
+        fail(`${at(page.no)} ${q.id} value는 -1과 +1 한 쌍이어야 한다 (현재 ${values.join(",")})`);
+      }
+      if (!(q.weight > 0)) fail(`${at(page.no)} ${q.id} weight가 0 이하다`);
+      if (!(q.axis in axes)) fail(`${at(page.no)} ${q.id} 미정의 축 "${q.axis}" — content/axes.json에 없다`);
+
+      // C축은 반드시 페어로 온다
+      if (q.axis === "C") {
+        if (!q.pair_id || !q.phase) fail(`${at(page.no)} ${q.id} C축 문항에 pair_id/phase가 없다`);
+      } else if (q.pair_id || q.phase) {
+        fail(`${at(page.no)} ${q.id} C축이 아닌데 pair_id/phase가 있다`);
+      }
+      axisOrder.push(q.axis);
+    });
   }
 
-  // spec §4 — B-A-B-A 교차. 한 축이 몰리면 사람들이 앞 답에 맞춰 일관성을 만든다.
+  // C 페어: pre 하나 + post 하나, pre가 먼저 와야 한다
+  const pairs = new Map<string, { pre?: number; post?: number }>();
+  for (const page of src.pages) {
+    for (const q of questionsOf(page)) {
+      if (q.axis !== "C" || !q.pair_id || !q.phase) continue;
+      const slot = pairs.get(q.pair_id) ?? {};
+      if (slot[q.phase] !== undefined) fail(`페어 "${q.pair_id}"에 ${q.phase}가 둘이다`);
+      slot[q.phase] = page.no;
+      pairs.set(q.pair_id, slot);
+    }
+  }
+  for (const [id, slot] of pairs) {
+    if (slot.pre === undefined || slot.post === undefined) {
+      fail(`페어 "${id}"가 짝이 없다 — pre와 post가 하나씩 있어야 한다`);
+    } else if (slot.pre >= slot.post) {
+      fail(`페어 "${id}"의 pre(${slot.pre}p)가 post(${slot.post}p)보다 앞서지 않는다`);
+    }
+  }
+  if (pairs.size === 1) {
+    warn(`${src.slug}: C 페어가 하나뿐이다 — 둘 미만이면 결과 화면에서 C가 표시되지 않는다`);
+  }
+
+  // spec §4 — 한 축이 몰리면 사람들이 앞 답에 맞춰 일관성을 만들어 좌표가 뭉개진다.
+  // 축이 셋이 되면서 완전 교차는 못 지키므로, 셋 연속을 막고 둘 연속은 경고만 한다.
+  for (let i = 2; i < axisOrder.length; i++) {
+    if (axisOrder[i] === axisOrder[i - 1] && axisOrder[i] === axisOrder[i - 2]) {
+      fail(`${axisOrder[i]}축 문항이 세 번 연속이다 (${i - 1}~${i + 1}번째) — 앞 답에 맞춘 일관성이 생긴다 (spec §4)`);
+      break;
+    }
+  }
   for (let i = 1; i < axisOrder.length; i++) {
     if (axisOrder[i] === axisOrder[i - 1]) {
-      fail(`축 교차 위반: ${i}번째와 ${i + 1}번째 문항이 둘 다 ${axisOrder[i]}축이다 (spec §4)`);
-      break;
+      warn(`${axisOrder[i]}축 문항이 연속이다 (${i}~${i + 1}번째) — 가능하면 사이에 다른 축을 넣을 것`);
     }
   }
 
@@ -254,6 +305,11 @@ const manifest: Record<string, Record<string, unknown>> = existsSync(manifestPat
   : (fail("assets/illustrations/manifest.json이 없다"), {});
 
 const axes = globalAxes();
+
+/** 소스는 question 하나만 써도 되고 questions 배열을 써도 된다. 여기서 배열로 통일한다. */
+const questionsOf = (p: { question?: unknown; questions?: unknown }): QuestionSource[] =>
+  (p.questions as QuestionSource[] | undefined) ??
+  ((p.question ? [p.question] : []) as QuestionSource[]);
 
 /** questions.id / choices.id는 전역 PK다 — 작품이 늘면 여기서 부딪힌다 */
 const seenIds = new Map<string, string>();
@@ -277,9 +333,10 @@ for (const entry of works().works) {
     validate(src, mdPages, manifest[slug] ?? {}, axes);
 
     for (const page of src.pages) {
-      if (!page.question) continue;
-      claimId(page.question.id, `${slug}/${resolved}`);
-      for (const c of page.question.choices) claimId(c.id, `${slug}/${resolved}`);
+      for (const q of questionsOf(page)) {
+        claimId(q.id, `${slug}/${resolved}`);
+        for (const c of q.choices) claimId(c.id, `${slug}/${resolved}`);
+      }
     }
 
     const results: ResultsFile = JSON.parse(
@@ -287,10 +344,14 @@ for (const entry of works().works) {
     );
     validateResults(src, results);
 
-    const pages: BuiltPage[] = src.pages.map((p) => ({
-      ...p,
-      body: toParagraphs(mdPages.find((m) => m.no === p.no)?.body ?? []),
-    }));
+    const pages: BuiltPage[] = src.pages.map((p) => {
+      const { question: _drop, ...rest } = p;
+      return {
+        ...rest,
+        questions: questionsOf(p),
+        body: toParagraphs(mdPages.find((m) => m.no === p.no)?.body ?? []),
+      };
+    });
 
     const build: WorkBuild = {
       ...src,
@@ -307,7 +368,7 @@ for (const entry of works().works) {
       writeFileSync(out, JSON.stringify(build, null, 2) + "\n");
     }
     console.log(
-      `${slug}/${resolved}: ${pages.length}장, 문항 ${src.pages.filter((p) => p.question).length}개` +
+      `${slug}/${resolved}: ${pages.length}장, 문항 ${pages.reduce((n, p) => n + p.questions.length, 0)}개` +
         (CHECK_ONLY ? " (검증만)" : " → content/.build/"),
     );
   }

@@ -1,6 +1,6 @@
 {
   "slug": "metamorphosis",
-  "scoring_version": 1,
+  "scoring_version": 2,
   "_note": "결과 화면 전용. 축·가중치·진단문이 여기 있고, 이 파일은 8문항을 다 답한 뒤에만 클라이언트로 나간다. 읽는 중 payload에는 축이 존재하지 않는다 (spec §2).",
   "proximity_threshold": 0.35,
   "_proximity_note": "1순위 유형과 2순위 유형의 거리 차가 이 값보다 작으면 '한 뼘 거리' 문구가 붙는다. 4분면 하드컷 금지 (spec §8). 데이터가 쌓이면 이 숫자부터 조정한다.",

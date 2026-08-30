@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { computeCoordinate, diagnose, pickQuotedChoice, type ScoringRule } from "../lib/scoring";
+import { computeCoordinate, computeCAxis, diagnose, pickQuotedChoice, type ScoringRule } from "../lib/scoring";
 import type { TypeSource } from "../lib/content-types";
 
 const rules: ScoringRule[] = [
@@ -95,4 +95,64 @@ test("인용문 동점은 가장 오래 망설인 문항으로 가른다", () =>
     { question_id: "qB", choice_id: "qBa" },
   ];
   assert.equal(pickQuotedChoice(tied, noDwell, types.violin)?.choice_id, "qAa");
+});
+
+/* ---------- C축 ---------- */
+
+const cRules: ScoringRule[] = [
+  { question_id: "c1pre", axis: "C", weight: 1, pair_id: "c1", phase: "pre",
+    choices: [{ id: "c1pre-a", value: 1 }, { id: "c1pre-b", value: -1 }] },
+  { question_id: "c2pre", axis: "C", weight: 1, pair_id: "c2", phase: "pre",
+    choices: [{ id: "c2pre-a", value: 1 }, { id: "c2pre-b", value: -1 }] },
+  { question_id: "c1post", axis: "C", weight: 1, pair_id: "c1", phase: "post",
+    choices: [{ id: "c1post-a", value: 1 }, { id: "c1post-b", value: -1 }] },
+  { question_id: "c2post", axis: "C", weight: 1, pair_id: "c2", phase: "post",
+    choices: [{ id: "c2post-a", value: 1 }, { id: "c2post-b", value: -1 }] },
+];
+const ans = (pairs: [string, string][]) =>
+  pairs.map(([question_id, choice_id]) => ({ question_id, choice_id }));
+
+test("C축은 전후 응답이 달라졌는지로 잰다 — 선택지 자체의 방향이 아니다", () => {
+  const bothChanged = computeCAxis(cRules, ans([
+    ["c1pre", "c1pre-a"], ["c1post", "c1post-b"],
+    ["c2pre", "c2pre-b"], ["c2post", "c2post-a"],
+  ]));
+  assert.equal(bothChanged.value, 1);
+  assert.equal(bothChanged.changed, 2);
+
+  const bothKept = computeCAxis(cRules, ans([
+    ["c1pre", "c1pre-a"], ["c1post", "c1post-a"],
+    ["c2pre", "c2pre-b"], ["c2post", "c2post-b"],
+  ]));
+  assert.equal(bothKept.value, -1);
+
+  const mixed = computeCAxis(cRules, ans([
+    ["c1pre", "c1pre-a"], ["c1post", "c1post-b"],
+    ["c2pre", "c2pre-b"], ["c2post", "c2post-b"],
+  ]));
+  assert.equal(mixed.value, 0);
+});
+
+test("페어가 둘 미만이면 C를 내지 않는다 — 하나로는 노이즈와 구별이 안 된다", () => {
+  const one = computeCAxis(cRules, ans([["c1pre", "c1pre-a"], ["c1post", "c1post-b"]]));
+  assert.equal(one.value, null);
+  assert.equal(one.pairs.length, 1);
+});
+
+test("짝이 안 맞는 페어는 통째로 빠진다", () => {
+  const half = computeCAxis(cRules, ans([
+    ["c1pre", "c1pre-a"], ["c1post", "c1post-b"],
+    ["c2pre", "c2pre-a"],                          // post 없음
+  ]));
+  assert.equal(half.pairs.length, 1);
+  assert.equal(half.value, null);
+});
+
+test("C축 문항은 A·B 좌표에 섞이지 않는다", () => {
+  const mixedRules = [...rules, ...cRules];
+  const co = computeCoordinate(mixedRules, [
+    ...ans([["c1pre", "c1pre-a"], ["c1post", "c1post-a"]]),
+    { question_id: "q2", choice_id: "q2a" },
+  ]);
+  assert.deepEqual(co, { A: 1, B: 0 });
 });

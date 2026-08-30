@@ -26,11 +26,12 @@ const upsertWork = db.prepare(`
     axes = excluded.axes
 `);
 const upsertQuestion = db.prepare(`
-  INSERT INTO questions (id, work_id, page_no, "order", axis, weight)
-  VALUES (@id, @work_id, @page_no, @order, @axis, @weight)
+  INSERT INTO questions (id, work_id, page_no, "order", axis, weight, pair_id, phase)
+  VALUES (@id, @work_id, @page_no, @order, @axis, @weight, @pair_id, @phase)
   ON CONFLICT(id) DO UPDATE SET
     page_no = excluded.page_no, "order" = excluded."order",
-    axis = excluded.axis, weight = excluded.weight
+    axis = excluded.axis, weight = excluded.weight,
+    pair_id = excluded.pair_id, phase = excluded.phase
 `);
 const upsertChoice = db.prepare(`
   INSERT INTO choices (id, question_id, label, value)
@@ -51,18 +52,15 @@ const seed = db.transaction((work: WorkBuild) => {
 
   let order = 0;
   for (const page of work.pages) {
-    if (!page.question) continue;
-    const q = page.question;
-    upsertQuestion.run({
-      id: q.id,
-      work_id: workId,
-      page_no: page.no,
-      order: order++,
-      axis: q.axis,
-      weight: q.weight,
-    });
-    for (const c of q.choices) {
-      upsertChoice.run({ id: c.id, question_id: q.id, label: c.label, value: c.value });
+    for (const q of page.questions) {
+      upsertQuestion.run({
+        id: q.id, work_id: workId, page_no: page.no, order: order++,
+        axis: q.axis, weight: q.weight,
+        pair_id: q.pair_id ?? null, phase: q.phase ?? null,
+      });
+      for (const c of q.choices) {
+        upsertChoice.run({ id: c.id, question_id: q.id, label: c.label, value: c.value });
+      }
     }
   }
   return { workId, questions: order };

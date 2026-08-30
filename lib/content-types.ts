@@ -8,7 +8,16 @@
  *    아예 없고, 결과 요청 시점에 ResultPayload로 처음 등장한다.
  */
 
-export type AxisKey = "A" | "B";
+export type AxisKey = "A" | "B" | "C";
+
+/**
+ * 좌표평면에 놓이는 축. 유형은 이 둘로만 만든다 — A·B·C를 8분면으로 합치면
+ * 유형 인구가 반으로 갈리고, 코멘트 밀도가 이 앱의 자산이다 (이방인 지시서 §1-4).
+ */
+export type PlaneAxis = "A" | "B";
+
+/** C축 문항만 갖는다. 같은 것을 전반부·후반부에 한 번씩 묻는다. */
+export type Phase = "pre" | "post";
 
 /** content/<slug>/<locale>.json — 저작용. 서버에만 있고 통째로 나가는 일이 없다. */
 export interface WorkSource {
@@ -32,14 +41,17 @@ export interface AxisSource {
 
 export interface TypeSource {
   name: string;
-  axis: Record<AxisKey, "pos" | "neg">;
+  axis: Record<PlaneAxis, "pos" | "neg">;
 }
 
 export interface PageSource {
   no: number;
   title: string;
   illustration_key: string | null;
-  question: QuestionSource | null;
+  /** 문항 하나뿐인 페이지는 이렇게 써도 된다. 빌드가 배열로 정규화한다. */
+  question?: QuestionSource | null;
+  /** 한 페이지에 둘 이상이면 이쪽 */
+  questions?: QuestionSource[];
   note?: string;
 }
 
@@ -49,6 +61,9 @@ export interface QuestionSource {
   weight: number;
   prompt: string;
   choices: ChoiceSource[];
+  /** C축 페어. 같은 페어의 pre와 post 응답이 달라졌는지가 점수가 된다. */
+  pair_id?: string;
+  phase?: Phase;
 }
 
 export interface ChoiceSource {
@@ -69,9 +84,11 @@ export interface WorkBuild extends WorkSource {
   pages: BuiltPage[];
 }
 
-export interface BuiltPage extends PageSource {
+export interface BuiltPage extends Omit<PageSource, "question" | "questions"> {
   /** md에서 뽑은 산문. 질문 블록은 제거된 상태. */
   body: string[];
+  /** 빌드가 정규화한다 — 문항이 없으면 빈 배열이다. */
+  questions: QuestionSource[];
 }
 
 /* ---------- 클라이언트로 나가는 것 ---------- */
@@ -93,7 +110,8 @@ export interface ReadingPage {
   title: string;
   illustration_key: string | null;
   body: string[];
-  question: ReadingQuestion | null;
+  /** 축도 가중치도 페어도 없다 — 읽는 중에는 무엇을 재는지 알 수 없어야 한다 */
+  questions: ReadingQuestion[];
 }
 
 export interface ReadingQuestion {

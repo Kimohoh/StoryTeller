@@ -5,6 +5,7 @@ import type {
   ReadingPayload,
   ReadingPage,
   AxisKey,
+  Phase,
   TypeSource,
 } from "./content-types";
 import type { ScoringRule } from "./scoring";
@@ -55,13 +56,11 @@ export function readingPayload(slug: string): ReadingPayload {
     title: p.title,
     illustration_key: p.illustration_key,
     body: p.body,
-    question: p.question
-      ? {
-          id: p.question.id,
-          prompt: p.question.prompt,
-          choices: p.question.choices.map((c) => ({ id: c.id, label: c.label })),
-        }
-      : null,
+    questions: p.questions.map((q) => ({
+      id: q.id,
+      prompt: q.prompt,
+      choices: q.choices.map((c) => ({ id: c.id, label: c.label })),
+    })),
   }));
   const payload: ReadingPayload = {
     slug: w.slug,
@@ -74,7 +73,7 @@ export function readingPayload(slug: string): ReadingPayload {
   return payload;
 }
 
-const FORBIDDEN = ["axis", "axes", "weight", "value", "types", "label_internal"];
+const FORBIDDEN = ["axis", "axes", "weight", "value", "types", "label_internal", "pair_id", "phase"];
 
 /** 읽기 payload에 축 관련 키가 하나라도 있으면 개발 중에 터진다. */
 export function assertNoAxisLeak(payload: unknown): void {
@@ -98,14 +97,18 @@ export function scoringRules(slug: string): ScoringRule[] {
   if (!work) throw new Error(`works에 ${slug} 없음 — npm run db:seed`);
 
   const qs = db
-    .prepare('SELECT id, axis, weight FROM questions WHERE work_id = ? ORDER BY "order"')
-    .all(work.id) as { id: string; axis: AxisKey; weight: number }[];
+    .prepare('SELECT id, axis, weight, pair_id, phase FROM questions WHERE work_id = ? ORDER BY "order"')
+    .all(work.id) as {
+      id: string; axis: AxisKey; weight: number; pair_id: string | null; phase: Phase | null;
+    }[];
   const getChoices = db.prepare("SELECT id, value FROM choices WHERE question_id = ?");
 
   return qs.map((q) => ({
     question_id: q.id,
     axis: q.axis,
     weight: q.weight,
+    pair_id: q.pair_id,
+    phase: q.phase,
     choices: getChoices.all(q.id) as { id: string; value: number }[],
   }));
 }

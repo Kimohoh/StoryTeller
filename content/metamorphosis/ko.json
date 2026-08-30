@@ -4,7 +4,7 @@
   "subtitle": "프란츠 카프카 『변신』",
   "public_domain": true,
   "author_died": 1924,
-  "scoring_version": 1,
+  "scoring_version": 2,
   "_axes": "content/axes.json 참조. 문항의 axis 값이 그 키를 가리킨다.",
   "types": {
     "violin": {

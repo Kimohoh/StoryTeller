@@ -20,7 +20,11 @@ CREATE TABLE IF NOT EXISTS questions (
   "order"  INTEGER NOT NULL,
   -- 축이 코드가 아니라 테이블에 있는 게 핵심이다. 튜닝이 배포가 아니라 데이터 수정이 된다.
   axis     TEXT    NOT NULL,
-  weight   REAL    NOT NULL CHECK (weight > 0)
+  weight   REAL    NOT NULL CHECK (weight > 0),
+  -- C축 전용. 같은 것을 전반부·후반부에 한 번씩 묻고 두 응답이 달라졌는지를 잰다.
+  -- A·B 문항은 둘 다 NULL이다.
+  pair_id  TEXT,
+  phase    TEXT CHECK (phase IN ('pre', 'post'))
 );
 CREATE INDEX IF NOT EXISTS idx_questions_work ON questions(work_id, "order");
 
@@ -51,6 +55,10 @@ CREATE TABLE IF NOT EXISTS answers (
   -- 3초 만에 넘어가는 문항은 축을 못 재고 있는 것.
   answered_at TEXT    NOT NULL,
   dwell_ms    INTEGER,
+  -- 문항 쪽 값을 답변에도 박아둔다. 나중에 문항의 페어 구성이 바뀌어도
+  -- 그때 그 사람이 무엇의 전·후로 답했는지가 남아야 소급 재계산이 된다.
+  pair_id     TEXT,
+  phase       TEXT CHECK (phase IN ('pre', 'post')),
   PRIMARY KEY (session_id, question_id)
 );
 

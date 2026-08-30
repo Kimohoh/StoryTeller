@@ -2,7 +2,14 @@
  * 결과 payload. 축이 여기서 처음 등장한다.
  * 이 모듈이 읽는 중 코드 경로에서 import되면 안 된다.
  */
-import { computeCoordinate, diagnose, pickQuotedChoice, type Coordinate } from "./scoring";
+import {
+  computeCoordinate,
+  computeCAxis,
+  diagnose,
+  pickQuotedChoice,
+  C_MIN_PAIRS,
+  type Coordinate,
+} from "./scoring";
 import { loadWork, loadResults, scoringRules } from "./work-repo";
 import { getAnswers } from "./session-repo";
 
@@ -23,10 +30,28 @@ export interface ResultPayload {
   quote: string | null;
   /** Ungeziefer 반전. 빼지 말 것 (spec §4). */
   ending_reveal: string[];
+  /**
+   * C축. 페어가 둘 미만이면 null이고 화면에 아예 뜨지 않는다 —
+   * 하나로는 노이즈와 구별되지 않는다 (이방인 지시서 §1-3).
+   */
+  c: CBlock | null;
   /** 진단문이 아직 초고 미작성인가 — 화면에 그대로 표시한다 */
   draft: boolean;
   answered: number;
   total: number;
+}
+
+export interface CBlock {
+  /** −1.0(두 번 다 지킴) ~ +1.0(두 번 다 바꿈) */
+  value: number;
+  pairs_total: number;
+  pairs_changed: number;
+  /** 실제 전후 응답. C축의 증거이자 이 화면에서 가장 강한 부분이다. */
+  evidence: {
+    pre: { page_no: number; label: string };
+    post: { page_no: number; label: string };
+    changed: boolean;
+  }[];
 }
 
 export function buildResult(slug: string, sessionId: string): ResultPayload {
@@ -43,6 +68,35 @@ export function buildResult(slug: string, sessionId: string): ResultPayload {
   const quote = quoted ? (results.choice_quotes[quoted.choice_id] ?? null) : null;
 
   const copy = results.types[verdict.primary.key];
+
+  // C축 — 페어의 전후 응답을 실제 문장으로 되돌린다
+  const cScore = computeCAxis(rules, answers);
+  let c: CBlock | null = null;
+  if (cScore.value !== null && cScore.pairs.length >= C_MIN_PAIRS) {
+    const located = new Map<string, { page_no: number; labels: Map<string, string> }>();
+    for (const page of work.pages) {
+      for (const q of page.questions) {
+        located.set(q.id, {
+          page_no: page.no,
+          labels: new Map(q.choices.map((ch) => [ch.id, ch.label])),
+        });
+      }
+    }
+    const side = (ref: { question_id: string; choice_id: string }) => {
+      const at = located.get(ref.question_id);
+      return { page_no: at?.page_no ?? 0, label: at?.labels.get(ref.choice_id) ?? "" };
+    };
+    c = {
+      value: cScore.value,
+      pairs_total: cScore.pairs.length,
+      pairs_changed: cScore.changed,
+      evidence: cScore.pairs.map((p) => ({
+        pre: side(p.pre),
+        post: side(p.post),
+        changed: p.changed,
+      })),
+    };
+  }
 
   return {
     slug,
@@ -67,9 +121,10 @@ export function buildResult(slug: string, sessionId: string): ResultPayload {
     paragraphs: copy?.paragraphs ?? [],
     quote,
     ending_reveal: work.ending_reveal,
+    c,
     draft: Boolean(copy?.draft),
     answered: answers.length,
-    total: work.pages.filter((p) => p.question).length,
+    total: work.pages.reduce((n, p) => n + p.questions.length, 0),
   };
 }
 
@@ -97,8 +152,7 @@ export function buildOthers(slug: string, sessionId: string): OtherSide[] {
 
   const out: OtherSide[] = [];
   for (const page of work.pages) {
-    const q = page.question;
-    if (!q) continue;
+    for (const q of page.questions) {
     const mineId = picked.get(q.id);
     const mineChoice = q.choices.find((c) => c.id === mineId) ?? null;
     const otherChoice = q.choices.find((c) => c.id !== mineId);
@@ -112,6 +166,7 @@ export function buildOthers(slug: string, sessionId: string): OtherSide[] {
       other: { label: otherChoice.label, body: arg(otherChoice.id) },
       mine: mineChoice ? { label: mineChoice.label, body: arg(mineChoice.id) } : null,
     });
+    }
   }
   return out;
 }

@@ -62,7 +62,7 @@ const data = {
     title: p.title,
     body: p.body,
     illustration_key: p.illustration_key,
-    question: p.question,
+    questions: p.questions,
   })),
 };
 

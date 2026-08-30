@@ -7,6 +7,7 @@ import { workTypes, loadWork } from "@/lib/work-repo";
 import { CoordinatePlot } from "@/components/CoordinatePlot";
 import { ResultActions } from "@/components/ResultActions";
 import { PendingNotice } from "@/components/PendingNotice";
+import { CAxisBlock } from "@/components/CAxisBlock";
 import { Prose } from "@/components/Prose";
 import { josa } from "@/lib/josa";
 
@@ -68,6 +69,9 @@ export default async function ResultPage({
       <Prose paragraphs={r.paragraphs.slice(1)} />
 
       {/* Ungeziefer 반전. 제목의 "바퀴벌레"를 회수하는 장치이므로 진단문의 맨 마지막에 둔다. */}
+      {/* 4분면과 합치지 않고 아래에 따로 세운다 */}
+      {r.c ? <CAxisBlock c={r.c} /> : null}
+
       <section className="reveal">
         <Prose paragraphs={r.ending_reveal} className="" />
       </section>

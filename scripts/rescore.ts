@@ -38,25 +38,29 @@ if (!work) {
 
 /** 새 규칙: DB의 현재 axis/weight를 진실로 본다 */
 const rules: ScoringRule[] = (
-  db.prepare('SELECT id, axis, weight FROM questions WHERE work_id = ? ORDER BY "order"').all(work.id) as
-    { id: string; axis: "A" | "B"; weight: number }[]
+  db.prepare('SELECT id, axis, weight, pair_id, phase FROM questions WHERE work_id = ? ORDER BY "order"').all(work.id) as
+    { id: string; axis: "A" | "B" | "C"; weight: number; pair_id: string | null; phase: "pre" | "post" | null }[]
 ).map((q) => ({
   question_id: q.id,
   axis: q.axis,
   weight: q.weight,
+  pair_id: q.pair_id,
+  phase: q.phase,
   choices: db.prepare("SELECT id, value FROM choices WHERE question_id = ?").all(q.id) as
     { id: string; value: number }[],
 }));
 
 /** 옛 규칙: content json에 박혀 있던 값 */
-const oldRules: ScoringRule[] = build.pages
-  .filter((p) => p.question)
-  .map((p) => ({
-    question_id: p.question!.id,
-    axis: p.question!.axis,
-    weight: p.question!.weight,
-    choices: p.question!.choices.map((c) => ({ id: c.id, value: c.value })),
-  }));
+const oldRules: ScoringRule[] = build.pages.flatMap((p) =>
+  p.questions.map((q) => ({
+    question_id: q.id,
+    axis: q.axis,
+    weight: q.weight,
+    pair_id: q.pair_id ?? null,
+    phase: q.phase ?? null,
+    choices: q.choices.map((c) => ({ id: c.id, value: c.value })),
+  })),
+);
 
 const sessions = db
   .prepare("SELECT id, scoring_version FROM sessions WHERE work_id = ? AND completed_at IS NOT NULL")

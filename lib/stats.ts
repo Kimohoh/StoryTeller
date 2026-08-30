@@ -80,9 +80,7 @@ export function workStats(slug: string): WorkStats {
 
   const questions: QuestionStat[] = [];
   for (const page of work.pages) {
-    const q = page.question;
-    if (!q) continue;
-
+    for (const q of page.questions) {
     const answers = db
       .prepare(
         `SELECT a.choice_id, a.dwell_ms
@@ -111,6 +109,7 @@ export function workStats(slug: string): WorkStats {
       // 표본이 너무 적으면 아직 아무 말도 할 수 없다
       suspicious: answers.length >= 5 && med !== null && med < DWELL_FLOOR_MS,
     });
+    }
   }
 
   // 유형 분포 — 완독 세션마다 좌표를 내서 센다

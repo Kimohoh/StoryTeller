@@ -49,14 +49,16 @@ export function recordAnswer(
 ): void {
   getDb()
     .prepare(
-      `INSERT INTO answers (session_id, question_id, choice_id, answered_at, dwell_ms)
-       VALUES (?, ?, ?, ?, ?)
+      `INSERT INTO answers (session_id, question_id, choice_id, answered_at, dwell_ms, pair_id, phase)
+       SELECT ?, q.id, ?, ?, ?, q.pair_id, q.phase FROM questions q WHERE q.id = ?
        ON CONFLICT(session_id, question_id) DO UPDATE SET
          choice_id = excluded.choice_id,
          answered_at = excluded.answered_at,
-         dwell_ms = excluded.dwell_ms`,
+         dwell_ms = excluded.dwell_ms,
+         pair_id = excluded.pair_id,
+         phase = excluded.phase`,
     )
-    .run(sessionId, questionId, choiceId, new Date().toISOString(), dwellMs);
+    .run(sessionId, choiceId, new Date().toISOString(), dwellMs, questionId);
 }
 
 export function getAnswers(sessionId: string): AnswerRef[] {
