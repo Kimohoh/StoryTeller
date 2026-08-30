@@ -17,7 +17,8 @@
         "ko"
       ],
       "order": 2,
-      "status": "draft"
+      "status": "published",
+      "_status": "published | draft — draft는 서재에 안 뜨고 직접 URL로만 열린다"
     }
   ]
 }
