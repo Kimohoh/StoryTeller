@@ -1,9 +1,79 @@
-# 배포 — Fly.io
+# 배포
+
+두 갈래가 있다. 주변 사람에게 읽혀보는 단계면 **터널**, 계속 켜둬야 하면 **Fly.io**.
+
+| | 비용 | 준비 | 항상 켜져 있나 |
+|---|---|---|---|
+| Cloudflare Tunnel | 0원 | 20분 | ✗ 내 컴퓨터가 켜져 있을 때만 |
+| Fly.io | 월 5달러 | 30분 | ✓ |
+
+---
+
+# 1. Cloudflare Tunnel — 링크만 만들어 보기
+
+내 컴퓨터에서 앱을 돌리고 공개 HTTPS 주소를 받는다. 계정도 도메인도 필요 없고
+코드도 그대로다. **SQLite는 내 컴퓨터의 `data/storyteller.sqlite`에 쌓이므로
+터널을 껐다 켜도 읽은 기록은 남는다.**
+
+## 준비
+
+```bash
+# macOS
+brew install cloudflared
+# Windows: winget install --id Cloudflare.cloudflared
+```
+
+## 띄우기 — 터미널 두 개
+
+터미널 ①에서 앱을 **프로덕션 모드로** 띄운다. 개발 모드(`npm run dev`)에서는
+서비스 워커를 일부러 등록하지 않으므로 **PWA와 오프라인이 테스트되지 않는다.**
+
+```bash
+npm run build
+ADMIN_TOKEN=아무거나-긴-문자열 npm start     # http://localhost:3000
+```
+
+터미널 ②에서 터널을 연다.
+
+```bash
+cloudflared tunnel --url http://localhost:3000
+```
+
+출력에 `https://무언가-무언가.trycloudflare.com` 이 뜬다. 그게 공유할 주소다.
+
+## 알고 있어야 할 것
+
+- **주소가 매번 바뀐다.** 터널을 껐다 켜면 새 주소가 나오고, 사람들이 저장해 둔
+  결과 링크는 죽는다. 테스트 기간에는 터미널을 계속 열어두는 편이 낫다.
+  고정 주소가 필요하면 Cloudflare 계정 + 도메인으로 named tunnel을 쓰거나 Fly로 간다.
+- **컴퓨터가 잠들면 링크가 죽는다.** macOS는 `caffeinate -i cloudflared tunnel --url ...`,
+  윈도우는 전원 설정에서 절전을 꺼둔다.
+- 읽은 기록은 내 컴퓨터에 있다. 백업하려면 `data/storyteller.sqlite` 파일을 복사해 둔다.
+
+## 읽은 기록 보기
+
+```
+https://<터널주소>/admin/enter?token=<ADMIN_TOKEN에 넣은 값>
+```
+
+한 번 들어가면 쿠키가 남아 그 뒤로는 `/admin` 만으로 열린다.
+`ADMIN_TOKEN`을 안 정해두면 **아무도** 못 들어온다 — 열려버리는 쪽이 아니라 잠기는 쪽이다.
+
+보이는 것: 시작·완독·완독률, 어느 페이지에서 그만두는가, 문항별 중앙 망설임 시간과
+선택 비율, 유형 분포. **중앙 망설임이 3초 아래인 문항은 표시된다** — 그 문항은 축을
+못 재고 있을 가능성이 크다 (spec §7).
+
+---
+
+# 2. Fly.io — 계속 켜두기
 
 서버 하나 + 볼륨 하나. SQLite 파일이 볼륨 위에 있으므로 **머신은 반드시 한 대**다.
 두 대가 같은 파일을 쓰면 깨진다. 이 앱의 쓰기는 완독자의 답 여덟 줄뿐이라 한 대로 한참 간다.
 
 ---
+
+무료 티어는 2024년 10월에 없어졌다. 지금은 **Hobby 월 $5**(안에 $5 사용 크레딧 포함)가
+사실상 최소이고, 이 구성의 실사용은 월 $2 안팎이라 크레딧 안에 들어간다.
 
 ## 한 번만 하는 일
 
@@ -49,6 +119,7 @@ fly volumes create storyteller_data --region nrt --size 1
 ```bash
 fly deploy
 fly scale count 1     # 볼륨이 하나이므로 머신도 하나
+fly secrets set ADMIN_TOKEN=아무거나-긴-문자열
 fly open
 ```
 

@@ -11,6 +11,7 @@ FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # 콘텐츠 검증이 여기서 돈다. md와 json이 어긋나면 이미지가 안 만들어진다.
+ENV DOCKER_BUILD=1
 RUN npm run content:build && npx next build
 
 FROM base AS runner
