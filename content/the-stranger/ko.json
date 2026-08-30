@@ -143,7 +143,7 @@
         "weight": 1.0,
         "pair_id": "c2",
         "phase": "pre",
-        "prompt": "첫 발과 나머지 네 발은?",
+        "prompt": "처음 발포한 한 발과, 쓰러진 뒤에 쏜 네 발은?",
         "choices": [
           {
             "id": "the-stranger-q5a",
@@ -239,12 +239,12 @@
           "choices": [
             {
               "id": "the-stranger-q9a",
-              "label": "첫 발과는 다른 무게로 보아야 한다",
+              "label": "처음 발포한 한 발과는 다른 무게로 보아야 한다",
               "value": 1
             },
             {
               "id": "the-stranger-q9b",
-              "label": "다섯 발은 한 번의 일이다",
+              "label": "다섯 발 모두 한 번의 일이다",
               "value": -1
             }
           ]
