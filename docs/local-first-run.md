@@ -47,13 +47,24 @@ node -v
 git --version
 ```
 
-- `v20.11.0` 처럼 숫자가 나오면 있는 것이다 (Node는 **20 이상**이어야 한다)
+- `v22.` 로 시작하는 숫자가 나오면 맞다. **`v25` 이상이면 아래를 그대로 해야 한다** (숫자가 커서 좋은 게 아니다)
 - `command not found` 또는 `'node'은(는) ... 명령이 아닙니다` 가 나오면 없는 것이다
 
 ### 없으면 깐다
 
-**Node.js** — https://nodejs.org 에서 **LTS** 라고 쓰인 버튼을 받아 실행하고 계속
-"다음"을 누른다.
+**Node.js** — **버전이 중요하다. 22를 쓴다.** 서버(Docker/Fly)가 Node 22로 돌고
+있고, 이 앱이 쓰는 `better-sqlite3`는 C++로 짜인 네이티브 모듈이라 Node 버전이
+맞아야 한다. `brew install node` 로 최신(26 등)을 깔면 `npm install`이
+**컴파일 에러로 죽는다** (`no member named 'GetPrototype' in 'v8::Object'`).
+
+```bash
+brew install node@22
+brew unlink node
+brew link --overwrite --force node@22
+```
+
+Homebrew를 안 쓴다면 https://nodejs.org 의 이전 릴리스에서 **22.x LTS** `.pkg`를
+받는다. 레포에 `.nvmrc`(`22`)가 있으니 nvm을 쓴다면 `nvm use` 한 줄이면 된다.
 
 **Git** — 윈도우는 https://git-scm.com 에서 받는다. mac은 `git --version`을 치면
 설치 창이 알아서 뜬다.
@@ -163,6 +174,7 @@ cloudflared tunnel --url http://localhost:3000
 
 | 증상 | 조치 |
 |---|---|
+| `npm install`이 `gyp ERR!` / `GetPrototype` 로 죽는다 | Node가 너무 최신이다. 위의 `node@22`로 내리고 `rm -rf node_modules` 후 다시 `npm install` |
 | `Invalid tag name "#"` / `invalid option: --id` | 명령 뒤의 `#` 설명까지 같이 붙여넣은 것이다. 설명을 빼고 명령만 다시 |
 | 깔았는데 `command not found` | 안티그래비티를 껐다 켠다. 대부분 이거다 |
 | `npm start` 할 때 방화벽 허용 창 | **허용**을 누른다 (안 하면 터널이 앱에 못 붙는다) |

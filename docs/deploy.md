@@ -48,7 +48,7 @@
 
 | | 무엇 | 어디서 |
 |---|---|---|
-| 1 | **Node.js 20 이상** | https://nodejs.org 의 LTS 버튼 |
+| 1 | **Node.js 22** (25 이상은 안 된다) | `brew install node@22` |
 | 2 | **Git** | macOS는 `xcode-select --install`, 윈도우는 https://git-scm.com |
 | 3 | **cloudflared** | 아래 |
 
@@ -78,7 +78,8 @@ git --version
 cloudflared --version
 ```
 
-Node는 `v20` 이상이어야 한다.
+`node -v`가 `v22.` 로 시작해야 한다. Node 25/26에서는 `better-sqlite3`가
+컴파일되지 않는다 — 서버도 Node 22로 돈다.
 
 ## 1.2 레포 내려받기 (한 번만)
 
