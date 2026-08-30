@@ -34,17 +34,20 @@ export function readWorks(userId: string): ReadWork[] {
 }
 
 /**
- * 누적 좌표. 완독한 작품들의 답을 전부 한 통에 넣고 축별 가중평균을 낸다.
- * 작품마다 문항 수가 같으므로 지금은 작품별 가중치를 따로 두지 않는다 —
- * 문항 수가 다른 작품이 들어오면 여기서 작품별 정규화를 해야 한다.
+ * 누적 좌표.
+ *
+ * 작품별로 먼저 좌표를 내고 그 좌표들을 평균한다. 답을 한 통에 부어 한 번에 계산하면
+ * 문항이 많은 작품이 그만큼 크게 말하게 된다 — 열 문항짜리가 들어오면 여덟 문항짜리
+ * 『변신』이 밀린다. 작품은 각각 한 표씩 갖는 게 맞다.
+ *
+ * 좌표는 여전히 파생값이다 (spec §6). 저장하는 것은 원본 선택뿐이다.
  */
 export function accumulatedCoordinate(userId: string): { coordinate: Coordinate; works: number } {
   const db = getDb();
   const sessions = readWorks(userId);
   if (sessions.length === 0) return { coordinate: { A: 0, B: 0 }, works: 0 };
 
-  const rules: ScoringRule[] = [];
-  const answers: AnswerRef[] = [];
+  const perWork: Coordinate[] = [];
 
   for (const s of sessions) {
     const rows = db
@@ -54,14 +57,26 @@ export function accumulatedCoordinate(userId: string): { coordinate: Coordinate;
           WHERE a.session_id = ?`,
       )
       .all(s.session_id) as { question_id: string; choice_id: string; axis: AxisKey; weight: number }[];
+    if (rows.length === 0) continue;
 
+    const rules: ScoringRule[] = [];
+    const answers: AnswerRef[] = [];
     for (const r of rows) {
       const choices = db.prepare("SELECT id, value FROM choices WHERE question_id = ?").all(r.question_id) as
         { id: string; value: number }[];
       rules.push({ question_id: r.question_id, axis: r.axis, weight: r.weight, choices });
       answers.push({ question_id: r.question_id, choice_id: r.choice_id });
     }
+    perWork.push(computeCoordinate(rules, answers));
   }
 
-  return { coordinate: computeCoordinate(rules, answers), works: sessions.length };
+  if (perWork.length === 0) return { coordinate: { A: 0, B: 0 }, works: 0 };
+
+  const mean = (pick: (c: Coordinate) => number) =>
+    perWork.reduce((sum, c) => sum + pick(c), 0) / perWork.length;
+
+  return {
+    coordinate: { A: mean((c) => c.A), B: mean((c) => c.B) },
+    works: perWork.length,
+  };
 }

@@ -40,13 +40,17 @@ npm run dev             # http://localhost:3000
 
 ### 작품 하나 더 붙이기
 
-1. `content/<슬러그>/ko.md` 정본과 `ko.json` 구조, `ko.results.json` 진단문을 쓴다
-2. `assets/illustrations/manifest.json`에 `"<슬러그>": { ... }`를 더한다
-3. `content/works.json`에 한 줄 더한다
-4. `npm run content:build && npm run db:seed`
+```bash
+npm run work:new -- <슬러그> --pages 10 --questions 8
+```
 
-코드는 건드리지 않는다. 삽화 키는 작품 안에서만 유일하면 되므로 작품마다
-`p1_*`을 다시 써도 부딪히지 않는다.
+폴더·레지스트리·manifest·설명문 자리가 한 번에 생긴다. 순서와 함정은
+`docs/new-work.md` 참조 — 코드는 건드리지 않는다.
+
+### 배포
+
+`docs/deploy.md` 참조. Fly.io에 서버 하나 + 볼륨 하나, 월 2달러 안팎.
+DB 시드는 앱이 부팅 때 스스로 하므로 컨테이너에 스크립트가 없어도 된다.
 
 ### 검수용 프리뷰
 

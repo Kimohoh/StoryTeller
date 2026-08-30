@@ -255,6 +255,14 @@ const manifest: Record<string, Record<string, unknown>> = existsSync(manifestPat
 
 const axes = globalAxes();
 
+/** questions.id / choices.id는 전역 PK다 — 작품이 늘면 여기서 부딪힌다 */
+const seenIds = new Map<string, string>();
+function claimId(id: string, where: string) {
+  const prev = seenIds.get(id);
+  if (prev) fail(`id "${id}"가 ${prev}와 ${where} 양쪽에 있다 — 전역으로 유일해야 한다`);
+  else seenIds.set(id, where);
+}
+
 for (const entry of works().works) {
   for (const locale of entry.locales) {
     const slug = entry.slug;
@@ -267,6 +275,12 @@ for (const entry of works().works) {
     if (src.slug !== slug) fail(`${slug}/${resolved}.json의 slug가 "${src.slug}"다 — 폴더 이름과 달라선 안 된다`);
 
     validate(src, mdPages, manifest[slug] ?? {}, axes);
+
+    for (const page of src.pages) {
+      if (!page.question) continue;
+      claimId(page.question.id, `${slug}/${resolved}`);
+      for (const c of page.question.choices) claimId(c.id, `${slug}/${resolved}`);
+    }
 
     const results: ResultsFile = JSON.parse(
       readFileSync(sourcePath(slug, resolved, "results.json"), "utf8"),

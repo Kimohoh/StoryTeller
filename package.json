@@ -17,7 +17,8 @@
     "illustration": "tsx scripts/replace-illustration.ts",
     "brief": "tsx scripts/build-brief-page.ts",
     "illustration:batch": "tsx scripts/batch-illustrations.ts",
-    "illustration:optimize": "tsx scripts/optimize-illustrations.ts"
+    "illustration:optimize": "tsx scripts/optimize-illustrations.ts",
+    "work:new": "tsx scripts/new-work.ts"
   },
   "dependencies": {
     "better-sqlite3": "^11.8.1",
