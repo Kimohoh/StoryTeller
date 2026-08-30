@@ -42,6 +42,10 @@
 터널은 "내 컴퓨터에서 앱을 돌린다"는 방식이라, 앱을 돌릴 도구가 로컬에 있어야
 한다. 여기까지는 GitHub 안에서 끝낼 수 없는 유일한 단계다.
 
+> 로컬에서 아무것도 해 본 적이 없다면 **[local-first-run.md](./local-first-run.md)**
+> 를 먼저 본다. 안티그래비티를 켜고 터미널을 여는 것부터 `npm install`까지가
+> 거기 있고, 그게 끝나면 여기 1.3으로 돌아오면 된다.
+
 | | 무엇 | 어디서 |
 |---|---|---|
 | 1 | **Node.js 20 이상** | https://nodejs.org 의 LTS 버튼 |
@@ -73,10 +77,10 @@ cloudflared --version
 ## 1.2 레포 내려받기 (한 번만)
 
 ```bash
-git clone https://github.com/kimohoh/storyteller.git
-cd storyteller
-git checkout claude/spec-app-structure-vzwaxh
+git clone https://github.com/Kimohoh/StoryTeller.git
+cd StoryTeller
 npm install        # 2~3분. 처음 한 번만 오래 걸린다
+                   # 기본 브랜치가 이미 claude/spec-app-structure-vzwaxh 라 브랜치는 안 바꿔도 된다
 ```
 
 ## 1.3 터미널 ① — 앱 띄우기
