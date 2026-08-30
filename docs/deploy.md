@@ -4,53 +4,133 @@
 
 | | 비용 | 준비 | 항상 켜져 있나 |
 |---|---|---|---|
-| Cloudflare Tunnel | 0원 | 20분 | ✗ 내 컴퓨터가 켜져 있을 때만 |
+| Cloudflare Tunnel | 0원 | 30분 | ✗ 내 컴퓨터가 켜져 있을 때만 |
 | Fly.io | 월 5달러 | 30분 | ✓ |
 
 ---
 
 # 1. Cloudflare Tunnel — 링크만 만들어 보기
 
-내 컴퓨터에서 앱을 돌리고 공개 HTTPS 주소를 받는다. 계정도 도메인도 필요 없고
-코드도 그대로다. **SQLite는 내 컴퓨터의 `data/storyteller.sqlite`에 쌓이므로
-터널을 껐다 켜도 읽은 기록은 남는다.**
+## 1.0 이게 무슨 원리인가
 
-## 준비
+앱은 지금 내 컴퓨터 안에서 `http://localhost:3000` 으로 돈다. `localhost`는 말
+그대로 *이 컴퓨터*라는 뜻이라 옆자리 사람 폰에서는 열리지 않는다.
+
+보통 이걸 남에게 보여주려면 공유기 포트를 열고 방화벽을 손대고 내 집 IP를
+알려줘야 한다. 터널은 그 반대로 한다. `cloudflared`라는 작은 프로그램이 내
+컴퓨터에서 **바깥으로 나가는** 연결을 하나 걸어두고, Cloudflare가 공개 주소를
+하나 내주고, 그 주소로 들어온 요청을 이미 뚫려 있는 그 연결로 되돌려 보낸다.
+
+```
+사람들 폰 ──HTTPS──▶ Cloudflare ──(cloudflared가 걸어둔 통로)──▶ 내 노트북 :3000
+```
+
+그래서:
+
+- 공유기·방화벽을 건드릴 일이 없다 (나가는 연결은 원래 열려 있으니까)
+- 내 IP가 드러나지 않는다
+- HTTPS 인증서는 Cloudflare가 알아서 붙인다 — PWA는 HTTPS가 아니면 설치가 안 되는데 이게 공짜로 해결된다
+- 계정도 도메인도 카드도 필요 없다 (이걸 **quick tunnel**이라 부른다)
+
+대신 **내 컴퓨터가 곧 서버다.** 노트북을 닫으면 링크가 죽는다.
+
+읽은 기록은 Cloudflare가 아니라 내 컴퓨터의 `data/storyteller.sqlite`에 쌓인다.
+터널을 껐다 켜도 그 파일은 남는다.
+
+## 1.1 준비물 — 로컬에 세 가지가 필요하다
+
+터널은 "내 컴퓨터에서 앱을 돌린다"는 방식이라, 앱을 돌릴 도구가 로컬에 있어야
+한다. 여기까지는 GitHub 안에서 끝낼 수 없는 유일한 단계다.
+
+| | 무엇 | 어디서 |
+|---|---|---|
+| 1 | **Node.js 20 이상** | https://nodejs.org 의 LTS 버튼 |
+| 2 | **Git** | macOS는 `xcode-select --install`, 윈도우는 https://git-scm.com |
+| 3 | **cloudflared** | 아래 |
 
 ```bash
 # macOS
 brew install cloudflared
-# Windows: winget install --id Cloudflare.cloudflared
+
+# Windows (PowerShell)
+winget install --id Cloudflare.cloudflared
 ```
 
-## 띄우기 — 터미널 두 개
+brew나 winget이 없으면 https://github.com/cloudflare/cloudflared/releases 에서
+받아도 된다 (mac은 `.pkg`, 윈도우는 `.msi`).
 
-터미널 ①에서 앱을 **프로덕션 모드로** 띄운다. 개발 모드(`npm run dev`)에서는
-서비스 워커를 일부러 등록하지 않으므로 **PWA와 오프라인이 테스트되지 않는다.**
+명령어는 Antigravity의 내장 터미널에 그대로 쳐도 된다. 별도 터미널 앱을 쓸
+필요는 없다.
+
+세 개가 다 들어왔는지 확인:
+
+```bash
+node -v            # v20.x 이상
+git --version
+cloudflared --version
+```
+
+## 1.2 레포 내려받기 (한 번만)
+
+```bash
+git clone https://github.com/kimohoh/storyteller.git
+cd storyteller
+git checkout claude/spec-app-structure-vzwaxh
+npm install        # 2~3분. 처음 한 번만 오래 걸린다
+```
+
+## 1.3 터미널 ① — 앱 띄우기
 
 ```bash
 npm run build
-ADMIN_TOKEN=아무거나-긴-문자열 npm start     # http://localhost:3000
+ADMIN_TOKEN=아무거나-긴-문자열 npm start
 ```
 
-터미널 ②에서 터널을 연다.
+윈도우 PowerShell이면 환경변수 문법이 다르다:
+
+```powershell
+$env:ADMIN_TOKEN="아무거나-긴-문자열"
+npm start
+```
+
+`✓ Ready in ...` 이 뜨면 된 것이다. 이 터미널은 **닫지 말고 그대로 둔다.**
+브라우저에서 `http://localhost:3000` 을 열어 서재가 보이는지 먼저 확인한다.
+
+> **왜 `npm run dev`가 아닌가.** 개발 모드에서는 서비스 워커를 일부러 등록하지
+> 않는다. 그 상태로는 홈 화면 설치도, 오프라인 읽기도 테스트되지 않는다.
+> 지금 확인하려는 게 바로 그 둘이므로 `build` + `start`여야 한다.
+
+## 1.4 터미널 ② — 터널 열기
+
+터미널을 **하나 더** 열고 (①은 앱이 돌고 있으니 건드리지 않는다), 같은 폴더에서:
 
 ```bash
+cd storyteller
 cloudflared tunnel --url http://localhost:3000
 ```
 
-출력에 `https://무언가-무언가.trycloudflare.com` 이 뜬다. 그게 공유할 주소다.
+몇 초 뒤 이런 상자가 뜬다:
 
-## 알고 있어야 할 것
+```
++--------------------------------------------------------------------------------------------+
+|  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):   |
+|  https://plain-jazz-tobacco-verified.trycloudflare.com                                      |
++--------------------------------------------------------------------------------------------+
+```
 
-- **주소가 매번 바뀐다.** 터널을 껐다 켜면 새 주소가 나오고, 사람들이 저장해 둔
-  결과 링크는 죽는다. 테스트 기간에는 터미널을 계속 열어두는 편이 낫다.
-  고정 주소가 필요하면 Cloudflare 계정 + 도메인으로 named tunnel을 쓰거나 Fly로 간다.
-- **컴퓨터가 잠들면 링크가 죽는다.** macOS는 `caffeinate -i cloudflared tunnel --url ...`,
-  윈도우는 전원 설정에서 절전을 꺼둔다.
-- 읽은 기록은 내 컴퓨터에 있다. 백업하려면 `data/storyteller.sqlite` 파일을 복사해 둔다.
+그 `https://....trycloudflare.com` 이 **공유할 주소**다. 이 터미널도 닫지 않는다.
+아래로 계속 흐르는 로그는 정상이다 (요청이 들어올 때마다 한 줄씩 찍힌다).
 
-## 읽은 기록 보기
+## 1.5 폰에서 확인하고, 사람들에게 보내기
+
+1. 그 주소를 내 폰에서 연다. (같은 와이파이일 필요 없다 — LTE로도 열린다)
+2. Safari면 공유 → **홈 화면에 추가**, Chrome이면 ⋮ → **앱 설치**
+3. 홈 화면 아이콘으로 들어가 한 편 읽어 본다
+4. 비행기 모드로 바꾸고 다시 들어가 페이지가 넘어가는지 본다 — 답은 폰에 쌓였다가
+   연결되면 자동으로 올라간다
+5. 되면 그 주소를 그대로 카톡으로 보내면 된다. 상대는 아무것도 설치할 필요가 없다
+
+## 1.6 읽은 기록 보기
 
 ```
 https://<터널주소>/admin/enter?token=<ADMIN_TOKEN에 넣은 값>
@@ -63,12 +143,36 @@ https://<터널주소>/admin/enter?token=<ADMIN_TOKEN에 넣은 값>
 선택 비율, 유형 분포. **중앙 망설임이 3초 아래인 문항은 표시된다** — 그 문항은 축을
 못 재고 있을 가능성이 크다 (spec §7).
 
+스무 명쯤 읽고 나면 이걸 본다:
+
+- 완독률이 60% 아래인가 → 길이나 초반 이탈 페이지를 본다
+- 한 선택지에 80% 이상 몰린 문항 → 그 문항은 축을 가르지 못하고 있다
+- 유형 하나에 몰림 → 가중치나 유형 경계를 손본다
+- C축: 페어에서 답을 바꾼 비율이 0%거나 100%면 사전/사후 문장이 잘못 잡힌 것이다
+
+## 1.7 자주 걸리는 것
+
+| 증상 | 원인과 조치 |
+|---|---|
+| 터널 주소에서 **502 Bad Gateway** | 터미널 ①이 안 떠 있거나 포트가 3000이 아니다. ①을 확인 |
+| 껐다 켜니 **주소가 바뀌었다** | quick tunnel은 매번 새 주소다. 사람들이 저장한 결과 링크는 죽는다. 테스트 기간엔 터미널을 계속 열어둔다. 고정 주소가 필요하면 Cloudflare 계정+도메인으로 named tunnel을 쓰거나 Fly로 간다 |
+| 자고 일어나니 **링크가 죽었다** | 컴퓨터가 잠든 것이다. macOS는 `caffeinate -i cloudflared tunnel --url http://localhost:3000`, 윈도우는 전원 설정에서 절전을 끈다 |
+| `/admin`이 안 열린다 | 터미널 ①을 띄울 때 `ADMIN_TOKEN`을 안 붙였다. ①에서 Ctrl+C 후 다시 |
+| 홈 화면 추가가 안 보인다 | `npm run dev`로 띄웠을 때 그렇다. `npm run build && npm start`로 |
+| 첫 로딩이 느리다 | 삽화 첫 다운로드뿐이다. 두 번째부터는 폰 캐시에서 뜬다 |
+
+**끄는 법**: 터미널 ②에서 `Ctrl+C`, 터미널 ①에서도 `Ctrl+C`. 읽은 기록은
+`data/storyteller.sqlite`에 그대로 남는다. 백업하려면 그 파일을 복사해 둔다.
+
+**다시 켤 때**: 코드가 그대로면 `npm run build`는 건너뛰고 `npm start` + `cloudflared`
+두 줄이면 된다. 내가 레포에 뭔가 바꾼 뒤라면 `git pull` → `npm run build`부터.
+
 ---
 
 # 2. Fly.io — 계속 켜두기
 
 서버 하나 + 볼륨 하나. SQLite 파일이 볼륨 위에 있으므로 **머신은 반드시 한 대**다.
-두 대가 같은 파일을 쓰면 깨진다. 이 앱의 쓰기는 완독자의 답 여덟 줄뿐이라 한 대로 한참 간다.
+두 대가 같은 파일을 쓰면 깨진다. 이 앱의 쓰기는 완독자의 답 열 줄 남짓뿐이라 한 대로 한참 간다.
 
 ---
 
