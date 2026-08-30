@@ -7,6 +7,8 @@ import { sessionCookieName } from "@/lib/session-cookie";
 import { loadWork } from "@/lib/work-repo";
 import { workEntry } from "@/lib/works";
 import { Illustration } from "@/components/Illustration";
+import { OfflineSave } from "@/components/OfflineSave";
+import { workAssetUrls, workAssetSize } from "@/lib/work-repo";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +49,8 @@ export default async function Cover({ params }: { params: Promise<{ slug: string
       <form action={start}>
         <button className="next" type="submit">읽기 시작</button>
       </form>
+      <OfflineSave urls={workAssetUrls(slug)} sizeHint={workAssetSize(slug)} />
+
       <Link className="quiet-link" href="/">서재로</Link>
     </main>
   );

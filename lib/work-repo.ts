@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 import type {
   WorkBuild,
   ReadingPayload,
@@ -9,6 +10,7 @@ import type {
 import type { ScoringRule } from "./scoring";
 import { getDb } from "./db";
 import { buildPath, sourcePath, resolveLocale } from "./works";
+import { entry as illustrationEntry } from "./illustrations";
 
 export interface ResultsContent {
   slug: string;
@@ -110,4 +112,37 @@ export function scoringRules(slug: string): ScoringRule[] {
 
 export function workTypes(slug: string): Record<string, TypeSource> {
   return loadWork(slug).types;
+}
+
+/* ---------- 오프라인 저장용 ---------- */
+
+/** 이 작품 삽화의 공개 URL 전부. 버전이 박혀 있어 그림이 바뀌면 새로 받는다. */
+export function workAssetUrls(slug: string): string[] {
+  const work = loadWork(slug);
+  const out: string[] = [];
+  for (const page of work.pages) {
+    if (!page.illustration_key) continue;
+    const e = illustrationEntry(slug, page.illustration_key);
+    if (e) out.push(`/api/illustrations/${slug}/${page.illustration_key}?v=${e.version}`);
+  }
+  return out;
+}
+
+/** "1.8MB"처럼 사람이 읽을 크기. 받기 전에 얼마인지는 알려줘야 한다. */
+export function workAssetSize(slug: string): string {
+  const work = loadWork(slug);
+  let bytes = 0;
+  for (const page of work.pages) {
+    if (!page.illustration_key) continue;
+    const e = illustrationEntry(slug, page.illustration_key);
+    if (!e) continue;
+    try {
+      bytes += statSync(join(process.cwd(), "assets/illustrations", e.src)).size;
+    } catch {
+      // 파일이 없으면 크기에서 빠질 뿐, 저장 자체는 시도한다
+    }
+  }
+  return bytes > 1024 * 1024
+    ? `${(bytes / 1024 / 1024).toFixed(1)}MB`
+    : `${Math.round(bytes / 1024)}KB`;
 }

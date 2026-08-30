@@ -1,0 +1,27 @@
+import type { MetadataRoute } from "next";
+
+/**
+ * 홈 화면에 설치되는 앱의 신원.
+ * 세로 읽기 전용이고, 바탕은 삽화와 같은 목탄색이라 실행 순간에도 흰 화면이 안 뜬다.
+ */
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: "다시 읽는 서재",
+    short_name: "서재",
+    description:
+      "퍼블릭 도메인 고전을 짧게 각색해 읽습니다. 읽는 중 몇 번 당신에게 묻고, 다 읽으면 당신이 읽은 방식을 돌려줍니다.",
+    lang: "ko",
+    start_url: "/",
+    scope: "/",
+    display: "standalone",
+    orientation: "portrait",
+    background_color: "#1B1917",
+    theme_color: "#1B1917",
+    categories: ["books", "education", "entertainment"],
+    icons: [
+      { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/icons/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+    ],
+  };
+}

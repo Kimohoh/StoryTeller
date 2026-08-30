@@ -6,6 +6,7 @@ import { buildResult } from "@/lib/verdict";
 import { workTypes, loadWork } from "@/lib/work-repo";
 import { CoordinatePlot } from "@/components/CoordinatePlot";
 import { ResultActions } from "@/components/ResultActions";
+import { PendingNotice } from "@/components/PendingNotice";
 import { Prose } from "@/components/Prose";
 import { josa } from "@/lib/josa";
 
@@ -29,7 +30,8 @@ export default async function ResultPage({
     return (
       <main className="wrap">
         <p>아직 {r.total - r.answered}개 문항이 남아 있습니다.</p>
-        <Link className="next" href={`/read/${slug}/1`}>돌아가기</Link>
+        <PendingNotice sessionId={sessionId} />
+        <Link className="quiet-link" href={`/read/${slug}/1`}>읽던 곳으로 돌아가기</Link>
       </main>
     );
   }

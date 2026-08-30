@@ -6,6 +6,7 @@ import { getAnswers, getSession } from "@/lib/session-repo";
 import { Illustration } from "@/components/Illustration";
 import { Prose } from "@/components/Prose";
 import { ChoiceGroup } from "@/components/ChoiceGroup";
+import { PrefetchPages } from "@/components/PrefetchPages";
 
 export default async function ReadPage({
   params,
@@ -35,8 +36,12 @@ export default async function ReadPage({
   const nextNo = pageNo + 1;
   const hasNext = payload.pages.some((p) => p.no === nextNo);
 
+  const allPages = payload.pages.map((p) => `/read/${slug}/${p.no}`);
+
   return (
     <main className="wrap">
+      {/* 다음 장이 오프라인에서도 열리도록 나머지를 미리 받아둔다 */}
+      <PrefetchPages urls={allPages} />
       {/* 진행 표시는 페이지 수만 말한다. 무엇을 재는 중인지는 어디에도 없다. */}
       <div className="progress" aria-label={`${pageNo} / ${payload.pages.length}`}>
         {payload.pages.map((p) => (

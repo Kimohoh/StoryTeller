@@ -194,3 +194,23 @@ a { color: var(--gold); }
   border-bottom: 1px solid var(--ink-2);
 }
 .quiet-link:hover { color: var(--gold); }
+
+.pending {
+  border: 1px solid var(--bronze);
+  border-radius: 3px;
+  padding: 1rem 1.1rem;
+  margin: 1.5rem 0;
+}
+.pending p { margin: 0 0 1rem; font-size: .9rem; color: var(--paper-dim); line-height: 1.75; }
+.pending .next { margin-top: 0; }
+.next:disabled { opacity: .55; cursor: default; }
+
+.offline-save { margin-top: 1.75rem; }
+.quiet-button {
+  background: none; border: 1px solid var(--ink-2); border-radius: 3px;
+  color: var(--paper-dim); font: inherit; font-size: .85rem;
+  padding: .6rem 1rem; min-height: 40px; cursor: pointer;
+}
+.quiet-button:hover:not(:disabled) { border-color: var(--bronze); color: var(--gold); }
+.quiet-button:disabled { opacity: .6; cursor: default; }
+.offline-note { color: var(--bronze); font-size: .78rem; margin: .7rem 0 0; line-height: 1.7; }
