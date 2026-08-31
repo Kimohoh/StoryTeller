@@ -45,7 +45,7 @@
         "id": "q1",
         "axis": "B",
         "weight": 1.0,
-        "prompt": "이 아침, 당신의 머릿속을 먼저 채우는 것은?",
+        "prompt": "알 수 없는 상황에 놓인 아침, 당신 머릿속에 가장 먼저 생각나는 것은?",
         "choices": [
           {
             "id": "q1a",
@@ -77,7 +77,7 @@
           },
           {
             "id": "q2b",
-            "label": "저 인간은 지금 무슨 소리를 하고 있나 생각한다",
+            "label": "저 인간은 무슨 말도 안 되는 이야기를 하는 건가 생각한다",
             "value": -1
           }
         ]
@@ -115,7 +115,7 @@
           "id": "q4",
           "axis": "A",
           "weight": 1.2,
-          "prompt": "당신은 그 돈을 어떻게 보는가?",
+          "prompt": "5년간 숨겨진 돈에 대해 알았을 때 당신은?",
           "choices": [
             {
               "id": "q4a",
@@ -124,7 +124,7 @@
             },
             {
               "id": "q4b",
-              "label": "나를 쓴 것이다. 알면서 말하지 않은 것이다",
+              "label": "무언의 희생을 강요당했다",
               "value": -1
             }
           ]
@@ -183,7 +183,7 @@
           "id": "q6",
           "axis": "A",
           "weight": 1.0,
-          "prompt": "이 문틈을 어떻게 읽는가?",
+          "prompt": "저녁마다 조금씩 열려 있는 그 문틈에 대해",
           "choices": [
             {
               "id": "q6a",
@@ -203,16 +203,16 @@
           "weight": 1.0,
           "pair_id": "mc2",
           "phase": "pre",
-          "prompt": "등에 사과를 던진 그 손을, 당신은?",
+          "prompt": "아버지가 던진 사과에 대해",
           "choices": [
             {
               "id": "mc2prea",
-              "label": "알고 한 일이다",
+              "label": "의도적으로 위해를 가했다",
               "value": 1
             },
             {
               "id": "mc2preb",
-              "label": "순간의 일이다",
+              "label": "당황하여 순간적으로 한 일이다",
               "value": -1
             }
           ]
@@ -223,46 +223,24 @@
       "no": 7,
       "title": "바이올린",
       "illustration_key": "p7_violin",
-      "questions": [
-        {
-          "id": "q7",
-          "axis": "B",
-          "weight": 1.0,
-          "prompt": "당신은?",
-          "choices": [
-            {
-              "id": "q7a",
-              "label": "기어나간다",
-              "value": 1
-            },
-            {
-              "id": "q7b",
-              "label": "방에 머문다",
-              "value": -1
-            }
-          ]
-        },
-        {
-          "id": "mc1post",
-          "axis": "C",
-          "weight": 1.0,
-          "pair_id": "mc1",
-          "phase": "post",
-          "prompt": "그 돈에 대해 끝내 입을 열지 않은 가족을, 지금은 어떻게 보는가?",
-          "choices": [
-            {
-              "id": "mc1posta",
-              "label": "그때 이미 숨긴 것이었다",
-              "value": 1
-            },
-            {
-              "id": "mc1postb",
-              "label": "그때는 말할 자리가 없었을 뿐이다",
-              "value": -1
-            }
-          ]
-        }
-      ]
+      "question": {
+        "id": "q7",
+        "axis": "B",
+        "weight": 1.0,
+        "prompt": "벌레가 된 채로 그레테의 연주를 들은 당신은?",
+        "choices": [
+          {
+            "id": "q7a",
+            "label": "기어나간다",
+            "value": 1
+          },
+          {
+            "id": "q7b",
+            "label": "방에 머문다",
+            "value": -1
+          }
+        ]
+      }
     },
     {
       "no": 8,
@@ -311,10 +289,29 @@
     },
     {
       "no": 9,
-      "title": "",
+      "title": "전차",
       "illustration_key": "p9_tram",
-      "question": null,
-      "note": "결말. 질문 없음. 8번 답한 직후 그냥 흘려보낼 것. 시리즈에서 유일한 실외 삽화."
+      "question": {
+        "id": "mc1post",
+        "axis": "C",
+        "weight": 1.0,
+        "pair_id": "mc1",
+        "phase": "post",
+        "prompt": "그 돈에 대해 끝내 입을 열지 않은 가족을, 지금은 어떻게 보는가?",
+        "choices": [
+          {
+            "id": "mc1posta",
+            "label": "그때 이미 숨긴 것이었다",
+            "value": 1
+          },
+          {
+            "id": "mc1postb",
+            "label": "그때는 말할 자리가 없었을 뿐이다",
+            "value": -1
+          }
+        ]
+      },
+      "_note": "원래 질문 없는 결말이었으나, 돈에 대한 침묵을 다시 묻는 자리는 가족이 새 일자리를 이야기하며 교외로 나가는 이 장면이다 (2026-08 교정)."
     }
   ]
 }
