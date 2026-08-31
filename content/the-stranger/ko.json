@@ -46,16 +46,16 @@
         "id": "the-stranger-q1",
         "axis": "B",
         "weight": 1.0,
-        "prompt": "이 죽음 앞에서, 당신에게 먼저 오는 것은?",
+        "prompt": "어머니의 죽음이라는 상황 앞에서, 당신은?",
         "choices": [
           {
             "id": "the-stranger-q1a",
-            "label": "무언가 정리해야 할 것이 남아 있다",
+            "label": "어머니와 관련된 무언가를 찾아본다",
             "value": 1
           },
           {
             "id": "the-stranger-q1b",
-            "label": "해야 할 절차가 있을 뿐이다",
+            "label": "장례라는 절차를 진행할 뿐이다",
             "value": -1
           }
         ]
@@ -94,16 +94,16 @@
         "id": "the-stranger-q3",
         "axis": "A",
         "weight": 1.0,
-        "prompt": "지금까지의 이 사람에 대해, 당신은?",
+        "prompt": "지금까지의 주인공 뫼르소에 대해",
         "choices": [
           {
             "id": "the-stranger-q3a",
-            "label": "대체로 어떤 사람인지 알 것 같다",
+            "label": "어떤 유형의 사람인지 알 것 같다",
             "value": 1
           },
           {
             "id": "the-stranger-q3b",
-            "label": "아직 아무것도 판단할 수 없다",
+            "label": "단편적인 사건일 뿐 판단할 수 없다",
             "value": -1
           }
         ]
@@ -190,7 +190,7 @@
         "weight": 1.0,
         "pair_id": "c1",
         "phase": "post",
-        "prompt": "어머니의 관을 끝내 열지 않은 그 사람을, 당신은 어떻게 보는가?",
+        "prompt": "어머니의 관을 끝내 열지 않은 뫼르소를, 당신은 어떻게 보는가?",
         "choices": [
           {
             "id": "the-stranger-q7a",
@@ -199,7 +199,7 @@
           },
           {
             "id": "the-stranger-q7b",
-            "label": "이상할 것 없는 일이다",
+            "label": "그럴 수도 있는 일이다",
             "value": -1
           }
         ]
@@ -218,12 +218,12 @@
           "choices": [
             {
               "id": "the-stranger-q8a",
-              "label": "그가 자초한 결과다",
+              "label": "그가 한 일과 행동들이 부른 결과다",
               "value": 1
             },
             {
               "id": "the-stranger-q8b",
-              "label": "다른 이유로 처벌된 것이다",
+              "label": "그와 상관없는 이유로 처벌되었다",
               "value": -1
             }
           ]
