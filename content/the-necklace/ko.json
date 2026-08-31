@@ -1,0 +1,236 @@
+{
+  "slug": "the-necklace",
+  "title": "내 인생 최고의 밤, 할부 120개월",
+  "subtitle": "기 드 모파상 『목걸이』",
+  "public_domain": true,
+  "author_died": 1893,
+  "_public_domain": "모파상은 1893년 사망. 사후 130년이 지나 전 세계에서 만료됐다. 원문 기반 자체 각색만 쓰고 국내 출판 번역본 문장은 인용하지 않는다.",
+  "scoring_version": 1,
+  "_axes": "content/axes.json 참조. C축은 pair_id/phase로 전후를 묶는다. c1: q3↔q7(하룻밤의 값어치), c2: q4↔q8(말할 것인가).",
+  "_c_note": "이 작품의 C는 앞의 셋과 다르다. 『이방인』은 틀이, 『시지프 신화』는 시선이 바뀌었고 사실은 그대로였다. 여기서는 사실 자체가 뒤집힌다 — 목걸이가 가짜였다. 그래서 이 작품의 C 응답이 사용자 C 좌표에서 가장 신뢰도가 높다.",
+  "types": {
+    "mirror": {
+      "name": "거울",
+      "axis": {
+        "A": "pos",
+        "B": "pos"
+      }
+    },
+    "receipt": {
+      "name": "영수증",
+      "axis": {
+        "A": "pos",
+        "B": "neg"
+      }
+    },
+    "invite": {
+      "name": "초대장",
+      "axis": {
+        "A": "neg",
+        "B": "pos"
+      }
+    },
+    "casket": {
+      "name": "보석함",
+      "axis": {
+        "A": "neg",
+        "B": "neg"
+      }
+    }
+  },
+  "pages": [
+    {
+      "no": 1,
+      "title": "초대장",
+      "illustration_key": "p1_invitation",
+      "question": {
+        "id": "the-necklace-q1",
+        "axis": "A",
+        "weight": 1.0,
+        "prompt": "입고 갈 옷이 없다는 것은?",
+        "choices": [
+          {
+            "id": "the-necklace-q1a",
+            "label": "이 사람이 지금 가진 것의 문제다",
+            "value": 1
+          },
+          {
+            "id": "the-necklace-q1b",
+            "label": "그런 옷을 갖춰야 들어갈 수 있는 자리의 문제다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 2,
+      "title": "보석함",
+      "illustration_key": "p2_jewel_box",
+      "question": {
+        "id": "the-necklace-q2",
+        "axis": "B",
+        "weight": 1.0,
+        "prompt": "그 목걸이를 걸고 거울을 볼 때, 당신에게 온 것은?",
+        "choices": [
+          {
+            "id": "the-necklace-q2a",
+            "label": "오늘 밤 나는 다른 사람이 된다",
+            "value": 1
+          },
+          {
+            "id": "the-necklace-q2b",
+            "label": "빌린 물건 하나가 목에 걸려 있다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 3,
+      "title": "그날 밤",
+      "illustration_key": "p3_ball",
+      "question": {
+        "id": "the-necklace-q3",
+        "axis": "C",
+        "weight": 1.0,
+        "pair_id": "c1",
+        "phase": "pre",
+        "prompt": "이 하룻밤은?",
+        "choices": [
+          {
+            "id": "the-necklace-q3a",
+            "label": "그만한 값어치가 있었다",
+            "value": 1
+          },
+          {
+            "id": "the-necklace-q3b",
+            "label": "하룻밤은 하룻밤일 뿐이다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 4,
+      "title": "없다",
+      "illustration_key": "p4_gone",
+      "question": {
+        "id": "the-necklace-q4",
+        "axis": "C",
+        "weight": 1.0,
+        "pair_id": "c2",
+        "phase": "pre",
+        "prompt": "잔에게, 당신은?",
+        "choices": [
+          {
+            "id": "the-necklace-q4a",
+            "label": "사실대로 말한다",
+            "value": 1
+          },
+          {
+            "id": "the-necklace-q4b",
+            "label": "말하지 않는다",
+            "value": -1
+          }
+        ]
+      }
+    },
+    {
+      "no": 5,
+      "title": "십 년",
+      "illustration_key": "p5_ten_years",
+      "questions": [
+        {
+          "id": "the-necklace-q5",
+          "axis": "A",
+          "weight": 1.0,
+          "prompt": "이 십 년은?",
+          "choices": [
+            {
+              "id": "the-necklace-q5a",
+              "label": "내가 자초한 것이다",
+              "value": 1
+            },
+            {
+              "id": "the-necklace-q5b",
+              "label": "하필 그날이었을 뿐이다",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "id": "the-necklace-q6",
+          "axis": "B",
+          "weight": 1.0,
+          "prompt": "그 십 년이 당신에게 남긴 것은?",
+          "choices": [
+            {
+              "id": "the-necklace-q6a",
+              "label": "그 십 년이 지금의 나를 만들었다",
+              "value": 1
+            },
+            {
+              "id": "the-necklace-q6b",
+              "label": "그냥 잃어버린 십 년이다",
+              "value": -1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "no": 6,
+      "title": "그건 가짜였어",
+      "illustration_key": "p6_it_was_fake",
+      "questions": [
+        {
+          "id": "the-necklace-q7",
+          "axis": "C",
+          "weight": 1.0,
+          "pair_id": "c1",
+          "phase": "post",
+          "prompt": "삼만 육천 프랑짜리가 아니었던 그 하룻밤을, 지금은?",
+          "choices": [
+            {
+              "id": "the-necklace-q7a",
+              "label": "그래도 값어치가 있었다",
+              "value": 1
+            },
+            {
+              "id": "the-necklace-q7b",
+              "label": "하룻밤은 하룻밤일 뿐이었다",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "id": "the-necklace-q8",
+          "axis": "C",
+          "weight": 1.0,
+          "pair_id": "c2",
+          "phase": "post",
+          "prompt": "그때 사실대로 말했어야 했다고 보는가?",
+          "choices": [
+            {
+              "id": "the-necklace-q8a",
+              "label": "말했어야 했다",
+              "value": 1
+            },
+            {
+              "id": "the-necklace-q8b",
+              "label": "말하지 않은 것도 하나의 선택이었다",
+              "value": -1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "no": 7,
+      "title": "두 손",
+      "illustration_key": "p7_two_hands",
+      "question": null,
+      "note": "결말. 질문 없음. 반전 직후의 정적만 담는다 — 마틸드가 무엇을 느꼈는지 쓰지 않는다."
+    }
+  ]
+}

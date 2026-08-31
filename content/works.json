@@ -27,6 +27,14 @@
       ],
       "order": 3,
       "status": "published"
+    },
+    {
+      "slug": "the-necklace",
+      "locales": [
+        "ko"
+      ],
+      "order": 4,
+      "status": "draft"
     }
   ]
 }

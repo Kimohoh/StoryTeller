@@ -45,10 +45,15 @@ export default async function Library() {
         </p>
       </header>
 
-      {/* 여러 작품을 읽을수록 좌표가 정밀해진다 (spec §3). 한 작품만으론 아직 말할 게 없다. */}
-      {readCount >= 2 ? (
+      {/* 칭호는 한 편부터 준다 — 다음 편을 읽을 이유가 된다.
+          좌표는 두 편부터다. 한 작품만으론 아직 말할 게 없다 (spec §3). */}
+      {readCount >= 1 ? (
         <section className="accum">
-          <h2>지금까지 읽은 {readCount}편이 찾은 나의 자리</h2>
+          <h2>
+            {readCount >= 2
+              ? `지금까지 읽은 ${readCount}편이 찾은 나의 자리`
+              : "첫 편에서 얻은 것"}
+          </h2>
 
           {epithet.length ? (
             <p className="epithet">
@@ -61,6 +66,15 @@ export default async function Library() {
             </p>
           ) : null}
 
+          {readCount < 2 ? (
+            <p className="note">
+              한 편을 더 읽으면 두 편이 모인 자리가 좌표로 나옵니다. 작품이 늘수록
+              칭호도 한 낱말씩 길어집니다.
+            </p>
+          ) : null}
+
+          {readCount >= 2 ? (
+            <>
           <AccumPlot coordinate={coordinate} axes={axes} c={acc.value} />
 
           <dl className="accum-legend">
@@ -85,6 +99,8 @@ export default async function Library() {
           </dl>
 
           <p className="note">작품을 더 읽을수록 이 자리는 조금씩 움직입니다.</p>
+            </>
+          ) : null}
         </section>
       ) : null}
 

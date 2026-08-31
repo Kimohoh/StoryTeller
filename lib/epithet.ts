@@ -12,7 +12,7 @@
  * C축은 넣지 않는다. 번짐을 수식어로 붙이려면 "흔들리는" 같은 말이 필요한데,
  * 그건 가치 서열이 실린 어휘라 쓰지 않기로 되어 있다 (docs/style.md §8).
  */
-import { publishedWorks } from "./works";
+import { works } from "./works";
 import { readWorks } from "./reader";
 import { buildResult } from "./verdict";
 
@@ -23,7 +23,8 @@ const JOINTS = ["위", "너머", "아래", "건너"];
 export function epithetWords(userId: string): string[] {
   const done = new Map(readWorks(userId).map((r) => [r.slug, r.session_id]));
   const words: string[] = [];
-  for (const entry of publishedWorks()) {
+  // draft 작품도 센다 — 직접 URL로 읽은 사람에게도 칭호는 나와야 한다.
+  for (const entry of works().works) {
     const sessionId = done.get(entry.slug);
     if (!sessionId) continue;
     try {

@@ -208,5 +208,56 @@
       "credit": null,
       "version": 3
     }
+  },
+  "the-necklace": {
+    "p1_invitation": {
+      "type": "svg",
+      "src": "the-necklace/p1_invitation.svg",
+      "alt": "어두운 좁은 방. 식탁 위 네모난 카드 한 장이 방 안 유일한 빛을 받고 있다. 방 저편에 등을 보이고 선 사람이 옷장을 마주하고 있는데, 옷장 안에는 옷 두어 벌만 걸려 있고 나머지는 비어 있다. 식탁 옆에 또 한 사람이 빈손으로 서서 그쪽을 보고 있다.",
+      "credit": null,
+      "version": 1
+    },
+    "p2_jewel_box": {
+      "type": "svg",
+      "src": "the-necklace/p2_jewel_box.svg",
+      "alt": "화장대 위에 열린 보석함. 안에 작고 어두운 형체 몇 개가 그림자에 잠겨 있고 어느 것도 반짝이지 않는다. 한 사람이 그 위로 몸을 기울여 손을 뻗었지만 아직 닿지 않았다. 뒤에 선 큰 거울에는 어둠과 그 사람의 등만 비친다.",
+      "credit": null,
+      "version": 1
+    },
+    "p3_ball": {
+      "type": "svg",
+      "src": "the-necklace/p3_ball.svg",
+      "alt": "시리즈에서 가장 밝은 무도회장. 천장의 샹들리에가 넓은 빛을 뿌리고, 바닥에는 얼굴 없는 사람들이 모두 등을 돌린 채 움직인다. 한가운데 한 사람만 멈춰 서 있고 그 주위만 비어 있다. 벽의 높은 창들은 새까맣다.",
+      "credit": null,
+      "version": 1
+    },
+    "p4_gone": {
+      "type": "svg",
+      "src": "the-necklace/p4_gone.svg",
+      "alt": "비 온 뒤의 밤거리. 젖은 돌바닥이 어둠 속으로 멀어지고, 멀리 가스등 하나가 작게 켜져 있다. 두 사람이 서로 떨어진 채 각각 허리를 굽혀 바닥을 살피고 있다. 화면 앞쪽에는 아무것도 걸리지 않은 목과 어깨의 곡선만 크게 잘려 들어와 있다.",
+      "credit": null,
+      "version": 1
+    },
+    "p5_ten_years": {
+      "type": "svg",
+      "src": "the-necklace/p5_ten_years.svg",
+      "alt": "시리즈에서 가장 어두운 다락방. 기울어진 천장 아래 한 사람이 등을 보이고 대야 앞에 웅크려 손을 물에 담그고 있다. 열린 문 너머로 가파른 계단이 화면 밖으로 올라간다. 빛은 높고 먼 채광창 하나뿐이고 잿빛으로 약하다. 벽에 걸린 거울은 벽 쪽으로 돌려져 있다.",
+      "credit": null,
+      "version": 1
+    },
+    "p6_it_was_fake": {
+      "type": "svg",
+      "src": "the-necklace/p6_it_was_fake.svg",
+      "alt": "시리즈에서 유일한 낮 거리. 넓은 보도 위에 두 사람이 떨어져 마주 서 있고, 한쪽이 눈에 띄게 허리를 펴고 있다. 빛이 넓고 평평해 그림자가 고이지 않는다. 뒤로 텅 빈 거리가 길게 이어지고 두 사람 모두 화면 속에서 작다.",
+      "credit": null,
+      "version": 1
+    },
+    "p7_two_hands": {
+      "type": "svg",
+      "src": "the-necklace/p7_two_hands.svg",
+      "alt": "어두운 바탕에 나란히 놓인 두 손만 아주 가깝게 잘려 들어와 있다. 한 손은 매끄럽고 편안하며, 한 손은 거칠고 손가락이 굵고 마디가 불거져 있다. 얼굴도 몸도 배경도 없다. 위에서 내려온 부드러운 빛 하나뿐이고 주위는 온통 빈 공간이다.",
+      "credit": null,
+      "version": 1
+    }
   }
 }
