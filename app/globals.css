@@ -281,3 +281,43 @@ a { color: var(--gold); }
 
 .accum-c { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--ink-2); }
 .accum-c b { color: var(--gold); font-weight: 400; }
+
+/* ── 브랜드 ── */
+.brand-hanja {
+  font-size: 0.62em;
+  letter-spacing: 0.06em;
+  color: #5C4C33;
+  margin-left: 0.35em;
+  vertical-align: 0.08em;
+}
+
+/* ── 좌표 그림 아래 축 설명 ── */
+.plot {
+  margin: 0 0 2.5rem;
+}
+.plot-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #6B5B41;
+}
+
+/* ── 선택지 없이 다시 읽기 ── */
+.reread-head {
+  margin-bottom: 2.5rem;
+}
+.reread-head h1 {
+  margin-bottom: 0.2rem;
+}
+.reread-page + .reread-page {
+  margin-top: 3.5rem;
+  padding-top: 3.5rem;
+  border-top: 1px solid #231F1B;
+}
+.reread-link {
+  display: block;
+  margin-top: 1.6rem;
+}

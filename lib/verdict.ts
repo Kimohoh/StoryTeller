@@ -18,8 +18,8 @@ export interface ResultPayload {
   scoring_version: number;
   coordinate: Coordinate;
   axes: {
-    A: { pos: string; neg: string; label_internal: string };
-    B: { pos: string; neg: string; label_internal: string };
+    A: { pos: string; neg: string; question: string; label_internal: string };
+    B: { pos: string; neg: string; question: string; label_internal: string };
   };
   primary: { key: string; name: string; distance: number };
   secondary: { key: string; name: string; distance: number };
@@ -106,11 +106,13 @@ export function buildResult(slug: string, sessionId: string): ResultPayload {
       A: {
         pos: work.axes.A.pos,
         neg: work.axes.A.neg,
+        question: work.axes.A.question,
         label_internal: work.axes.A.label_internal,
       },
       B: {
         pos: work.axes.B.pos,
         neg: work.axes.B.neg,
+        question: work.axes.B.question,
         label_internal: work.axes.B.label_internal,
       },
     },

@@ -9,7 +9,10 @@ interface Props {
   coordinate: { A: number; B: number };
   types: Record<string, TypeSource>;
   primaryKey: string;
-  axes: { A: { pos: string; neg: string }; B: { pos: string; neg: string } };
+  axes: {
+    A: { pos: string; neg: string; question: string };
+    B: { pos: string; neg: string; question: string };
+  };
 }
 
 const S = 300;
@@ -19,7 +22,8 @@ const toY = (b: number) => S - PAD - ((b + 1) / 2) * (S - PAD * 2);
 
 export function CoordinatePlot({ coordinate, types, primaryKey, axes }: Props) {
   return (
-    <svg viewBox={`0 0 ${S} ${S}`} width="100%" style={{ maxWidth: 340, margin: "0 0 2.5rem" }} role="img"
+    <figure className="plot">
+    <svg viewBox={`0 0 ${S} ${S}`} width="100%" style={{ maxWidth: 340 }} role="img"
          aria-label={`가로축 ${axes.A.neg}–${axes.A.pos}, 세로축 ${axes.B.neg}–${axes.B.pos} 위의 당신 좌표`}>
       <rect x={PAD} y={PAD} width={S - PAD * 2} height={S - PAD * 2} fill="none" stroke="#231F1B" strokeWidth="1" />
       <line x1={PAD} y1={S / 2} x2={S - PAD} y2={S / 2} stroke="#2A241E" strokeWidth="1" />
@@ -53,5 +57,11 @@ export function CoordinatePlot({ coordinate, types, primaryKey, axes }: Props) {
         return <circle key={key} cx={toX(c.A)} cy={toY(c.B)} r="2" fill={key === primaryKey ? "#E5BE72" : "#3A342C"} />;
       })}
     </svg>
+    {/* 축 이름만 보고는 무엇을 잰 건지 알 수 없다. 이 두 줄이 설명을 대신한다. */}
+    <figcaption className="plot-legend">
+      <span>가로 — {axes.A.question}</span>
+      <span>세로 — {axes.B.question}</span>
+    </figcaption>
+    </figure>
   );
 }

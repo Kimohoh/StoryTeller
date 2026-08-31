@@ -36,6 +36,8 @@ export interface AxisSource {
   label_internal: string;
   pos: string;
   neg: string;
+  /** 좌표 그림 아래 한 줄. 축 이름만으로는 무엇을 잰 건지 안 읽힌다. */
+  question: string;
   reveal_to_user: string;
 }
 

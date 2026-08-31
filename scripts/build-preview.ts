@@ -437,6 +437,9 @@ figure.illustration img {
     }
     s += '<circle cx="' + x(co.A) + '" cy="' + y(co.B) + '" r="16" fill="#C4903D" opacity=".18"/>';
     s += '<circle cx="' + x(co.A) + '" cy="' + y(co.B) + '" r="5" fill="#C4903D"/></svg>';
+    // 축 이름만으로는 무엇을 잰 건지 안 읽힌다 — 화면과 같은 설명을 붙인다
+    s += '<p class="plot-legend"><span>가로 — ' + esc(D.axes.A.question) + "</span>";
+    s += '<span>세로 — ' + esc(D.axes.B.question) + "</span></p>";
     return s;
   }
 

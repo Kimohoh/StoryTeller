@@ -81,6 +81,11 @@ export default async function ResultPage({
         다르게 읽은 사람들
       </Link>
 
+      {/* 피드백 F3 — 다 읽은 사람만 온다. 여기서는 아무것도 기록되지 않는다. */}
+      <Link className="quiet-link reread-link" href={`/reread/${slug}`}>
+        선택지 없이 처음부터 다시 읽기
+      </Link>
+
       <ResultActions
         slug={slug}
         title={loadWork(slug).title}
