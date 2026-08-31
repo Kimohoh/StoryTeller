@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { publishedWorks } from "@/lib/works";
+import { publishedWorks, globalAxes } from "@/lib/works";
 import { loadWork } from "@/lib/work-repo";
 import { currentUserId } from "@/lib/user";
 import { readWorks, accumulatedCoordinate, accumulatedCAxis } from "@/lib/reader";
 import { Illustration } from "@/components/Illustration";
+import { AccumPlot } from "@/components/AccumPlot";
 import { LocalLibrary } from "@/components/LocalLibrary";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +18,7 @@ export default async function Library() {
     : { coordinate: { A: 0, B: 0 }, works: 0 };
   // C는 측정된 작품들만 모아 계산한다 — 페어가 없는 작품은 셈에서 빠진다
   const acc = userId ? accumulatedCAxis(userId) : { value: null, works: 0, pairs: 0, changed: 0 };
+  const axes = globalAxes();
 
   const shelf = publishedWorks().map((entry) => {
     const work = loadWork(entry.slug);
@@ -40,40 +42,56 @@ export default async function Library() {
         </p>
       </header>
 
+      {/* 여러 작품을 읽을수록 좌표가 정밀해진다 (spec §3). 한 작품만으론 아직 말할 게 없다. */}
+      {readCount >= 2 ? (
+        <section className="accum">
+          <h2>지금까지 읽은 {readCount}편이 찾은 나의 자리</h2>
+
+          <AccumPlot coordinate={coordinate} axes={axes} c={acc.value} />
+
+          <dl className="accum-legend">
+            <div>
+              <dt>가로</dt>
+              <dd>{axes.A.question}</dd>
+            </div>
+            <div>
+              <dt>세로</dt>
+              <dd>{axes.B.question}</dd>
+            </div>
+            {acc.value !== null ? (
+              <div>
+                <dt>번짐</dt>
+                <dd>
+                  판단의 근거가 바뀌었을 때 답을 고쳤는지. {acc.works}편에서 {acc.pairs}번 중{" "}
+                  <b>{acc.changed}번</b> 고쳤습니다. 넓게 번질수록 자주 고쳤다는 뜻이고,
+                  어느 쪽이 더 나은 태도는 아닙니다.
+                </dd>
+              </div>
+            ) : null}
+          </dl>
+
+          <p className="note">작품을 더 읽을수록 이 자리는 조금씩 움직입니다.</p>
+        </section>
+      ) : null}
+
       <ul className="shelf">
         {shelf.map((w) => (
           <li key={w.slug}>
-            <Link href={w.session ? `/result/${w.session.session_id}` : `/w/${w.slug}`} className="shelf-item">
+            {/* 언제나 표지로 보낸다 — 거기서 답하며 읽을지 그냥 읽을지 고른다.
+                바로 결과로 보내면 읽은 작품을 다시 읽을 방법이 없어진다. */}
+            <Link href={`/w/${w.slug}`} className="shelf-item">
               <Illustration work={w.slug} k={w.cover} className="shelf-art" />
               <div className="shelf-text">
                 <h2>{w.title}</h2>
                 <p className="sub">{w.subtitle}</p>
                 <p className="meta">
-                  {w.session ? "읽음 — 결과 다시 보기" : `${w.pages}장`}
+                  {w.session ? `읽음 · ${w.pages}장` : `${w.pages}장`}
                 </p>
               </div>
             </Link>
           </li>
         ))}
       </ul>
-
-      {/* 여러 작품을 읽을수록 좌표가 정밀해진다 (spec §3). 한 작품만으론 아직 말할 게 없다. */}
-      {readCount >= 2 ? (
-        <section className="accum">
-          <h2>지금까지 읽은 {readCount}편이 모인 자리</h2>
-          <p className="note">
-            가로 {coordinate.A.toFixed(2)}, 세로 {coordinate.B.toFixed(2)}.
-            작품을 더 읽을수록 이 점은 조금씩 움직입니다.
-          </p>
-
-          {acc.value !== null ? (
-            <p className="note accum-c">
-              그리고 물음이 다시 왔을 때, {acc.works}편에 걸친 {acc.pairs}번 중{" "}
-              <b>{acc.changed}번</b> 답을 바꿨습니다.
-            </p>
-          ) : null}
-        </section>
-      ) : null}
 
       {/* 쿠키가 지워져도 이 기기에 남은 기록을 보여준다 */}
       <LocalLibrary serverSlugs={[...read.keys()]} />
