@@ -46,7 +46,7 @@
         "id": "sisyphus-q1",
         "axis": "B",
         "weight": 1.0,
-        "prompt": "어제와 같은 하루가 또 시작됐다. 지금 이 반복은?",
+        "prompt": "어제와 같은 하루에 대한 생각은?",
         "choices": [
           {
             "id": "sisyphus-q1a",
@@ -71,16 +71,16 @@
         "weight": 1.0,
         "pair_id": "c1",
         "phase": "pre",
-        "prompt": "커서가 깜빡이는 그 자리에서, 당신은?",
+        "prompt": "깜빡이는 커서를 바라보며 이상함을 느낀 당신은?",
         "choices": [
           {
             "id": "sisyphus-q2a",
-            "label": "손을 놓고 그대로 앉아 있는다",
+            "label": "이상함에 대해서 고민하기 시작한다",
             "value": 1
           },
           {
             "id": "sisyphus-q2b",
-            "label": "다시 숫자를 채워 넣는다",
+            "label": "당장은 숫자를 채워 넣는 수밖에 없다",
             "value": -1
           }
         ]
@@ -94,7 +94,7 @@
         "id": "sisyphus-q3",
         "axis": "A",
         "weight": 1.0,
-        "prompt": "아무리 물어도 답이 돌아오지 않을 때, 그건?",
+        "prompt": "문득 떠올라 머릿속을 떠나지 않는 그 고민, 그건?",
         "choices": [
           {
             "id": "sisyphus-q3a",
@@ -117,16 +117,16 @@
         "id": "sisyphus-q4",
         "axis": "B",
         "weight": 1.0,
-        "prompt": "답이 없는 자리에 답을 세워둔 그 사람들을, 당신은?",
+        "prompt": "대답 없는 세상을 대하는 그들만의 방법들, 당신 생각은?",
         "choices": [
           {
             "id": "sisyphus-q4a",
-            "label": "그것도 하나의 답이다",
+            "label": "그들만의 방식으로 답을 한 것이다",
             "value": 1
           },
           {
             "id": "sisyphus-q4b",
-            "label": "답이 아니라 질문을 지운 것이다",
+            "label": "스스로의 질문을 지움으로써 넘어간 것이다",
             "value": -1
           }
         ]
@@ -142,16 +142,16 @@
         "weight": 1.0,
         "pair_id": "c2",
         "phase": "pre",
-        "prompt": "그 문 앞에서, 당신은?",
+        "prompt": "지겹도록 반복되는 출근에 대해서, 당신은?",
         "choices": [
           {
             "id": "sisyphus-q5a",
-            "label": "짐을 챙겨 일어선다",
+            "label": "그래도 지겨운 반복을 끊어낸다",
             "value": 1
           },
           {
             "id": "sisyphus-q5b",
-            "label": "앉은 자리에 그대로 있는다",
+            "label": "의문을 남긴 채로 판을 벗어날 순 없다",
             "value": -1
           }
         ]
@@ -169,12 +169,12 @@
         "choices": [
           {
             "id": "sisyphus-q6a",
-            "label": "각자 그렇게 정한 것이다",
+            "label": "각자가 원하는 것을 찾아 선택한 것이다",
             "value": 1
           },
           {
             "id": "sisyphus-q6b",
-            "label": "다른 수가 없어서 그렇게 된 것이다",
+            "label": "오래해서는 찾을 수 없어서 밀려난 것이다",
             "value": -1
           }
         ]
@@ -247,7 +247,7 @@
           },
           {
             "id": "sisyphus-q9b",
-            "label": "나가고 말고와는 다른 것을 하고 있는 사람이다",
+            "label": "반복 속에서 다른 가치를 추구하는 사람이다",
             "value": -1
           }
         ]
