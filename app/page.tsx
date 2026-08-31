@@ -5,6 +5,7 @@ import { currentUserId } from "@/lib/user";
 import { readWorks, accumulatedCoordinate, accumulatedCAxis } from "@/lib/reader";
 import { Illustration } from "@/components/Illustration";
 import { AccumPlot } from "@/components/AccumPlot";
+import { epithetWords, epithetParts } from "@/lib/epithet";
 import { LocalLibrary } from "@/components/LocalLibrary";
 
 export const dynamic = "force-dynamic";
@@ -19,6 +20,8 @@ export default async function Library() {
   // C는 측정된 작품들만 모아 계산한다 — 페어가 없는 작품은 셈에서 빠진다
   const acc = userId ? accumulatedCAxis(userId) : { value: null, works: 0, pairs: 0, changed: 0 };
   const axes = globalAxes();
+  // 읽어서 얻은 칭호 — 작품마다 받은 유형 이름을 한 줄로 엮는다
+  const epithet = userId ? epithetParts(epithetWords(userId)) : [];
 
   const shelf = publishedWorks().map((entry) => {
     const work = loadWork(entry.slug);
@@ -46,6 +49,17 @@ export default async function Library() {
       {readCount >= 2 ? (
         <section className="accum">
           <h2>지금까지 읽은 {readCount}편이 찾은 나의 자리</h2>
+
+          {epithet.length ? (
+            <p className="epithet">
+              <span className="epithet-label">읽어서 얻은 칭호</span>
+              <span className="epithet-line">
+                {epithet.map((part, i) =>
+                  part.word ? <b key={i}>{part.text}</b> : <span key={i}>{part.text}</span>,
+                )}
+              </span>
+            </p>
+          ) : null}
 
           <AccumPlot coordinate={coordinate} axes={axes} c={acc.value} />
 

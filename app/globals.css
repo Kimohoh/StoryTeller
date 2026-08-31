@@ -382,3 +382,27 @@ a { color: var(--gold); }
   color: #C4903D;
 }
 
+
+/* ── 읽어서 얻은 칭호 ── */
+.epithet {
+  margin: 0 0 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.epithet-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--bronze);
+}
+.epithet-line {
+  font-family: ui-serif, "Nanum Myeongjo", "Apple SD Gothic Neo", Georgia, serif;
+  font-size: 1.32rem;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  color: var(--paper-dim);
+}
+.epithet-line b {
+  font-weight: 600;
+  color: var(--gold);
+}
