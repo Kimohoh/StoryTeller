@@ -44,6 +44,7 @@ export default async function ResultPage({
         types={workTypes(slug)}
         primaryKey={r.primary.key}
         axes={r.axes}
+        c={r.c}
       />
 
       <h1 className="verdict-type">{r.primary.name}</h1>
@@ -76,16 +77,11 @@ export default async function ResultPage({
         <Prose paragraphs={r.ending_reveal} className="" />
       </section>
 
-      {/* ③ 사각지대를 읽은 다음에야 반대쪽을 보러 갈 이유가 생긴다 (spec §8). */}
-      <Link className="next" href={`/result/${sessionId}/others`}>
-        다르게 읽은 사람들
-      </Link>
+      {/* 「다르게 읽은 사람들」은 숨겼다. 4분면마다 경우의 수가 한정되어 몇 번만
+          보면 바닥이 드러난다. 라우트는 남겨두고 진입점만 뺀다 — 코멘트가 쌓인
+          뒤 다시 세운다. */}
 
-      {/* 피드백 F3 — 다 읽은 사람만 온다. 여기서는 아무것도 기록되지 않는다. */}
-      <Link className="quiet-link reread-link" href={`/reread/${slug}`}>
-        선택지 없이 처음부터 다시 읽기
-      </Link>
-
+      {/* 표지의 두 갈래와 같은 형태로 맞춘다. 작은 글씨 링크가 흩어져 있던 자리다. */}
       <ResultActions
         slug={slug}
         title={loadWork(slug).title}

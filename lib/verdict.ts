@@ -48,8 +48,8 @@ export interface CBlock {
   pairs_changed: number;
   /** 실제 전후 응답. C축의 증거이자 이 화면에서 가장 강한 부분이다. */
   evidence: {
-    pre: { page_no: number; label: string };
-    post: { page_no: number; label: string };
+    pre: { page_no: number; page_title: string; label: string };
+    post: { page_no: number; page_title: string; label: string };
     changed: boolean;
   }[];
 }
@@ -73,18 +73,26 @@ export function buildResult(slug: string, sessionId: string): ResultPayload {
   const cScore = computeCAxis(rules, answers);
   let c: CBlock | null = null;
   if (cScore.value !== null && cScore.pairs.length >= C_MIN_PAIRS) {
-    const located = new Map<string, { page_no: number; labels: Map<string, string> }>();
+    const located = new Map<
+      string,
+      { page_no: number; page_title: string; labels: Map<string, string> }
+    >();
     for (const page of work.pages) {
       for (const q of page.questions) {
         located.set(q.id, {
           page_no: page.no,
+          page_title: page.title,
           labels: new Map(q.choices.map((ch) => [ch.id, ch.label])),
         });
       }
     }
     const side = (ref: { question_id: string; choice_id: string }) => {
       const at = located.get(ref.question_id);
-      return { page_no: at?.page_no ?? 0, label: at?.labels.get(ref.choice_id) ?? "" };
+      return {
+        page_no: at?.page_no ?? 0,
+        page_title: at?.page_title ?? "",
+        label: at?.labels.get(ref.choice_id) ?? "",
+      };
     };
     c = {
       value: cScore.value,

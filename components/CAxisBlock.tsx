@@ -11,10 +11,10 @@ export function CAxisBlock({ c }: { c: CBlock }) {
 
   const headline =
     c.pairs_changed === c.pairs_total
-      ? "당신은 물음이 다시 왔을 때 답을 바꿨습니다."
+      ? "판단의 근거가 바뀌었을 때, 당신은 답을 고쳤습니다."
       : kept === c.pairs_total
-        ? "당신은 물음이 다시 왔을 때 처음 답을 지켰습니다."
-        : `${c.pairs_total}번 중 ${c.pairs_changed}번, 당신은 답을 바꿨습니다.`;
+        ? "판단의 근거가 바뀌었을 때, 당신은 처음 답을 지켰습니다."
+        : `판단의 근거가 바뀌었을 때, ${c.pairs_total}번 중 ${c.pairs_changed}번 답을 고쳤습니다.`;
 
   return (
     <section className="caxis">
@@ -24,19 +24,25 @@ export function CAxisBlock({ c }: { c: CBlock }) {
         {c.evidence.map((e, i) => (
           <li key={i} data-changed={e.changed}>
             <span className="caxis-side">
-              <b>{e.pre.page_no}페이지</b> {e.pre.label}
+              <b>
+                {e.pre.page_no}장{e.pre.page_title ? ` 「${e.pre.page_title}」` : ""}
+              </b>
+              {e.pre.label}
             </span>
             <span className="caxis-arrow" aria-hidden="true">↓</span>
             <span className="caxis-side">
-              <b>{e.post.page_no}페이지</b> {e.post.label}
+              <b>
+                {e.post.page_no}장{e.post.page_title ? ` 「${e.post.page_title}」` : ""}
+              </b>
+              {e.post.label}
             </span>
           </li>
         ))}
       </ul>
 
       <p className="caxis-note">
-        같은 사실 앞에서 물음의 각도만 바뀌었습니다. 새로 알게 된 것은 없었습니다.
-        바꾸는 쪽과 지키는 쪽 중 어느 것도 더 나은 태도는 아닙니다 — 다만 그때
+        사실은 하나도 바뀌지 않았습니다. 같은 일을 보는 자리만 옮겨졌을 뿐입니다.
+        고치는 쪽과 지키는 쪽 중 어느 것도 더 나은 태도는 아닙니다 — 다만 그때
         무엇을 하는지가 사람마다 다릅니다.
       </p>
     </section>

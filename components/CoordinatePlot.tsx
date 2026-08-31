@@ -13,6 +13,8 @@ interface Props {
     A: { pos: string; neg: string; question: string };
     B: { pos: string; neg: string; question: string };
   };
+  /** C축. −1(지켰다) ~ +1(고쳤다). 측정되지 않았으면 null. */
+  c: { value: number; pairs_total: number; pairs_changed: number } | null;
 }
 
 const S = 300;
@@ -20,7 +22,14 @@ const PAD = 34;
 const toX = (a: number) => PAD + ((a + 1) / 2) * (S - PAD * 2);
 const toY = (b: number) => S - PAD - ((b + 1) / 2) * (S - PAD * 2);
 
-export function CoordinatePlot({ coordinate, types, primaryKey, axes }: Props) {
+export function CoordinatePlot({ coordinate, types, primaryKey, axes, c }: Props) {
+  // 서재의 누적 그림과 같은 규칙 — 자주 고친 사람은 넓게 번지고 지킨 사람은 좁게 조인다.
+  const spread = c === null ? 0 : 8 + ((c.value + 1) / 2) * 26;
+  const rings = c === null ? [] : [1, 0.66, 0.36].map((k, i) => ({
+    r: spread * k,
+    opacity: [0.1, 0.16, 0.26][i],
+  }));
+
   return (
     <figure className="plot">
     <svg viewBox={`0 0 ${S} ${S}`} width="100%" style={{ maxWidth: 340 }} role="img"
@@ -50,18 +59,40 @@ export function CoordinatePlot({ coordinate, types, primaryKey, axes }: Props) {
         );
       })}
 
-      <circle cx={toX(coordinate.A)} cy={toY(coordinate.B)} r="16" fill="#C4903D" opacity=".18" />
-      <circle cx={toX(coordinate.A)} cy={toY(coordinate.B)} r="5" fill="#C4903D" />
+      {rings.map((ring, i) => (
+        <circle key={i} cx={toX(coordinate.A)} cy={toY(coordinate.B)} r={ring.r} fill="#C4903D" opacity={ring.opacity} />
+      ))}
+      {rings.map((ring, i) => (
+        <circle key={`o${i}`} cx={toX(coordinate.A)} cy={toY(coordinate.B)} r={ring.r}
+                fill="none" stroke="#C4903D" strokeWidth="0.5" opacity="0.35" />
+      ))}
+      <circle cx={toX(coordinate.A)} cy={toY(coordinate.B)} r="5" fill="#E5BE72" />
       {Object.entries(types).map(([key, t]) => {
         const c = typeCenter(t);
         return <circle key={key} cx={toX(c.A)} cy={toY(c.B)} r="2" fill={key === primaryKey ? "#E5BE72" : "#3A342C"} />;
       })}
     </svg>
     {/* 축 이름만 보고는 무엇을 잰 건지 알 수 없다. 이 두 줄이 설명을 대신한다. */}
-    <figcaption className="plot-legend">
-      <span>가로 — {axes.A.question}</span>
-      <span>세로 — {axes.B.question}</span>
-    </figcaption>
+    <dl className="plot-legend">
+      <div>
+        <dt>가로</dt>
+        <dd>{axes.A.question}</dd>
+      </div>
+      <div>
+        <dt>세로</dt>
+        <dd>{axes.B.question}</dd>
+      </div>
+      {c ? (
+        <div>
+          <dt>번짐</dt>
+          <dd>
+            판단의 근거가 바뀌었을 때 답을 고쳤는지. {c.pairs_total}번 중{" "}
+            <b>{c.pairs_changed}번</b> 고쳤습니다. 넓게 번질수록 자주 고쳤다는 뜻이고,
+            어느 쪽이 더 나은 태도는 아닙니다.
+          </dd>
+        </div>
+      ) : null}
+    </dl>
     </figure>
   );
 }
