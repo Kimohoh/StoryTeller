@@ -67,6 +67,7 @@ export default async function ReadPage({
           picked={answered}
           nextHref={hasNext ? `/read/${slug}/${nextNo}` : `/result/${sessionId}`}
           lastQuestionId={lastQuestionId}
+          hold={!hasNext}
         />
       ) : hasNext ? (
         <Link className="next" href={`/read/${slug}/${nextNo}`}>
@@ -74,7 +75,7 @@ export default async function ReadPage({
         </Link>
       ) : (
         <Link className="next" href={`/result/${sessionId}`}>
-          다 읽었습니다
+          나의 위치 찾기
         </Link>
       )}
     </main>

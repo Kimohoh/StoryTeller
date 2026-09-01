@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { enqueueAnswer, flushPendingAnswers } from "@/lib/pending-answers";
 
@@ -19,9 +20,24 @@ interface Props {
   nextHref: string;
   /** 작품 전체의 마지막 문항. 이걸 답하면 세션이 완료된다. */
   lastQuestionId: string | null;
+  /**
+   * 마지막 장이라 답을 고르자마자 결과로 튕기면 안 되는 경우.
+   * 답한 뒤 버튼을 띄워, 결과로 넘어가는 걸음은 읽는 사람이 직접 딛게 한다.
+   */
+  hold?: boolean;
+  /** hold일 때 띄우는 버튼 문구 */
+  holdLabel?: string;
 }
 
-export function QuestionBlock({ sessionId, questions, picked, nextHref, lastQuestionId }: Props) {
+export function QuestionBlock({
+  sessionId,
+  questions,
+  picked,
+  nextHref,
+  lastQuestionId,
+  hold = false,
+  holdLabel = "나의 위치 찾기",
+}: Props) {
   const router = useRouter();
   const [answers, setAnswers] = useState<Record<string, string>>(picked);
   const [busy, setBusy] = useState(false);
@@ -86,6 +102,11 @@ export function QuestionBlock({ sessionId, questions, picked, nextHref, lastQues
     }
 
     if (questions.some((q) => q.id === lastQuestionId)) await flushPendingAnswers();
+    // 마지막 장에서는 스스로 튀어나가지 않는다. 버튼이 뜨고, 누르는 건 읽은 사람이다.
+    if (hold) {
+      setBusy(false);
+      return;
+    }
     setTimeout(() => router.push(nextHref), 260);
   }
 
@@ -108,6 +129,11 @@ export function QuestionBlock({ sessionId, questions, picked, nextHref, lastQues
           ))}
         </section>
       ))}
+      {hold && questions.every((q) => answers[q.id]) ? (
+        <Link className="next" href={nextHref}>
+          {holdLabel}
+        </Link>
+      ) : null}
     </>
   );
 }

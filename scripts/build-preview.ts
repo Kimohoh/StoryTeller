@@ -391,7 +391,7 @@ figure.illustration img {
         h += "</section>";
       }
     } else {
-      h += '<button class="next" id="go">' + (hasNext ? "계속" : "다 읽었습니다") + "</button>";
+      h += '<button class="next" id="go">' + (hasNext ? "계속" : "나의 위치 찾기") + "</button>";
     }
     h += "</div>";
     render(h);
