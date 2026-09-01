@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  앱을 맥이 켜지면 저절로 뜨고, 죽으면 저절로 살아나는 서비스로 만든다.
+
+  터미널 창을 띄워 두는 방식은 창을 실수로 닫거나 맥이 재부팅되면 끝이다.
+  광고 심사 크롤러는 며칠에 걸쳐 아무 때나 오기 때문에, 그 사이 한 번
+  꺼져 있으면 그것만으로 반려된다.
+
+  쓰는 법:
+    1. __REPO__, __USER__, __ADMIN_TOKEN__ 세 곳을 고친다
+    2. cp deploy/launchd/*.plist ~/Library/LaunchAgents/
+    3. launchctl load ~/Library/LaunchAgents/page.godok.app.plist
+    4. launchctl load ~/Library/LaunchAgents/page.godok.tunnel.plist
+
+  끄려면 load 대신 unload. 고친 뒤에는 unload 하고 다시 load 한다.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>page.godok.app</string>
+
+  <key>WorkingDirectory</key>
+  <string>__REPO__</string>
+
+  <!-- launchd는 로그인 셸이 아니라서 PATH가 비어 있다. brew 경로를 직접 준다.
+       인텔 맥이면 /opt/homebrew 대신 /usr/local 이다. -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/opt/node@22/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    <key>NODE_ENV</key>
+    <string>production</string>
+    <key>APP_ORIGIN</key>
+    <string>https://godok.page</string>
+    <key>ADMIN_TOKEN</key>
+    <string>__ADMIN_TOKEN__</string>
+    <!-- 애드센스를 붙일 때 채운다. 비워 두면 광고 코드가 안 나간다. -->
+    <key>NEXT_PUBLIC_ADSENSE_CLIENT</key>
+    <string></string>
+    <key>ADSENSE_PUBLISHER_ID</key>
+    <string></string>
+    <key>CONTACT_EMAIL</key>
+    <string></string>
+  </dict>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/opt/node@22/bin/npm</string>
+    <string>start</string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <!-- 죽으면 다시 띄운다 -->
+  <key>KeepAlive</key>
+  <true/>
+  <!-- 죽자마자 무한 재시작하지 않도록 10초 쉰다 -->
+  <key>ThrottleInterval</key>
+  <integer>10</integer>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/godok-app.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/godok-app.err.log</string>
+</dict>
+</plist>

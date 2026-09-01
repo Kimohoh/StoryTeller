@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  cloudflared 터널도 같은 이유로 서비스로 만든다.
+  ~/.cloudflared/config.yml 이 먼저 있어야 한다 (docs/domain-setup.md 3단계).
+
+  __USER__만 고치면 된다. 인텔 맥이면 /opt/homebrew 대신 /usr/local 이다.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>page.godok.tunnel</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/bin/cloudflared</string>
+    <string>--config</string>
+    <string>/Users/__USER__/.cloudflared/config.yml</string>
+    <string>tunnel</string>
+    <string>run</string>
+    <string>godok</string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ThrottleInterval</key>
+  <integer>10</integer>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/godok-tunnel.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/godok-tunnel.err.log</string>
+</dict>
+</plist>
