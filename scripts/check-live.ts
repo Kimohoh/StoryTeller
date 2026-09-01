@@ -10,22 +10,15 @@
  *
  * 다른 컴퓨터에서 돌려도 된다 — 레포만 있으면 된다.
  */
-import { readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { publishedWorks } from "../lib/works";
+import { loadEnvLocal } from "../lib/env-file";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-function envLocal(key: string): string | null {
-  const p = join(ROOT, ".env.local");
-  if (!existsSync(p)) return null;
-  for (const line of readFileSync(p, "utf8").split("\n")) {
-    const m = line.match(/^\s*([A-Z_0-9]+)\s*=\s*(.*)$/);
-    if (m && m[1] === key) return m[2].trim().replace(/^["']|["']$/g, "") || null;
-  }
-  return null;
-}
+loadEnvLocal(ROOT);
+const envLocal = (key: string): string | null => process.env[key] ?? null;
 
 const origin = (process.argv[2] ?? envLocal("APP_ORIGIN") ?? "").replace(/\/$/, "");
 if (!origin) {

@@ -11,7 +11,13 @@
  */
 import Database from "better-sqlite3";
 import { existsSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { loadEnvLocal } from "../lib/env-file";
+
+// 앱과 같은 것을 보게 한다 — 이걸 안 하면 앱은 .env.local을 읽고 이 스크립트는
+// 안 읽어서, 서로 다른 파일을 보고도 둘 다 정상으로 보인다.
+loadEnvLocal(join(dirname(fileURLToPath(import.meta.url)), ".."));
 
 const path = process.env.STORYTELLER_DB ?? join(process.cwd(), "data/storyteller.sqlite");
 
@@ -19,14 +25,19 @@ console.log(`\n지금 폴더  ${process.cwd()}`);
 console.log(`DB 경로    ${path}`);
 console.log(
   process.env.STORYTELLER_DB
-    ? "           (.env.local의 STORYTELLER_DB로 지정됨)"
+    ? "           (STORYTELLER_DB로 지정됨 — 기본값이 아니다)"
     : "           (기본값 — 앱을 띄운 폴더 기준)",
 );
 
 if (!existsSync(path)) {
-  console.log("\n이 파일이 없다. 앱을 이 폴더에서 띄운 적이 없다는 뜻이다.");
-  console.log("다른 데 있는지 찾아본다:\n");
-  console.log('  find ~ -name "storyteller.sqlite" -not -path "*/node_modules/*" 2>/dev/null\n');
+  if (process.env.STORYTELLER_DB) {
+    console.log("\n이 파일이 없다. STORYTELLER_DB를 지운 적 없이 적어 두면");
+    console.log("앱이 여기에 빈 DB를 새로 만든다. .env.local에서 그 줄을 비워라.");
+  } else {
+    console.log("\n이 파일이 없다. 앱을 이 폴더에서 띄운 적이 없다는 뜻이다.");
+  }
+  console.log("\n다른 데 있는지 찾아본다:\n");
+  console.log('  find ~ -name "storyteller.*" -not -path "*/node_modules/*" 2>/dev/null\n');
   process.exit(1);
 }
 
