@@ -187,7 +187,12 @@ https://godok.page/admin/enter?token=<.env.local의 ADMIN_TOKEN>
 "저장 공간 최적화"가 켜져 있으면 안 쓰는 것으로 판단해 본체를 걷어가기도 한다.
 기록이 오락가락하거나 손상되기 딱 좋은 조합이다.
 
-DB만 동기화 밖으로 뺀다. 레포는 그대로 둬도 된다.
+**더 깨끗한 쪽은 레포 자체를 동기화 밖으로 옮기는 것이다.** DB만 빼도 사고는
+막지만, `node_modules`와 `.next` 수만 개 파일이 계속 iCloud로 오르내리는 건
+그대로다. 레포를 `~/projects/` 같은 홈 아래로 옮기면 그 문제가 같이 사라진다
+(옮긴 뒤 plist의 `WorkingDirectory`를 새 경로로 고치고 다시 빌드한다).
+
+레포를 옮기지 않겠다면 DB만이라도 뺀다.
 
 ```
 mkdir -p ~/godok-data
