@@ -1,0 +1,19 @@
+# Named Tunnel 설정 — 이 파일을 ~/.cloudflared/config.yml 로 복사해서 쓴다.
+#
+# quick tunnel(주소가 매번 바뀌는 것)과 다르다. 터널에 이름과 UUID가 붙고
+# 도메인이 그 UUID를 가리키므로, 껐다 켜도 주소가 그대로다.
+#
+# <UUID>는 `cloudflared tunnel create godok` 이 찍어주는 값으로 바꾼다.
+# <USER>는 맥 사용자 이름(clarkkim).
+
+tunnel: <UUID>
+credentials-file: /Users/<USER>/.cloudflared/<UUID>.json
+
+ingress:
+  # 도메인으로 들어온 요청을 로컬 3000번으로 넘긴다
+  - hostname: godok.page
+    service: http://localhost:3000
+  - hostname: www.godok.page
+    service: http://localhost:3000
+  # 위 어느 것에도 안 맞으면 404. 이 줄이 없으면 cloudflared가 뜨지 않는다.
+  - service: http_status:404
