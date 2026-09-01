@@ -57,7 +57,22 @@ async function main() {
     console.log("\n실패 1건. 나머지는 건너뛴다.\n");
     process.exit(1);
   }
-  home.status === 200 ? ok("서재") : bad("서재", `${home.status}`);
+  if (home.status === 200) ok("서재");
+  else {
+    // 502·503·521~523은 터널은 살아 있는데 뒤의 앱이 안 떠 있다는 뜻이다.
+    // 그냥 숫자만 보여주면 사이트 전체가 망가진 것처럼 읽힌다.
+    const originDown = home.status === 502 || home.status === 503 || (home.status >= 521 && home.status <= 523);
+    bad("서재", originDown ? `${home.status} — 터널은 살아 있는데 앱이 안 떠 있다` : `${home.status}`);
+    if (originDown) {
+      console.log("\n  앱만 다시 띄우면 된다. 도메인도 터널도 그대로다.\n");
+      console.log("    launchctl list | grep godok        (가운데 칸이 0이어야 한다)");
+      console.log("    tail -20 /tmp/godok-app.err.log    (왜 죽었는지)");
+      console.log("    grep -A1 WorkingDirectory ~/Library/LaunchAgents/page.godok.app.plist");
+      console.log("                                      (레포를 옮겼다면 이 경로부터)");
+      console.log("\n  나머지 검사는 앱이 뜬 뒤에 의미가 있다.\n");
+      process.exit(1);
+    }
+  }
 
   /* ---------- 절대 주소 ---------- */
   console.log("\n공유 카드");
