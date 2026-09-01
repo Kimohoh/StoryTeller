@@ -179,6 +179,19 @@ https://godok.page/admin/enter?token=<.env.local의 ADMIN_TOKEN>
 한 번 열면 그 뒤로는 `https://godok.page/admin` 만 치면 된다.
 404가 나오면 토큰이 `.env.local`의 값과 다른 것이다.
 
+### 옮기기 전에 백업
+
+```
+npm run db:backup
+```
+
+`~/godok-backup/storyteller-날짜.sqlite` 한 파일로 뜬다. cp로 세 파일을 긁는
+것과 달리 SQLite 자신의 백업 기능을 쓰므로, 앱이 돌고 있어도 `-wal`에 있던
+내용까지 합쳐진 온전한 파일이 나온다. 뜬 뒤 건수까지 확인해 준다.
+
+**옛 파일은 새 자리에서 같은 건수가 확인된 뒤에 지운다.** 순서를 바꾸면
+앱이 빈 DB를 새로 만들고, 화면은 그냥 0이 된다.
+
 ### DB를 iCloud 밖으로 옮기기 (맥에서 데스크탑 동기화를 쓴다면)
 
 레포가 `~/Desktop` 이나 `~/Documents` 안에 있고 iCloud의 "데스크탑 및 문서 폴더"

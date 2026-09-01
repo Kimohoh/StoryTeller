@@ -16,6 +16,7 @@
     "check:live": "tsx scripts/check-live.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:where": "tsx scripts/db-where.ts",
+    "db:backup": "tsx scripts/db-backup.ts",
     "db:rescore": "tsx scripts/rescore.ts",
     "test": "node --import tsx --test scripts/*.test.ts",
     "preview": "tsx scripts/build-preview.ts",
