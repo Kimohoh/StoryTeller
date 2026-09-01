@@ -52,16 +52,16 @@
         "id": "the-necklace-q1",
         "axis": "A",
         "weight": 1.0,
-        "prompt": "입고 갈 옷이 없다는 것은?",
+        "prompt": "입고 갈 옷이 없다는 말에 대한 생각은?",
         "choices": [
           {
             "id": "the-necklace-q1a",
-            "label": "이 사람이 지금 가진 것의 문제다",
+            "label": "중요한 자리에 대비하지 못한 개인의 문제다",
             "value": 1
           },
           {
             "id": "the-necklace-q1b",
-            "label": "그런 옷을 갖춰야 들어갈 수 있는 자리의 문제다",
+            "label": "그런 옷을 갖춰야만 들어갈 수 있는 자리가 문제다",
             "value": -1
           }
         ]
@@ -75,16 +75,16 @@
         "id": "the-necklace-q2",
         "axis": "B",
         "weight": 1.0,
-        "prompt": "그 목걸이를 걸고 거울을 볼 때, 당신에게 온 것은?",
+        "prompt": "거울에 비친 목걸이를 보며 당신에게 든 생각은?",
         "choices": [
           {
             "id": "the-necklace-q2a",
-            "label": "오늘 밤 나는 다른 사람이 된다",
+            "label": "이 목걸이를 통해 오늘 밤 나의 다른 모습을 보여줄 수 있다",
             "value": 1
           },
           {
             "id": "the-necklace-q2b",
-            "label": "빌린 물건 하나가 목에 걸려 있다",
+            "label": "매료될 정도로 아름답지만 결국 빌린 물건일 뿐이다",
             "value": -1
           }
         ]
