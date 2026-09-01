@@ -6,13 +6,16 @@
   광고 심사 크롤러는 며칠에 걸쳐 아무 때나 오기 때문에, 그 사이 한 번
   꺼져 있으면 그것만으로 반려된다.
 
-  쓰는 법:
-    1. __REPO__ 한 곳을 고친다 (레포 폴더의 절대 경로)
-    2. cp deploy/launchd/*.plist ~/Library/LaunchAgents/
-    3. launchctl load ~/Library/LaunchAgents/page.godok.app.plist
-    4. launchctl load ~/Library/LaunchAgents/page.godok.tunnel.plist
+  이 파일은 본이다. 손으로 고쳐 쓰지 말고 레포 폴더에서 이걸 돌린다:
 
-  끄려면 load 대신 unload. 고친 뒤에는 unload 하고 다시 load 한다.
+    npm run launchd:install
+
+  __REPO__ 는 지금 폴더로, __NPM__ 과 __PATH__ 는 이 맥에 실제로 깔린
+  경로로 채워서 ~/Library/LaunchAgents/ 에 넣고 다시 띄운다. 편집기로
+  고치다 한 줄이 지워지면 launchd가 / 에서 앱을 띄우려 들고, 그러면
+  package.json을 못 찾는다며 조용히 죽는다.
+
+  끄려면: launchctl unload ~/Library/LaunchAgents/page.godok.app.plist
 -->
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -24,7 +27,6 @@
   <string>__REPO__</string>
 
   <!-- launchd는 로그인 셸이 아니라서 PATH가 비어 있다. brew 경로를 직접 준다.
-       인텔 맥이면 /opt/homebrew 대신 /usr/local 이다.
 
        APP_ORIGIN, ADMIN_TOKEN, ADSENSE_PUBLISHER_ID 같은 값은 여기 적지 않는다.
        레포 폴더의 .env.local에 두면 Next가 뜰 때 알아서 읽는다 — 비밀이
@@ -32,12 +34,12 @@
   <key>EnvironmentVariables</key>
   <dict>
     <key>PATH</key>
-    <string>/opt/homebrew/opt/node@22/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    <string>__PATH__</string>
   </dict>
 
   <key>ProgramArguments</key>
   <array>
-    <string>/opt/homebrew/opt/node@22/bin/npm</string>
+    <string>__NPM__</string>
     <string>start</string>
   </array>
 

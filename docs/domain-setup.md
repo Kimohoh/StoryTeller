@@ -110,8 +110,9 @@ cloudflared tunnel run godok
 ## 껐다 켜도 알아서 뜨게 (권장)
 
 터미널 두 개를 띄워 두는 방식은 창을 실수로 닫거나 맥이 재부팅되면 끝난다.
-`deploy/launchd/`의 plist 둘을 넣으면 로그인할 때 저절로 뜨고 죽으면 되살아난다.
-방법은 `docs/adsense.md`의 "노트북을 원본 서버로 쓰는 경우"에 있다.
+레포 폴더에서 `npm run launchd:install` 한 줄이면 앱과 터널이 서비스로 서고,
+로그인할 때 저절로 뜬다. **레포를 옮겼을 때도 이것만 다시 돌리면 된다.**
+자세한 건 `docs/adsense.md`의 "노트북을 원본 서버로 쓰는 경우"에 있다.
 
 **터널을 launchd로 띄운다면 `sudo cloudflared service install` 은 하지 않는다.**
 둘 다 하면 같은 터널을 두 번 띄우게 되고, 연결이 겹쳐 요청이 오락가락한다.
@@ -203,7 +204,7 @@ npm run db:backup
 **더 깨끗한 쪽은 레포 자체를 동기화 밖으로 옮기는 것이다.** DB만 빼도 사고는
 막지만, `node_modules`와 `.next` 수만 개 파일이 계속 iCloud로 오르내리는 건
 그대로다. 레포를 `~/projects/` 같은 홈 아래로 옮기면 그 문제가 같이 사라진다
-(옮긴 뒤 plist의 `WorkingDirectory`를 새 경로로 고치고 다시 빌드한다).
+(옮긴 뒤 새 폴더에서 `npm run build` 하고 `npm run launchd:install` 을 다시 돌린다).
 
 레포를 옮기지 않겠다면 DB만이라도 뺀다.
 

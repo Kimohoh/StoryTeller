@@ -93,32 +93,21 @@
 
 ### 자동으로 뜨고 죽으면 살아나게
 
-터미널 창 두 개를 띄워 두는 방식은 창을 실수로 닫거나 맥이 재부팅되면 끝난다.
-`deploy/launchd/`의 plist 두 개를 쓰면 로그인할 때 저절로 뜨고, 죽으면
-10초 뒤에 다시 뜬다.
+터미널 창을 띄워 두는 방식은 창을 실수로 닫거나 맥이 재부팅되면 끝난다.
+레포 폴더에서 한 줄이면 앱과 터널이 서비스로 선다.
 
 ```
-cp deploy/launchd/page.godok.app.plist ~/Library/LaunchAgents/
-```
-```
-cp deploy/launchd/page.godok.tunnel.plist ~/Library/LaunchAgents/
-```
-```
-open -e ~/Library/LaunchAgents/page.godok.app.plist
+npm run launchd:install
 ```
 
-앱 쪽은 `__REPO__`(레포 폴더의 절대 경로) 한 곳, 터널 쪽은 `__USER__`(맥 사용자
-이름) 한 곳만 바꾸면 된다. 비밀은 여기 적지 않는다 — `.env.local`에 있는 것을
-Next가 알아서 읽는다. 인텔 맥이면 두 파일의 `/opt/homebrew`를 `/usr/local`로 바꾼다.
+`deploy/launchd/`의 본을 읽어 이 맥에 맞는 값(레포 경로, npm과 cloudflared의
+실제 위치)으로 채워 `~/Library/LaunchAgents/`에 넣고 띄운다. 로그인할 때
+저절로 뜨고, 죽으면 10초 뒤 되살아난다. **레포를 옮겼을 때도 이것만 다시
+돌리면 된다.**
 
-레포 절대 경로가 헷갈리면 레포 폴더에서 `pwd`를 치면 나온다.
-
-```
-launchctl load ~/Library/LaunchAgents/page.godok.app.plist
-```
-```
-launchctl load ~/Library/LaunchAgents/page.godok.tunnel.plist
-```
+plist를 편집기로 직접 고치지 않는다. `WorkingDirectory` 한 줄이 지워지면
+launchd가 `/`에서 앱을 띄우려 들고, npm이 `/package.json`을 못 찾는다며 죽는다.
+사이트에는 502만 뜨고 이유는 아무 데도 안 적힌다.
 
 `sudo cloudflared service install` 은 하지 않는다. 둘 다 하면 같은 터널이
 두 번 뜬다. 이미 했다면 `sudo cloudflared service uninstall` 로 걷어낸다.
