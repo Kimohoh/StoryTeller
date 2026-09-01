@@ -1,5 +1,5 @@
 import { publishedWorks, works } from "@/lib/works";
-import { workStats, DWELL_FLOOR_MS, type WorkStats } from "@/lib/stats";
+import { workStats, dbInfo, DWELL_FLOOR_MS, type WorkStats } from "@/lib/stats";
 import { adminOk } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +45,7 @@ export default async function Admin({
     );
   }
 
+  const db = dbInfo();
   const all = works().works;
   const stats: WorkStats[] = [];
   for (const w of all) {
@@ -142,6 +143,14 @@ export default async function Admin({
       ))}
 
       {publishedWorks().length === 0 ? <p className="note">공개된 작품이 없습니다.</p> : null}
+
+      {/* 위 숫자가 0인데 여기 총계가 크면 작품 연결이 어긋난 것이고, 여기까지
+          0이면 앱이 다른 파일을 보고 있는 것이다. 화면에서 바로 구분되게 둔다. */}
+      <p className="note admin-db">
+        {db.sessions}건의 읽기 · {db.answers}건의 답 · {db.users}명 (익명 id 기준)
+        <br />
+        <code>{db.path}</code>
+      </p>
     </main>
   );
 }

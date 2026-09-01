@@ -5,7 +5,7 @@
  * spec §7이 말한 문항 품질 지표다 — 3초 만에 넘어가는 문항은 축을 못 재고 있는 것이다.
  * 좌표는 여기서도 저장하지 않고 그때그때 계산한다 (spec §6).
  */
-import { getDb } from "./db";
+import { getDb, DB_PATH } from "./db";
 import { computeCoordinate, diagnose, type ScoringRule } from "./scoring";
 import { outboundStat } from "./outbound";
 import { loadWork, loadResults, scoringRules } from "./work-repo";
@@ -55,6 +55,23 @@ const median = (xs: number[]): number | null => {
   const m = Math.floor(s.length / 2);
   return s.length % 2 ? s[m] : Math.round((s[m - 1] + s[m]) / 2);
 };
+
+/**
+ * 지금 앱이 어느 파일을 보고 있고 거기 전부 몇 건이 들었는지.
+ *
+ * 작품별 숫자가 0인데 여기 총계가 크면 작품 연결이 어긋난 것이고,
+ * 여기까지 0이면 다른 파일을 보고 있는 것이다. 둘을 구분하려고 둔다.
+ */
+export function dbInfo(): { path: string; sessions: number; answers: number; users: number } {
+  const db = getDb();
+  const c = (sql: string) => (db.prepare(sql).get() as { c: number }).c;
+  return {
+    path: DB_PATH,
+    sessions: c("SELECT COUNT(*) c FROM sessions"),
+    answers: c("SELECT COUNT(*) c FROM answers"),
+    users: c("SELECT COUNT(DISTINCT user_id) c FROM sessions"),
+  };
+}
 
 export function workStats(slug: string): WorkStats {
   const db = getDb();

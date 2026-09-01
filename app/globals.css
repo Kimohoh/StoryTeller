@@ -491,3 +491,14 @@ a { color: var(--gold); }
   line-height: 1.7;
   color: var(--bronze);
 }
+
+/* 어느 DB를 보고 있는지. 숫자가 0일 때 여기를 보면 이유를 안다. */
+.admin-db {
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--ink-2);
+  font-size: .75rem;
+  line-height: 1.8;
+  color: var(--bronze);
+}
+.admin-db code { font-size: .95em; word-break: break-all; }

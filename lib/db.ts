@@ -3,7 +3,12 @@ import { readFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { bootstrap } from "./bootstrap";
 
-const DB_PATH = process.env.STORYTELLER_DB ?? join(process.cwd(), "data/storyteller.sqlite");
+/**
+ * 앱을 띄운 폴더 기준이다. 다른 데서 띄우면 빈 파일이 조용히 새로 생기고,
+ * 화면은 그냥 0을 보여준다. 그래서 이 경로를 밖으로 내보내 /admin 아래에
+ * 찍고, 뜰 때 로그에도 한 번 남긴다.
+ */
+export const DB_PATH = process.env.STORYTELLER_DB ?? join(process.cwd(), "data/storyteller.sqlite");
 
 let db: Database.Database | null = null;
 
@@ -11,6 +16,7 @@ export function getDb(): Database.Database {
   if (db) return db;
   mkdirSync(dirname(DB_PATH), { recursive: true });
   db = new Database(DB_PATH);
+  console.log(`[db] ${DB_PATH}`);
   db.exec(readFileSync(join(process.cwd(), "db/schema.sql"), "utf8"));
   // 배포 컨테이너에는 시드 스크립트가 없다. 프로세스마다 한 번, 여기서 맞춘다.
   bootstrap(db);
