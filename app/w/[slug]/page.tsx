@@ -83,7 +83,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   try {
     const w = loadWork(slug);
-    return { title: w.title, description: w.subtitle };
+    return {
+      title: w.title,
+      description: w.subtitle,
+      openGraph: { title: w.title, description: w.subtitle },
+    };
   } catch {
     return {};
   }

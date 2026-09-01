@@ -282,14 +282,41 @@ a { color: var(--gold); }
 .accum-c { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--ink-2); }
 .accum-c b { color: var(--gold); font-weight: 400; }
 
-/* ── 브랜드 ── */
-.brand-hanja {
-  font-size: 0.62em;
-  letter-spacing: 0.06em;
-  color: #5C4C33;
-  margin-left: 0.35em;
-  vertical-align: 0.08em;
+/* ── 브랜드 로고 전용 폰트 ──
+   IBM Plex Sans KR ExtraLight. 「고독 古讀」 네 글자만 담은 서브셋이라 2.5KB다.
+   구글 폰트를 직접 물면 오프라인에서 깨지므로 파일을 직접 들고 있는다. */
+@font-face {
+  font-family: "GodokBrand";
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/plexkr-200.woff2") format("woff2");
 }
+@font-face {
+  font-family: "GodokBrand";
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/plexkr-300.woff2") format("woff2");
+}
+
+.shelf-head h1 {
+  font-family: "GodokBrand", -apple-system, "Apple SD Gothic Neo", sans-serif;
+  font-weight: 200;
+  font-size: 3.1rem;
+  line-height: 1;
+  letter-spacing: .01em;
+  color: var(--paper);
+}
+.brand-hanja {
+  font-size: .4em;
+  font-weight: 300;
+  letter-spacing: .16em;
+  color: var(--bronze);
+  margin-left: .5em;
+  vertical-align: .26em;
+}
+
 
 /* ── 좌표 그림 아래 축 설명 ── */
 .plot {

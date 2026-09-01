@@ -107,3 +107,29 @@ export default async function ResultPage({
     </main>
   );
 }
+
+/**
+ * 공유될 때 카톡·트위터에 뜨는 글. 그림은 고정(og.png)이고 이 두 줄만 바뀐다.
+ * 유형과 작품만 말한다 — 좌표도 칭호도 여기서는 읽히지 않는다.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ sessionId: string }>;
+}) {
+  const { sessionId } = await params;
+  const session = getSession(sessionId);
+  if (!session) return {};
+  try {
+    const row = getDb()
+      .prepare("SELECT slug FROM works WHERE id = ?")
+      .get(session.work_id) as { slug: string };
+    const r = buildResult(row.slug, sessionId);
+    const work = loadWork(row.slug);
+    const title = `나는 ${r.primary.name}에 가까웠습니다`;
+    const description = `${work.title} — ${work.subtitle}`;
+    return { title, description, openGraph: { title, description } };
+  } catch {
+    return {};
+  }
+}
