@@ -16,7 +16,7 @@
 | 소개 | `app/about/page.tsx` | 무엇을 하는 곳인지, 글이 어디에서 왔는지, 문의처 |
 | 개인정보처리방침 | `app/privacy/page.tsx` | 실제로 저장하는 것만 적었다. 광고 문단은 변수가 켜지면 나타남 |
 | 본문 안 링크 | `components/SiteFooter.tsx` | 서재 맨 아래. sitemap에만 있으면 사람이 못 찾는다 |
-| 심사용 스크립트 | `app/layout.tsx` | `NEXT_PUBLIC_ADSENSE_CLIENT`가 있을 때만 `<head>`에 나감 |
+| 검토용 스크립트 | `app/layout.tsx` | `ADSENSE_PUBLISHER_ID`가 있을 때만 `<head>`에 나감 |
 | ads.txt | `app/ads.txt/route.ts` | `ADSENSE_PUBLISHER_ID`가 있을 때만. 없으면 404 |
 
 ### Mediapartners-Google을 왜 따로 여는가
@@ -47,12 +47,28 @@
 
 3. **환경변수를 채우고 배포한다.**
 
+   레포 폴더에 **`.env.local`** 파일을 만들어 넣는다. 명령줄에 길게 붙이지
+   않는다 — 한 번 써 두면 다시 띄울 때마다 저절로 읽힌다.
+
+   ```
+   cp .env.example .env.local
+   ```
+   ```
+   open -e .env.local
+   ```
+
    | 변수 | 값 |
    |---|---|
    | `APP_ORIGIN` | `https://godok.page` |
-   | `NEXT_PUBLIC_ADSENSE_CLIENT` | `ca-pub-...` (앞에 `ca-`가 붙는다) |
-   | `ADSENSE_PUBLISHER_ID` | `pub-...` (`ca-` 없이) |
+   | `ADMIN_TOKEN` | 쓰던 값 그대로 |
+   | `ADSENSE_PUBLISHER_ID` | `pub-...` — **`ca-`는 붙이지 않는다** |
    | `CONTACT_EMAIL` | 공개 페이지에 찍힐 주소 |
+
+   `.env.local`은 git에 올라가지 않는다(`.gitignore`). 여기에 `ADMIN_TOKEN`이
+   들어 있으므로 이 파일을 누구에게도 보내지 않는다.
+
+   고친 뒤 다시 띄운다. 광고 스크립트와 `/ads.txt`는 서버가 뜰 때 읽으므로
+   `npm run build`를 다시 할 필요는 없다.
 
 4. **확인한다.** 배포 뒤 브라우저에서 직접 본다.
    - `https://godok.page/ads.txt` → `google.com, pub-..., DIRECT, f08c47fec0942fa0`
@@ -86,9 +102,11 @@ cp deploy/launchd/page.godok.tunnel.plist ~/Library/LaunchAgents/
 open -e ~/Library/LaunchAgents/page.godok.app.plist
 ```
 
-`__REPO__`(레포 절대 경로), `__USER__`(맥 사용자 이름), `__ADMIN_TOKEN__`을
-바꾸고, 광고 변수도 여기서 채운다. 터널 쪽은 `__USER__` 한 곳뿐이다.
-인텔 맥이면 두 파일의 `/opt/homebrew`를 `/usr/local`로 바꾼다.
+앱 쪽은 `__REPO__`(레포 폴더의 절대 경로) 한 곳, 터널 쪽은 `__USER__`(맥 사용자
+이름) 한 곳만 바꾸면 된다. 비밀은 여기 적지 않는다 — `.env.local`에 있는 것을
+Next가 알아서 읽는다. 인텔 맥이면 두 파일의 `/opt/homebrew`를 `/usr/local`로 바꾼다.
+
+레포 절대 경로가 헷갈리면 레포 폴더에서 `pwd`를 치면 나온다.
 
 ```
 launchctl load ~/Library/LaunchAgents/page.godok.app.plist

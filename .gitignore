@@ -14,3 +14,6 @@ data/
 
 # 파생물 — npm run preview로 다시 뽑는다
 preview/
+
+# 비밀이 든다. 절대 커밋되면 안 된다 — ADMIN_TOKEN이 여기 있다.
+.env*.local

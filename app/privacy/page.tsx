@@ -15,7 +15,7 @@ export const metadata: Metadata = {
  */
 export default function Privacy() {
   const contact = process.env.CONTACT_EMAIL ?? null;
-  const adsense = Boolean(process.env.NEXT_PUBLIC_ADSENSE_CLIENT);
+  const adsense = Boolean(process.env.ADSENSE_PUBLISHER_ID);
 
   return (
     <main className="wrap doc">
