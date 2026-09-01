@@ -86,7 +86,7 @@ export default async function ResultPage({
           광고가 아니라 결말의 일부다. 클릭은 /out에서 센다 (docs/bm.md). */}
       {work.original ? (
         <p className="to-original">
-          <a href={`/out/${slug}`} rel="noopener">
+          <a href={`/out/${slug}`} target="_blank" rel="noopener noreferrer">
             {work.original.label} <span aria-hidden="true">→</span>
           </a>
         </p>

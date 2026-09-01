@@ -73,6 +73,11 @@ self.addEventListener("fetch", (event) => {
   // 결과 채점표는 캐시하지 않는다 — 축이 기기에 남을 이유가 없다 (spec §2)
   if (url.pathname.startsWith("/api/sessions/")) return;
 
+  // 바깥으로 나가는 리디렉트는 브라우저에 맡긴다.
+  // 여기를 가로채면 fetch가 다른 출처까지 따라가고, 그렇게 받은 응답은
+  // cache.put에서 막히거나 내비게이션 응답으로 돌려줄 수 없어 화면이 깨진다.
+  if (url.pathname.startsWith("/out/")) return;
+
   if (url.pathname.startsWith("/api/illustrations/")) {
     event.respondWith(cacheFirst(request, ASSETS));
     return;
