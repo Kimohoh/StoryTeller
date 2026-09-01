@@ -7,6 +7,7 @@ import { Illustration } from "@/components/Illustration";
 import { AccumPlot } from "@/components/AccumPlot";
 import { epithetWords, epithetParts } from "@/lib/epithet";
 import { LocalLibrary } from "@/components/LocalLibrary";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export const dynamic = "force-dynamic";
 
@@ -125,6 +126,8 @@ export default async function Library() {
 
       {/* 쿠키가 지워져도 이 기기에 남은 기록을 보여준다 */}
       <LocalLibrary serverSlugs={[...read.keys()]} />
+
+      <SiteFooter />
     </main>
   );
 }

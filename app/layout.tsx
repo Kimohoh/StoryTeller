@@ -50,8 +50,27 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  /**
+   * 애드센스 심사는 이 스크립트가 <head>에 있어야 시작된다.
+   *
+   * 승인 전에도 넣어 둘 수 있고, 넣어 둬야 심사가 걸린다. 값이 없으면
+   * 아무것도 나가지 않으므로 개발 중에는 로컬에 변수를 두지 않으면 된다.
+   * 승인 뒤 광고 단위를 어디에 붙일지는 이 태그와 별개다 — 자동 광고를
+   * 켜면 이것만으로 붙는다.
+   */
+  const adsense = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+
   return (
     <html lang="ko">
+      <head>
+        {adsense ? (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsense}`}
+            crossOrigin="anonymous"
+          />
+        ) : null}
+      </head>
       <body>
         {children}
         <ServiceWorker />

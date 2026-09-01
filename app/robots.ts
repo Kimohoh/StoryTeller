@@ -14,11 +14,27 @@ import { siteOrigin } from "@/lib/site-origin";
 export default async function robots(): Promise<MetadataRoute.Robots> {
   const origin = await siteOrigin();
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: ["/admin", "/api/", "/read/", "/result/", "/offline"],
-    },
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/admin", "/api/", "/read/", "/result/", "/offline"],
+      },
+      /**
+       * 광고 크롤러는 따로 연다.
+       *
+       * Mediapartners-Google은 색인을 만들지 않는다 — 광고를 띄울 페이지가
+       * 무슨 내용인지 읽어 맞는 광고를 고르는 데만 쓴다. 이걸 막아 두면
+       * /read와 /result에는 엉뚱한 광고가 뜨거나 아예 안 뜬다.
+       *
+       * 즉 '색인은 안 되지만 광고는 제대로 붙는' 상태가 이 둘의 조합이다.
+       */
+      {
+        userAgent: "Mediapartners-Google",
+        allow: "/",
+        disallow: ["/admin", "/api/"],
+      },
+    ],
     ...(origin ? { sitemap: `${origin}/sitemap.xml`, host: origin } : {}),
   };
 }

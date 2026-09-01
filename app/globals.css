@@ -445,3 +445,49 @@ a { color: var(--gold); }
   border-bottom: 1px solid #3A342C;
   padding-bottom: 0.15rem;
 }
+
+/* ---------- 소개·개인정보처리방침 ---------- */
+
+/* 읽는 화면이 아니라 확인하는 화면이다. 글자를 조금 줄이고 줄간을 넓혀
+   훑어 내려가기 좋게 둔다. */
+.doc { padding-top: 3rem; }
+.doc h1 { font-size: 1.6rem; margin: 0 0 2.5rem; color: var(--gold); }
+.doc h2 {
+  font-size: .95rem;
+  letter-spacing: .04em;
+  color: var(--gold);
+  margin: 2.75rem 0 .9rem;
+}
+.doc p { font-size: .92rem; line-height: 1.9; margin: 0 0 1.1em; }
+.doc b { color: var(--paper); font-weight: 600; }
+.doc-list {
+  margin: 0 0 1.1em;
+  padding-left: 1.1rem;
+  font-size: .92rem;
+  line-height: 1.9;
+}
+.doc-list li { margin-bottom: .7em; }
+.doc .term { margin: 0 .15em; }
+.doc-back {
+  margin-top: 3.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ink-2);
+  font-size: .85rem;
+}
+
+/* ---------- 서재 맨 아래 ---------- */
+
+.site-foot {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ink-2);
+}
+.site-foot nav { display: flex; gap: 1.25rem; margin-bottom: .9rem; }
+.site-foot nav a { font-size: .8rem; color: var(--bronze); text-decoration: none; }
+.site-foot nav a:hover { color: var(--gold); }
+.site-foot p {
+  margin: 0;
+  font-size: .75rem;
+  line-height: 1.7;
+  color: var(--bronze);
+}
