@@ -22,8 +22,9 @@ export default async function Admin({
         <h1 className="admin-h1">읽기 기록</h1>
         <p className="note">
           <code>ADMIN_TOKEN</code> 환경변수가 없습니다. 정해두지 않으면 아무도 들어올 수 없습니다.
+          레포의 <code>.env.local</code>에 적고 앱을 다시 띄우세요.
         </p>
-        <pre className="admin-pre">ADMIN_TOKEN=아무거나-긴-문자열 npm start</pre>
+        <pre className="admin-pre">ADMIN_TOKEN=아무거나-긴-문자열</pre>
       </main>
     );
   }
@@ -33,6 +34,12 @@ export default async function Admin({
         <h1 className="admin-h1">읽기 기록</h1>
         <p className="note">
           <code>/admin/enter?token=…</code> 로 한 번 들어오면 그 뒤로는 주소에 안 붙여도 됩니다.
+        </p>
+        {/* 주소가 바뀌면 다시 들어와야 한다는 걸 몰라서 '기록이 사라졌다'고 읽기 쉽다.
+            숫자는 그대로 있고 열쇠만 없는 상태다. */}
+        <p className="note">
+          열쇠는 이 주소에서만, 그리고 14일 동안만 기억됩니다. 도메인을 새로 붙였거나
+          2주가 지났다면 기록이 지워진 게 아니라 다시 들어와야 하는 것입니다.
         </p>
       </main>
     );

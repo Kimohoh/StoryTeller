@@ -164,6 +164,35 @@ npm run check:live
 npm run check:live -- https://godok.page
 ```
 
+## /admin 이 비어 보일 때
+
+기록이 지워진 게 아니라 **열쇠가 없는 것**이다.
+
+`/admin`은 `st_admin` 쿠키로 잠긴다. 이 쿠키는 **주소마다 따로** 저장되고
+14일이면 만료된다. 터널 주소에서 도메인으로 옮겼다면 godok.page에서는 한 번도
+들어온 적이 없는 셈이라, 표가 통째로 빠진 화면이 나온다.
+
+```
+https://godok.page/admin/enter?token=<.env.local의 ADMIN_TOKEN>
+```
+
+한 번 열면 그 뒤로는 `https://godok.page/admin` 만 치면 된다.
+404가 나오면 토큰이 `.env.local`의 값과 다른 것이다.
+
+숫자가 진짜로 남아 있는지 보려면 DB를 직접 세어 본다.
+
+```
+sqlite3 data/storyteller.sqlite "select count(*) from sessions; select count(*) from answers;"
+```
+
+DB는 `data/storyteller.sqlite` 한 파일이고, 앱을 띄운 폴더 기준으로 찾는다.
+그래서 항상 레포 폴더에서 띄워야 한다 (launchd는 plist의 `WorkingDirectory`가
+그 역할을 한다). 다른 데서 띄우면 빈 DB가 새로 생기고, 그때는 정말로 비어 보인다.
+
+**백업할 때는 세 파일을 같이 가져간다** — `storyteller.sqlite`,
+`storyteller.sqlite-wal`, `storyteller.sqlite-shm`. 본체만 복사하면 최근 기록이
+통째로 빠진다 (아직 WAL에만 있기 때문이다).
+
 ## 문의 메일 만들기 (Email Routing, 무료)
 
 `/about`과 `/privacy`에 연락처가 찍힌다. 거기에 개인 지메일 주소를 그대로
