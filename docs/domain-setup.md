@@ -48,23 +48,36 @@ cloudflared tunnel route dns godok www.godok.page
 ## 3. 설정 파일 (님, 3분)
 
 레포의 `deploy/cloudflared.example.yml` 을 열어 `<UUID>`와 `<USER>`를 바꾼 뒤
-`~/.cloudflared/config.yml` 로 저장한다. 터미널로 하려면:
+`~/.cloudflared/config.yml` 로 저장한다.
+
+**먼저 레포로 들어간다.** 클론 위치는 사람마다 다르므로 절대 경로를 쓰지 말고
+`cd` 한 뒤 상대 경로로 친다.
 
 ```
-cp ~/projects/StoryTeller/deploy/cloudflared.example.yml ~/.cloudflared/config.yml
+cd <레포 폴더>
+```
+```
+git pull origin claude/spec-app-structure-vzwaxh
+```
+```
+mkdir -p ~/.cloudflared
+```
+```
+cp deploy/cloudflared.example.yml ~/.cloudflared/config.yml
 ```
 ```
 open -e ~/.cloudflared/config.yml
 ```
 
-열린 편집기에서 `<UUID>` 두 곳과 `<USER>` 한 곳을 고치고 저장한다.
+열린 편집기에서 `<UUID>` 두 곳과 `<USER>` 한 곳(맥 사용자 이름)을 고치고 저장한다.
+UUID를 잊었으면 `cloudflared tunnel list` 로 다시 본다.
 
 ## 4. 띄우기
 
 **터미널 ①** — 앱. `APP_ORIGIN`이 새로 들어간다.
 
 ```
-cd ~/projects/StoryTeller
+cd <레포 폴더>
 ```
 ```
 git pull origin claude/spec-app-structure-vzwaxh
@@ -99,7 +112,7 @@ cloudflared tunnel run godok
 터미널 두 개를 다시 연다. **주소는 그대로다.**
 
 ```
-cd ~/projects/StoryTeller && APP_ORIGIN=https://godok.page ADMIN_TOKEN=... npm start
+cd <레포 폴더> && APP_ORIGIN=https://godok.page ADMIN_TOKEN=... npm start
 ```
 ```
 cloudflared tunnel run godok
