@@ -64,6 +64,8 @@ export default async function Admin({
             <div><b>{s.started}</b><span>시작</span></div>
             <div><b>{s.completed}</b><span>완독</span></div>
             <div><b>{pct(s.completion_rate)}</b><span>완독률</span></div>
+            {/* 완독자 중 몇 명이 원작을 보러 나갔는가 (docs/bm.md) */}
+            <div><b>{pct(s.original.rate)}</b><span>원작 클릭률</span></div>
             <div><b>{s.pages}</b><span>장</span></div>
           </div>
 

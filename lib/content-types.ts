@@ -29,7 +29,23 @@ export interface WorkSource {
   scoring_version: number;
   /** 축은 작품이 아니라 앱의 것이다 — content/axes.json (spec §3) */
   types: Record<string, TypeSource>;
+  /** 결과 화면에서 원작으로 나가는 한 줄. 없으면 그 줄이 안 뜬다. */
+  original?: OriginalLink;
   pages: PageSource[];
+}
+
+/**
+ * 원작 찾아보기.
+ *
+ * url을 특정 서점으로 박지 않는다. 지금은 협상 카드가 없어 어느 출판사와도
+ * 조건을 만들 수 없고, 한 서점으로 보내면 그 순간 광고가 된다. 판본을 다 보여주는
+ * 검색으로 보내고 클릭만 센다 — 이 숫자가 다음 단계 협상의 재료다 (docs/bm.md).
+ * 제휴가 생기면 이 한 줄만 바꾸면 된다.
+ */
+export interface OriginalLink {
+  /** 화면에 뜨는 문구. "『변신』 원작이 읽고 싶어졌다면" */
+  label: string;
+  url: string;
 }
 
 export interface AxisSource {

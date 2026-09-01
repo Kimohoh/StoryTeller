@@ -38,6 +38,11 @@
       }
     }
   },
+  "original": {
+    "label": "『목걸이』 원작이 읽고 싶어졌다면",
+    "url": "https://search.naver.com/search.naver?query=%EB%AA%A8%ED%8C%8C%EC%83%81%20%EB%AA%A9%EA%B1%B8%EC%9D%B4%20%EB%8B%A8%ED%8E%B8",
+    "_note": "특정 서점이 아니라 판본을 다 보여주는 검색으로 보낸다. 제휴가 생기면 url만 바꾼다 (docs/bm.md)."
+  },
   "pages": [
     {
       "no": 1,

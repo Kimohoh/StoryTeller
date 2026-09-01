@@ -74,3 +74,15 @@ CREATE TABLE IF NOT EXISTS comments (
   created_at  TEXT    NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_comments_question ON comments(question_id, created_at);
+
+-- 결과 화면에서 밖으로 나간 클릭. 지금은 원작 찾아보기 한 줄뿐이다.
+-- 무엇을 눌렀는지만 남기고 누가 눌렀는지는 남기지 않는다 — session_id는
+-- 어느 완독에서 나갔는지 세기 위한 것이고, 그것도 없을 수 있다.
+CREATE TABLE IF NOT EXISTS outbound_clicks (
+  id         INTEGER PRIMARY KEY,
+  slug       TEXT    NOT NULL,
+  target     TEXT    NOT NULL,
+  session_id TEXT,
+  clicked_at TEXT    NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_outbound_slug ON outbound_clicks(slug, target);

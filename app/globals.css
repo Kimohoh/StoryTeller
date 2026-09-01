@@ -406,3 +406,15 @@ a { color: var(--gold); }
   font-weight: 600;
   color: var(--gold);
 }
+
+/* ── 원작으로 나가는 한 줄 ── */
+.to-original {
+  margin: 2.25rem 0 0;
+  font-size: 0.92rem;
+}
+.to-original a {
+  color: var(--amber);
+  text-decoration: none;
+  border-bottom: 1px solid #3A342C;
+  padding-bottom: 0.15rem;
+}

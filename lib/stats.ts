@@ -7,6 +7,7 @@
  */
 import { getDb } from "./db";
 import { computeCoordinate, diagnose, type ScoringRule } from "./scoring";
+import { outboundStat } from "./outbound";
 import { loadWork, loadResults, scoringRules } from "./work-repo";
 import type { AxisKey } from "./content-types";
 
@@ -41,6 +42,11 @@ export interface WorkStats {
   types: { key: string; name: string; count: number; ratio: number }[];
   /** 완독 세션의 좌표 — 흩어짐을 눈으로 본다 */
   coordinates: { A: number; B: number }[];
+  /**
+   * 결과 화면에서 원작을 보러 나간 수. 완독 대비 비율이 이 앱이 가진
+   * 유일한 협상 재료다 (docs/bm.md).
+   */
+  original: { clicks: number; sessions: number; rate: number | null };
 }
 
 const median = (xs: number[]): number | null => {
@@ -127,6 +133,8 @@ export function workStats(slug: string): WorkStats {
     typeCount.set(v.primary.key, (typeCount.get(v.primary.key) ?? 0) + 1);
   }
 
+  const out = outboundStat(slug, "original");
+
   return {
     slug,
     title: work.title,
@@ -143,5 +151,9 @@ export function workStats(slug: string): WorkStats {
       ratio: done.length ? (typeCount.get(key) ?? 0) / done.length : 0,
     })),
     coordinates,
+    original: {
+      ...out,
+      rate: completed ? out.sessions / completed : null,
+    },
   };
 }

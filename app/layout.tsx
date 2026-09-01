@@ -2,7 +2,15 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ServiceWorker } from "@/components/ServiceWorker";
 
+/**
+ * 고정 주소. 터널 주소는 켤 때마다 바뀌므로, 도메인이 생기면 APP_ORIGIN에 넣는다.
+ * 그래야 공유 링크와 OG 주소가 지금 보고 있는 호스트가 아니라 그쪽을 가리킨다.
+ * 앱 안의 이동은 전부 상대 경로라서 호스트가 바뀌어도 그대로 산다.
+ */
+const origin = process.env.APP_ORIGIN;
+
 export const metadata: Metadata = {
+  ...(origin ? { metadataBase: new URL(origin) } : {}),
   title: {
     default: "고독 古讀",
     template: "%s — 고독 古讀",

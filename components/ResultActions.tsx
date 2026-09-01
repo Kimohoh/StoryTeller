@@ -11,6 +11,12 @@ interface Props {
   type: string;
   coordinate: { A: number; B: number };
   completedAt: string;
+  /**
+   * 공유 링크에 쓸 고정 주소 (APP_ORIGIN). 비어 있으면 지금 보고 있는 주소를 쓴다.
+   * 터널 주소는 켤 때마다 바뀌므로, 도메인이 생기면 여기에 넣어야 그때 공유된
+   * 링크가 나중에도 산다.
+   */
+  origin?: string;
 }
 
 /**
@@ -24,11 +30,13 @@ export function ResultActions(props: Props) {
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
 
   useEffect(() => {
-    saveLocalResult(props);
+    const { slug, title, sessionId, type, coordinate, completedAt } = props;
+    saveLocalResult({ slug, title, sessionId, type, coordinate, completedAt });
   }, [props]);
 
   async function share() {
-    const url = window.location.href;
+    const base = (props.origin || window.location.origin).replace(/\/$/, "");
+    const url = `${base}/result/${props.sessionId}`;
     const text = `나는 ${props.type}에 가까웠습니다 — ${props.title}`;
 
     if (navigator.share) {

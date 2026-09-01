@@ -26,6 +26,7 @@ export default async function ResultPage({
     getDb().prepare("SELECT slug FROM works WHERE id = ?").get(session.work_id) as { slug: string }
   ).slug;
   const r = buildResult(slug, sessionId);
+  const work = loadWork(slug);
 
   if (r.answered < r.total) {
     return (
@@ -81,14 +82,25 @@ export default async function ResultPage({
           보면 바닥이 드러난다. 라우트는 남겨두고 진입점만 뺀다 — 코멘트가 쌓인
           뒤 다시 세운다. */}
 
+      {/* 원작으로 나가는 한 줄. 각색이 원작을 읽고 싶게 만드는 것이 목표이므로
+          광고가 아니라 결말의 일부다. 클릭은 /out에서 센다 (docs/bm.md). */}
+      {work.original ? (
+        <p className="to-original">
+          <a href={`/out/${slug}`} rel="noopener">
+            {work.original.label} <span aria-hidden="true">→</span>
+          </a>
+        </p>
+      ) : null}
+
       {/* 표지의 두 갈래와 같은 형태로 맞춘다. 작은 글씨 링크가 흩어져 있던 자리다. */}
       <ResultActions
         slug={slug}
-        title={loadWork(slug).title}
+        title={work.title}
         sessionId={sessionId}
         type={r.primary.name}
         coordinate={r.coordinate}
         completedAt={session.completed_at ?? new Date().toISOString()}
+        origin={process.env.APP_ORIGIN ?? ""}
       />
 
       <Link className="quiet-link" href="/">서재로</Link>
