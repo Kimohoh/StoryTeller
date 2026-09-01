@@ -126,6 +126,44 @@ sudo cloudflared service install
 
 앱 쪽은 노트북이 깨어 있어야 하므로 잘 때는 `caffeinate -i` 를 앞에 붙인다.
 
+## 문의 메일 만들기 (Email Routing, 무료)
+
+`/about`과 `/privacy`에 연락처가 찍힌다. 거기에 개인 지메일 주소를 그대로
+적으면 스팸 수집기가 긁어 간다. 도메인 주소를 하나 만들어 개인 메일로
+넘겨받으면 그 문제가 없다 — 나중에 스팸이 오면 그 주소만 지우면 된다.
+
+Cloudflare Email Routing은 무료이고, 도메인이 Cloudflare에 있으면 바로 켜진다.
+메일함을 새로 관리하는 게 아니라 **전달만** 한다.
+
+### 켜기 (5분)
+
+1. Cloudflare 대시보드 → `godok.page` → 왼쪽 메뉴 **Email** → **Email Routing**
+   → **Get started**
+2. MX·TXT 레코드를 자동으로 넣어 준다. **Add records and enable** 누른다
+3. **Destination address**에 개인 지메일을 넣는다 → 그 지메일로 확인 메일이
+   오니 링크를 누른다
+4. **Custom address**를 만든다: `hello@godok.page` → 방금 확인한 지메일로 전달
+
+이제 `hello@godok.page`로 온 메일이 지메일 받은편지함에 들어온다.
+`.env.local`의 `CONTACT_EMAIL`에 이 주소를 적는다.
+
+무료 요금제에서 주소 200개까지 만들 수 있고 전달 통수 제한은 없다.
+**Catch-all**을 켜면 `@godok.page`로 오는 아무 주소나 다 받는다.
+
+### 답장은 어떻게 하나
+
+Email Routing은 **받기만** 한다. 보내지는 않는다.
+
+지메일에서 답장하면 보내는 사람이 개인 지메일 주소로 찍힌다. 문의가 어쩌다
+한 통씩 오는 정도면 이걸로 충분하다 — 공개 페이지에 주소가 박히는 것과,
+먼저 메일을 보낸 한 사람이 답장에서 주소를 보는 것은 전혀 다른 문제다.
+
+지메일의 "다른 주소에서 메일 보내기"로 도메인 주소를 발신자로 쓰는 방법이
+예전부터 있었지만, **구글이 2027년 1월에 이 기능(외부 주소 Send as)을
+없앤다고 발표했다.** 지금 붙여 봐야 몇 달 뒤에 끊기므로 하지 않는다.
+발신까지 도메인 주소로 해야 할 일이 생기면 그때 도메인 메일함(Zoho·Fastmail·
+Google Workspace 등)을 따로 붙이는 게 맞다.
+
 ## 나중에 24시간 서버로 옮길 때
 
 **주소를 안 바꾸고 원점만 옮긴다.** Fly나 Render에 올린 뒤 Cloudflare DNS에서

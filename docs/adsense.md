@@ -62,7 +62,7 @@
    | `APP_ORIGIN` | `https://godok.page` |
    | `ADMIN_TOKEN` | 쓰던 값 그대로 |
    | `ADSENSE_PUBLISHER_ID` | `pub-...` — **`ca-`는 붙이지 않는다** |
-   | `CONTACT_EMAIL` | 공개 페이지에 찍힐 주소 |
+   | `CONTACT_EMAIL` | 공개 페이지에 찍힐 주소 (`docs/domain-setup.md`의 Email Routing 참고) |
 
    `.env.local`은 git에 올라가지 않는다(`.gitignore`). 여기에 `ADMIN_TOKEN`이
    들어 있으므로 이 파일을 누구에게도 보내지 않는다.
