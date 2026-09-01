@@ -107,24 +107,62 @@ cloudflared tunnel run godok
 
 ---
 
-## 컴퓨터를 껐다 켠 뒤
+## 껐다 켜도 알아서 뜨게 (권장)
 
-터미널 두 개를 다시 연다. **주소는 그대로다.**
+터미널 두 개를 띄워 두는 방식은 창을 실수로 닫거나 맥이 재부팅되면 끝난다.
+`deploy/launchd/`의 plist 둘을 넣으면 로그인할 때 저절로 뜨고 죽으면 되살아난다.
+방법은 `docs/adsense.md`의 "노트북을 원본 서버로 쓰는 경우"에 있다.
+
+**터널을 launchd로 띄운다면 `sudo cloudflared service install` 은 하지 않는다.**
+둘 다 하면 같은 터널을 두 번 띄우게 되고, 연결이 겹쳐 요청이 오락가락한다.
+이미 했다면 `sudo cloudflared service uninstall` 로 걷어낸 뒤 plist만 남긴다.
+
+설정값(`APP_ORIGIN`, `ADMIN_TOKEN`, 광고 ID 등)은 명령줄이 아니라 레포의
+`.env.local`에 둔다. 어느 쪽으로 띄우든 Next가 알아서 읽는다.
+
+### 손으로 띄울 때
 
 ```
-cd <레포 폴더> && APP_ORIGIN=https://godok.page ADMIN_TOKEN=... npm start
+cd <레포 폴더> && npm start
 ```
 ```
 cloudflared tunnel run godok
 ```
 
-매번 치기 싫으면 터널을 백그라운드 서비스로 등록한다. 부팅할 때 알아서 뜬다.
+`.env.local`이 있으므로 앞에 변수를 붙이지 않는다.
+
+### 코드를 고친 뒤
+
+`npm start`는 빌드된 것을 띄우기만 한다. 반드시 빌드가 먼저다.
+**돌고 있는 앱을 세우지 않고 빌드하면 그 앱이 죽는다** — `.next/`가 통째로
+갈리기 때문이다. launchd로 띄웠다면 순서가 이렇다.
 
 ```
-sudo cloudflared service install
+launchctl unload ~/Library/LaunchAgents/page.godok.app.plist
+```
+```
+cd <레포 폴더> && git pull origin claude/spec-app-structure-vzwaxh && npm run build
+```
+```
+launchctl load ~/Library/LaunchAgents/page.godok.app.plist
 ```
 
-앱 쪽은 노트북이 깨어 있어야 하므로 잘 때는 `caffeinate -i` 를 앞에 붙인다.
+## 밖에서 확인하기
+
+로컬에서 뜨는 것과 도메인으로 제대로 나가는 것은 다른 문제다. 한 줄로 훑는다.
+
+```
+npm run check:live
+```
+
+접속, OG 그림의 절대 주소, 광고 스크립트와 `/ads.txt`, robots·sitemap,
+소개·개인정보처리방침의 연락처, 작품마다 표지와 '그냥 읽기', 집계 API까지
+차례로 두드려 보고 ✓/✗ 로 알려준다. `.env.local`의 `APP_ORIGIN`을 읽으므로
+인자가 필요 없다. 다른 주소를 보려면:
+
+```
+npm run check:live -- https://godok.page
+```
 
 ## 문의 메일 만들기 (Email Routing, 무료)
 

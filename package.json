@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "content:build": "tsx scripts/build-content.ts",
     "content:check": "tsx scripts/build-content.ts --check",
+    "check:live": "tsx scripts/check-live.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:rescore": "tsx scripts/rescore.ts",
     "test": "node --import tsx --test scripts/*.test.ts",

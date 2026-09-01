@@ -70,10 +70,15 @@
    고친 뒤 다시 띄운다. 광고 스크립트와 `/ads.txt`는 서버가 뜰 때 읽으므로
    `npm run build`를 다시 할 필요는 없다.
 
-4. **확인한다.** 배포 뒤 브라우저에서 직접 본다.
-   - `https://godok.page/ads.txt` → `google.com, pub-..., DIRECT, f08c47fec0942fa0`
-   - 페이지 소스에 `pagead2.googlesyndication.com`이 있다
-   - `https://godok.page/robots.txt` 에 `Mediapartners-Google` 블록이 있다
+4. **확인한다.** 눈으로 하나씩 볼 것 없이 한 줄로 훑는다.
+
+   ```
+   npm run check:live
+   ```
+
+   접속, OG 그림의 절대 주소, 광고 스크립트와 `/ads.txt`, robots·sitemap,
+   연락처, 작품 페이지, 집계 API까지 두드려 보고 ✓/✗ 로 알려준다.
+   ✗ 가 하나라도 있으면 그것부터 고친다.
 
 5. **애드센스에서 '사이트 연결' → 확인.** 소유권 확인 방법이 셋 있는데
    (AdSense 코드 / ads.txt / 메타 태그) **앞의 둘은 4번에서 이미 끝나 있다.**
@@ -115,11 +120,49 @@ launchctl load ~/Library/LaunchAgents/page.godok.app.plist
 launchctl load ~/Library/LaunchAgents/page.godok.tunnel.plist
 ```
 
-로그는 `/tmp/godok-app.log`, `/tmp/godok-tunnel.log`. 고친 뒤에는
-`launchctl unload` 하고 다시 `load` 한다.
+`sudo cloudflared service install` 은 하지 않는다. 둘 다 하면 같은 터널이
+두 번 뜬다. 이미 했다면 `sudo cloudflared service uninstall` 로 걷어낸다.
 
-`npm start`는 빌드된 것을 띄우기만 하므로, 코드를 고쳤으면 `git pull`과
-`npm run build`를 먼저 하고 `unload`/`load` 한다.
+### 제대로 떴는지
+
+```
+launchctl list | grep godok
+```
+
+가운데 칸이 **0**이면 정상이다. 0이 아니거나 왼쪽 PID가 볼 때마다 바뀌면
+계속 죽고 되살아나는 중이다. 그때는 오류 쪽 로그를 본다 — 파일 이름 끝에
+`.err`이 아니라 **`.err.log`** 가 붙는다.
+
+```
+tail -20 /tmp/godok-app.err.log
+```
+```
+tail -20 /tmp/godok-tunnel.err.log
+```
+
+가장 흔한 원인은 3000번 포트를 손으로 띄운 앱이 이미 쓰고 있는 경우다
+(`EADDRINUSE`). 하나만 남긴다.
+
+```
+lsof -i:3000
+```
+
+### 코드를 고친 뒤
+
+`npm start`는 빌드된 것을 띄우기만 한다. **돌고 있는 앱을 세우지 않고 빌드하면
+그 앱이 죽는다** — `.next/`가 통째로 갈리기 때문이다. 순서를 지킨다.
+
+```
+launchctl unload ~/Library/LaunchAgents/page.godok.app.plist
+```
+```
+git pull origin claude/spec-app-structure-vzwaxh && npm run build
+```
+```
+launchctl load ~/Library/LaunchAgents/page.godok.app.plist
+```
+
+일반 로그는 `/tmp/godok-app.log`, `/tmp/godok-tunnel.log`.
 
 ### 잠들지 않게
 
