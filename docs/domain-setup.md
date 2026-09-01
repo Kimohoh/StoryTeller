@@ -179,6 +179,42 @@ https://godok.page/admin/enter?token=<.env.local의 ADMIN_TOKEN>
 한 번 열면 그 뒤로는 `https://godok.page/admin` 만 치면 된다.
 404가 나오면 토큰이 `.env.local`의 값과 다른 것이다.
 
+### DB를 iCloud 밖으로 옮기기 (맥에서 데스크탑 동기화를 쓴다면)
+
+레포가 `~/Desktop` 이나 `~/Documents` 안에 있고 iCloud의 "데스크탑 및 문서 폴더"
+동기화가 켜져 있으면, **DB가 iCloud에 실려 다닌다.** SQLite는 파일 하나를 계속
+열어 두고 쓰는데, 동기화는 그 파일을 뒤에서 올리고 내리고 바꿔치기한다.
+"저장 공간 최적화"가 켜져 있으면 안 쓰는 것으로 판단해 본체를 걷어가기도 한다.
+기록이 오락가락하거나 손상되기 딱 좋은 조합이다.
+
+DB만 동기화 밖으로 뺀다. 레포는 그대로 둬도 된다.
+
+```
+mkdir -p ~/godok-data
+```
+```
+launchctl unload ~/Library/LaunchAgents/page.godok.app.plist
+```
+```
+cp data/storyteller.sqlite* ~/godok-data/
+```
+
+`.env.local`에 경로를 박는다. **파일 이름까지 정확히 적는다.**
+
+```
+STORYTELLER_DB=/Users/<맥 사용자 이름>/godok-data/storyteller.sqlite
+```
+
+```
+launchctl load ~/Library/LaunchAgents/page.godok.app.plist
+```
+```
+npm run db:where
+```
+
+새 경로와 예전과 같은 건수가 나오면 옮겨진 것이다. 그때 `data/` 안의 옛
+파일 셋을 지운다. 확인 전에는 지우지 않는다.
+
 숫자가 진짜로 남아 있는지 보려면 DB를 직접 세어 본다.
 
 ```
