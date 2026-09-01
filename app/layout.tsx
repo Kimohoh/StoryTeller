@@ -1,15 +1,32 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 import { ServiceWorker } from "@/components/ServiceWorker";
 
 /**
- * 고정 주소. 터널 주소는 켤 때마다 바뀌므로, 도메인이 생기면 APP_ORIGIN에 넣는다.
- * 그래야 공유 링크와 OG 주소가 지금 보고 있는 호스트가 아니라 그쪽을 가리킨다.
- * 앱 안의 이동은 전부 상대 경로라서 호스트가 바뀌어도 그대로 산다.
+ * OG 주소는 반드시 절대 주소여야 한다 — 카카오톡·트위터 크롤러는 상대 주소를
+ * 못 읽고, 그러면 카드에 그림이 안 뜬다.
+ *
+ * APP_ORIGIN이 있으면 그것을 쓴다(도메인이 정해진 뒤). 없으면 요청이 들어온
+ * 호스트에서 만든다 — 터널 주소로 열어도, 도메인으로 열어도 그때그때 맞는
+ * 절대 주소가 나간다. 환경변수를 깜빡해도 그림이 안 뜨는 일이 없다.
  */
-const origin = process.env.APP_ORIGIN;
+async function siteOrigin(): Promise<string | null> {
+  if (process.env.APP_ORIGIN) return process.env.APP_ORIGIN;
+  try {
+    const h = await headers();
+    const host = h.get("x-forwarded-host") ?? h.get("host");
+    if (!host) return null;
+    const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+    return `${proto}://${host}`;
+  } catch {
+    return null;
+  }
+}
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const origin = await siteOrigin();
+  return {
   ...(origin ? { metadataBase: new URL(origin) } : {}),
   title: {
     default: "고독 古讀",
@@ -42,7 +59,8 @@ export const metadata: Metadata = {
     apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
   },
   formatDetection: { telephone: false },
-};
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#1B1917",

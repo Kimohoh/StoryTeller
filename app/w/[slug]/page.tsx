@@ -86,7 +86,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
       title: w.title,
       description: w.subtitle,
-      openGraph: { title: w.title, description: w.subtitle },
+      // openGraph를 다시 쓰면 부모(layout)의 images가 통째로 덮인다. 그림을 같이 넣는다.
+      openGraph: { title: w.title, description: w.subtitle, images: ["/og.png"] },
     };
   } catch {
     return {};

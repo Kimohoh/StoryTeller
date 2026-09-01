@@ -6,6 +6,7 @@ import { buildResult } from "@/lib/verdict";
 import { workTypes, loadWork } from "@/lib/work-repo";
 import { CoordinatePlot } from "@/components/CoordinatePlot";
 import { ResultActions } from "@/components/ResultActions";
+import { OriginalLink } from "@/components/OriginalLink";
 import { PendingNotice } from "@/components/PendingNotice";
 import { CAxisBlock } from "@/components/CAxisBlock";
 import { Prose } from "@/components/Prose";
@@ -85,11 +86,7 @@ export default async function ResultPage({
       {/* 원작으로 나가는 한 줄. 각색이 원작을 읽고 싶게 만드는 것이 목표이므로
           광고가 아니라 결말의 일부다. 클릭은 /out에서 센다 (docs/bm.md). */}
       {work.original ? (
-        <p className="to-original">
-          <a href={`/out/${slug}`} target="_blank" rel="noopener noreferrer">
-            {work.original.label} <span aria-hidden="true">→</span>
-          </a>
-        </p>
+        <OriginalLink slug={slug} label={work.original.label} url={work.original.url} />
       ) : null}
 
       {/* 표지의 두 갈래와 같은 형태로 맞춘다. 작은 글씨 링크가 흩어져 있던 자리다. */}
@@ -128,7 +125,12 @@ export async function generateMetadata({
     const work = loadWork(row.slug);
     const title = `나는 ${r.primary.name}에 가까웠습니다`;
     const description = `${work.title} — ${work.subtitle}`;
-    return { title, description, openGraph: { title, description } };
+    // openGraph를 다시 쓰면 부모(layout)의 images가 통째로 덮인다. 그림을 같이 넣는다.
+    return {
+      title,
+      description,
+      openGraph: { title, description, images: ["/og.png"] },
+    };
   } catch {
     return {};
   }
