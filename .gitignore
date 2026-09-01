@@ -1,6 +1,8 @@
 node_modules/
 .next/
-out/
+# 맨 앞의 / 가 중요하다. 이게 없으면 어느 깊이의 out 폴더든 다 걸린다 —
+# 실제로 app/api/out/route.ts 가 이것 때문에 커밋되지 않고 사라졌다.
+/out/
 *.tsbuildinfo
 next-env.d.ts
 
