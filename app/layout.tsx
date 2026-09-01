@@ -1,28 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { headers } from "next/headers";
+import { siteOrigin } from "@/lib/site-origin";
 import "./globals.css";
 import { ServiceWorker } from "@/components/ServiceWorker";
-
-/**
- * OG 주소는 반드시 절대 주소여야 한다 — 카카오톡·트위터 크롤러는 상대 주소를
- * 못 읽고, 그러면 카드에 그림이 안 뜬다.
- *
- * APP_ORIGIN이 있으면 그것을 쓴다(도메인이 정해진 뒤). 없으면 요청이 들어온
- * 호스트에서 만든다 — 터널 주소로 열어도, 도메인으로 열어도 그때그때 맞는
- * 절대 주소가 나간다. 환경변수를 깜빡해도 그림이 안 뜨는 일이 없다.
- */
-async function siteOrigin(): Promise<string | null> {
-  if (process.env.APP_ORIGIN) return process.env.APP_ORIGIN;
-  try {
-    const h = await headers();
-    const host = h.get("x-forwarded-host") ?? h.get("host");
-    if (!host) return null;
-    const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-    return `${proto}://${host}`;
-  } catch {
-    return null;
-  }
-}
 
 export async function generateMetadata(): Promise<Metadata> {
   const origin = await siteOrigin();
