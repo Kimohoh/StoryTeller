@@ -259,5 +259,77 @@
       "credit": null,
       "version": 3
     }
+  },
+  "frankenstein": {
+    "p1_ingolstadt": {
+      "type": "webp",
+      "src": "frankenstein/p1_ingolstadt.webp",
+      "alt": "밤의 좁은 다락. 등불 하나가 유일한 빛이다. 얼굴 없는 형체가 작업대에 등을 보이고 웅크려 앉아 있다. 종이와 도구 모양이 흩어져 있으나 무엇인지 알아볼 수 없다. 뒤편 창밖은 검다.",
+      "credit": null,
+      "version": 3
+    },
+    "p2_the_night": {
+      "type": "webp",
+      "src": "frankenstein/p2_the_night.webp",
+      "alt": "같은 다락. 작업대가 화면 가운데 있고 그 위에 천을 덮은 긴 형체가 누워 있다. 얼굴 없는 형체 하나가 건너편 문간에서 이미 몸을 돌린 채 걸어 나가는 중이다. 등불이 기울어 빛이 비스듬하다.",
+      "credit": null,
+      "version": 3
+    },
+    "p3_empty_room": {
+      "type": "webp",
+      "src": "frankenstein/p3_empty_room.webp",
+      "alt": "잿빛 아침 빛이 든 다락. 작업대는 비어 있고 천이 바닥에 떨어져 있다. 문이 열려 있다. 화면에 사람이 하나도 없다.",
+      "credit": null,
+      "version": 3
+    },
+    "p4_william": {
+      "type": "webp",
+      "src": "frankenstein/p4_william.webp",
+      "alt": "폭풍 아래 산비탈. 가파른 어두운 경사와 낮게 깔린 하늘. 앞쪽에 작은 형체 하나가 서서 위를 본다. 오른쪽 위 능선에 두 번째 형체가 있다. 앞의 것보다 눈에 띄게 크고 가늘며 걸어 올라가는 중이다.",
+      "credit": null,
+      "version": 3
+    },
+    "p5_justine": {
+      "type": "webp",
+      "src": "frankenstein/p5_justine.webp",
+      "alt": "장식 없는 재판정. 빈 바닥 한가운데 작은 형체 하나가 혼자 서 있다. 뒤로 똑같이 생긴 형체들이 줄지어 앉아 모두 앞을 보고 있다. 화면 끝의 한 사람만 몸이 살짝 다른 쪽으로 돌아가 있다.",
+      "credit": null,
+      "version": 3
+    },
+    "p6_glacier": {
+      "type": "webp",
+      "src": "frankenstein/p6_glacier.webp",
+      "alt": "넓은 빙하와 창백한 하늘. 얼굴 없는 두 형체가 얼음을 사이에 두고 멀리 마주 서 있다. 둘 다 화면에서 작고 하나가 확연히 크다. 그림자가 없고 빛이 사방에서 고르게 온다.",
+      "credit": null,
+      "version": 3
+    },
+    "p7_window": {
+      "type": "webp",
+      "src": "frankenstein/p7_window.webp",
+      "alt": "밤에 바깥에서 본 오두막 창. 안에서 호박색 빛이 나오고 탁자에 앉은 세 형체가 보인다. 화면 앞쪽 가까이에 밖에 선 큰 형체의 뒷모습이 어둡게 있다. 보는 쪽이 창보다 크다.",
+      "credit": null,
+      "version": 3
+    },
+    "p8_one_more": {
+      "type": "webp",
+      "src": "frankenstein/p8_one_more.webp",
+      "alt": "바위뿐인 벌판에 선 얼굴 없는 두 형체. 빙하 장면보다 훨씬 가까이, 조용히 말할 수 있는 거리다. 하늘이 낮고 빛이 거의 없다. 큰 쪽이 한 손을 낮게 펴 내밀고 있다.",
+      "credit": null,
+      "version": 3
+    },
+    "p9_torn": {
+      "type": "webp",
+      "src": "frankenstein/p9_torn.webp",
+      "alt": "외딴 섬의 돌방. 작업대가 넘어져 있고 그 내용물이 어두운 형태로 바닥에 흩어져 있다. 무엇인지 알아볼 수 없다. 얼굴 없는 형체가 팔을 내린 채 그 위에 서 있다. 높은 작은 창으로 세로로 좁은 빛이 들고, 그 안에 멀리 선 형체의 윤곽이 있다.",
+      "credit": null,
+      "version": 3
+    },
+    "p10_ice": {
+      "type": "webp",
+      "src": "frankenstein/p10_ice.webp",
+      "alt": "끝없이 평평한 얼음 벌판과 색 없는 하늘. 수평선이 아주 낮다. 덮인 시신 하나가 얼음 위에 작게 놓여 있고 그 옆에 큰 형체가 고개를 숙이고 무릎을 꿇고 있다. 배도 다른 사람도 건물도 없다.",
+      "credit": null,
+      "version": 3
+    }
   }
 }

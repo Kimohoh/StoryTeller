@@ -35,6 +35,14 @@
       ],
       "order": 4,
       "status": "published"
+    },
+    {
+      "slug": "frankenstein",
+      "locales": [
+        "ko"
+      ],
+      "order": 5,
+      "status": "draft"
     }
   ]
 }

@@ -2,7 +2,7 @@
  * 삽화 파일 다루기 (spec §5).
  * 단건 교체 스크립트와 일괄 교체 스크립트가 같이 쓴다.
  */
-import { readFileSync, copyFileSync, existsSync, statSync } from "node:fs";
+import { readFileSync, copyFileSync, existsSync, statSync, mkdirSync } from "node:fs";
 import { join, dirname, extname } from "node:path";
 
 export interface Entry {
@@ -126,6 +126,8 @@ export function replaceEntry(
     old.src !== nextSrc && existsSync(join(assetsDir, old.src)) ? old.src : null;
 
   if (!opts.dryRun) {
+    // 작품 폴더는 첫 삽화를 받을 때 아직 없다. copyFileSync는 폴더를 안 만든다.
+    mkdirSync(dirname(join(assetsDir, nextSrc)), { recursive: true });
     copyFileSync(file, join(assetsDir, nextSrc));
     manifest[key] = {
       type,
