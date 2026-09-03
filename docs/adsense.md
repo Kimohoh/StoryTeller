@@ -138,18 +138,16 @@ lsof -i:3000
 
 ### 코드를 고친 뒤
 
-`npm start`는 빌드된 것을 띄우기만 한다. **돌고 있는 앱을 세우지 않고 빌드하면
-그 앱이 죽는다** — `.next/`가 통째로 갈리기 때문이다. 순서를 지킨다.
+```
+npm run reload
+```
 
-```
-launchctl unload ~/Library/LaunchAgents/page.godok.app.plist
-```
-```
-git pull origin claude/spec-app-structure-vzwaxh && npm run build
-```
-```
-launchctl load ~/Library/LaunchAgents/page.godok.app.plist
-```
+내리고 → 받고 → 빌드하고 → 올린다. 순서가 중요해서 한 줄로 묶었다.
+**돌고 있는 앱을 세우지 않고 빌드하면 `.next/`가 통째로 갈리면서 그 앱이
+죽는다.** 빌드가 실패해도 사이트를 내려둔 채로 두지 않는다 — 옛 빌드로
+다시 올리고 무엇이 틀렸는지 말한다. 다 되면 `check:live`까지 돌린다.
+
+커밋 안 한 변경이 있으면 받기 전에 멈춘다.
 
 일반 로그는 `/tmp/godok-app.log`, `/tmp/godok-tunnel.log`.
 

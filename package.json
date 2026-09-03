@@ -15,6 +15,7 @@
     "content:check": "tsx scripts/build-content.ts --check",
     "check:live": "tsx scripts/check-live.ts",
     "launchd:install": "tsx scripts/launchd-install.ts",
+    "reload": "tsx scripts/reload-local.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:where": "tsx scripts/db-where.ts",
     "db:backup": "tsx scripts/db-backup.ts",
