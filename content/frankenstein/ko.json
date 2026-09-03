@@ -42,10 +42,10 @@
         "id": "frankenstein-q1",
         "axis": "B",
         "weight": 1.0,
-        "prompt": "2년째 답장을 미루는 중이다. 왜 하냐고 누가 묻는다면?",
+        "prompt": "답장을 2년이나 미루고 있다. 당신이 빅터라면?",
         "choices": [
           { "id": "frankenstein-q1a", "label": "이 2년에는 그만한 뜻이 있다", "value": 1 },
-          { "id": "frankenstein-q1b", "label": "할 수 있을 것 같아서 하고 있다", "value": -1 }
+          { "id": "frankenstein-q1b", "label": "본인만이 할 수 있는 것을 할 뿐이다", "value": -1 }
         ]
       }
     },
@@ -77,7 +77,7 @@
         "prompt": "방은 비어 있고 그것은 어디에도 없다. 지금 그것은?",
         "choices": [
           { "id": "frankenstein-q3a", "label": "세상에 풀려난 위험이다", "value": 1 },
-          { "id": "frankenstein-q3b", "label": "갈 곳 없이 나간 쪽이다", "value": -1 }
+          { "id": "frankenstein-q3b", "label": "보호자 없이 나간 쪽이다", "value": -1 }
         ]
       }
     },
@@ -91,8 +91,8 @@
         "weight": 1.0,
         "prompt": "산등성이의 형체를 보고 빅터는 알았다. 윌리엄의 죽음은?",
         "choices": [
-          { "id": "frankenstein-q4a", "label": "죽인 쪽에 물을 일이다", "value": 1 },
-          { "id": "frankenstein-q4b", "label": "만든 쪽에도 물을 일이다", "value": -1 }
+          { "id": "frankenstein-q4a", "label": "죽인 쪽에 책임이 있다", "value": 1 },
+          { "id": "frankenstein-q4b", "label": "만든 쪽에도 책임이 있다", "value": -1 }
         ]
       }
     },
@@ -106,7 +106,7 @@
         "weight": 1.0,
         "pair_id": "c2",
         "phase": "pre",
-        "prompt": "재판정에 앉아 있다. 지금 당신은?",
+        "prompt": "재판정에 앉아 있다. 당신이 빅터라면?",
         "choices": [
           { "id": "frankenstein-q5a", "label": "일어나서 아는 것을 말한다", "value": 1 },
           { "id": "frankenstein-q5b", "label": "말해도 믿을 사람이 없다", "value": -1 }
@@ -124,7 +124,7 @@
         "prompt": "그것이 들어달라고 한다. 당신은?",
         "choices": [
           { "id": "frankenstein-q6a", "label": "무슨 사정인지는 들어봐야 한다", "value": 1 },
-          { "id": "frankenstein-q6b", "label": "무슨 말을 하든 윌리엄은 죽었다", "value": -1 }
+          { "id": "frankenstein-q6b", "label": "윌리엄을 죽인 당사자다. 들어주지 않는다", "value": -1 }
         ]
       }
     },
@@ -141,7 +141,7 @@
         "prompt": "창밖에 2년을 서 있었다는 말을 듣고, 지금 그는?",
         "choices": [
           { "id": "frankenstein-q7a", "label": "그래도 풀려난 위험이다", "value": 1 },
-          { "id": "frankenstein-q7b", "label": "갈 곳이 없던 쪽에 가깝다", "value": -1 }
+          { "id": "frankenstein-q7b", "label": "보호자가 없던 쪽에 가깝다", "value": -1 }
         ]
       }
     },
@@ -153,10 +153,10 @@
         "id": "frankenstein-q8",
         "axis": "A",
         "weight": 1.0,
-        "prompt": "하나만 만들어달라고 한다. 당신은?",
+        "prompt": "다른 하나를 만들어달라는 말에 당신은?",
         "choices": [
           { "id": "frankenstein-q8a", "label": "그가 한 일을 보고 만들지 않는다", "value": 1 },
-          { "id": "frankenstein-q8b", "label": "그가 혼자인 것을 보고 만들어준다", "value": -1 }
+          { "id": "frankenstein-q8b", "label": "혼자인 그를 위해 만든다", "value": -1 }
         ]
       }
     },
@@ -170,7 +170,7 @@
         "weight": 1.0,
         "pair_id": "c2",
         "phase": "post",
-        "prompt": "빅터는 아무에게도 말한 적이 없다. 그 침묵은?",
+        "prompt": "빅터는 자신이 한 일을 아무에게도 말한 적이 없다. 당신이라면?",
         "choices": [
           { "id": "frankenstein-q9a", "label": "말했어야 하는 것이었다", "value": 1 },
           { "id": "frankenstein-q9b", "label": "말해도 달라지지 않았다", "value": -1 }
