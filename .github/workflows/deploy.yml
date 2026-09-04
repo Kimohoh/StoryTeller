@@ -1,0 +1,61 @@
+# 밀면 뜬다.
+#
+# 지금은 코드를 고쳐 밀어도 누군가 맥에서 npm run reload 를 쳐야 반영된다.
+# 그 한 줄이 사람 손을 붙잡아 두는 유일한 자리다. 여기로 옮기면 미는 것만으로
+# 끝난다 — 새벽이든 어디서든.
+#
+# 준비: 저장소 Settings → Secrets and variables → Actions 에 FLY_API_TOKEN 하나.
+#       (fly tokens create deploy 로 만든다. docs/host-move.md 참조)
+# 토큰이 없으면 검사만 하고 배포는 건너뛴다 — 실패로 시끄럽게 만들지 않는다.
+
+name: deploy
+
+on:
+  push:
+    branches: [main, claude/spec-app-structure-vzwaxh]
+  # 손으로도 누를 수 있다. 깃허브 모바일 앱에서 탭 한 번이면 재배포된다.
+  workflow_dispatch:
+
+# 밀린 커밋이 여럿이면 마지막 것만 띄운다. 중간 것을 굳이 배포할 이유가 없다.
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # md와 json이 어긋나거나 진단문이 빠지면 여기서 멈춘다.
+      # 깨진 콘텐츠가 사이트에 올라가는 것보다 배포가 안 되는 쪽이 낫다.
+      - run: npm run content:check
+      - run: npm run typecheck
+      - run: npm test
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: token
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          if [ -z "$FLY_API_TOKEN" ]; then
+            echo "FLY_API_TOKEN이 없다. 검사만 하고 배포는 건너뛴다."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.token.outputs.ready == 'true'
+        uses: superfly/flyctl-actions/setup-flyctl@master
+      - if: steps.token.outputs.ready == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        # --remote-only: 도커 빌드를 fly 쪽에서 한다. 러너에 도커를 안 깔아도 된다.
+        run: flyctl deploy --remote-only
