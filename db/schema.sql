@@ -86,3 +86,16 @@ CREATE TABLE IF NOT EXISTS outbound_clicks (
   clicked_at TEXT    NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_outbound_slug ON outbound_clicks(slug, target);
+
+-- 60초 입구. 열 장을 읽기 전에 찍어보는 흐릿한 자리다.
+-- 여기 남는 user_id가 나중에 sessions에 나타나면 그것이 전환이다.
+CREATE TABLE IF NOT EXISTS quick_runs (
+  id         INTEGER PRIMARY KEY,
+  user_id    TEXT    NOT NULL,
+  axis_a     REAL    NOT NULL,
+  axis_b     REAL    NOT NULL,
+  -- 고른 선지 id들. 문항을 고치면 옛 기록의 뜻이 달라지므로 원본을 남긴다.
+  picks      TEXT    NOT NULL,
+  created_at TEXT    NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_quick_user ON quick_runs(user_id, created_at);

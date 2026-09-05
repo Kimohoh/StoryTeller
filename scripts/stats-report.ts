@@ -16,6 +16,7 @@ loadEnvLocal(join(dirname(fileURLToPath(import.meta.url)), ".."));
 
 const { works } = await import("../lib/works");
 const { workStats, dbInfo, DWELL_FLOOR_MS } = await import("../lib/stats");
+const { quickStat } = await import("../lib/quick");
 const { getDb } = await import("../lib/db");
 
 const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
@@ -24,7 +25,12 @@ const secs = (ms: number | null) => (ms === null ? "—" : `${(ms / 1000).toFixe
 
 const db = dbInfo();
 console.log(`\n고독 읽기 기록 — ${new Date().toISOString().slice(0, 10)}`);
-console.log(`전체 ${db.sessions}건 읽기 · ${db.answers}건 답 · ${db.users}명\n`);
+console.log(`전체 ${db.sessions}건 읽기 · ${db.answers}건 답 · ${db.users}명`);
+const q = quickStat();
+if (q.runs > 0) {
+  console.log(`60초 입구 ${q.runs}명 지남 → ${q.converted}명이 한 편 펼침 (${pct(q.rate)})`);
+}
+console.log("");
 
 for (const entry of works().works) {
   if (only.length && !only.includes(entry.slug)) continue;
@@ -37,9 +43,10 @@ for (const entry of works().works) {
 
   console.log("─".repeat(58));
   console.log(`${s.title}  (${entry.slug}, ${s.pages}장, ${entry.status})`);
+  // 시작→진입은 입구의 문제, 진입→완독은 글의 문제다. 하나로 묶으면 둘이 섞인다.
   console.log(
-    `시작 ${s.started} · 완독 ${s.completed} · 완독률 ${pct(s.completion_rate)}` +
-      ` · 원작 클릭 ${s.original.clicks}건 ${pct(s.original.rate)}`,
+    `시작 ${s.started} → 첫 문항 ${s.entered} (${pct(s.entry_rate)}) → 완독 ${s.completed} (${pct(s.completion_rate)})` +
+      `   원작 클릭 ${s.original.clicks}건 ${pct(s.original.rate)}`,
   );
 
   if (s.dropoff.length) {

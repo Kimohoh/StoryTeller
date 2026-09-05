@@ -1,0 +1,54 @@
+{
+  "_note": "60초 입구. 카톡으로 링크를 받은 사람이 열 장을 읽기 전에 자기 자리를 흐릿하게라도 보게 하는 자리다. 콘텐츠를 캐주얼하게 만드는 대신 입구를 캐주얼하게 만든다.",
+  "_rule": "네 문항 전부 자족적이어야 한다 — 앞을 안 읽어도 장면만으로 서야 한다. 작품마다 하나씩 뽑되 결말은 흘리지 않는다. 축은 클라이언트로 나가지 않는다 (spec §2): 화면에는 scene과 prompt와 선지 문면만 간다.",
+  "questions": [
+    {
+      "id": "q1",
+      "axis": "A",
+      "work": "the-necklace",
+      "character": "mathilde",
+      "scene": "중요한 자리에 초대받았다. 그런데 입고 갈 만한 옷이 없다.",
+      "prompt": "이건 누구의 문제인가?",
+      "choices": [
+        { "id": "q1a", "label": "준비하지 못한 내 문제다", "value": 1 },
+        { "id": "q1b", "label": "그런 걸 따지는 자리가 문제다", "value": -1 }
+      ]
+    },
+    {
+      "id": "q2",
+      "axis": "B",
+      "work": "sisyphus",
+      "character": "sisyphus",
+      "scene": "매일 같은 시각에 일어나 같은 지하철을 탄다. 어느 날 문득 손이 멈춘다. 왜 하지.",
+      "prompt": "그 물음에 당신은?",
+      "choices": [
+        { "id": "q2a", "label": "답이 어딘가 있을 것이다", "value": 1 },
+        { "id": "q2b", "label": "답이 없어도 내일은 온다", "value": -1 }
+      ]
+    },
+    {
+      "id": "q3",
+      "axis": "A",
+      "work": "the-stranger",
+      "character": "meursault",
+      "scene": "어머니가 돌아가셨다. 장례식 내내 그 사람은 울지 않았다.",
+      "prompt": "그 사람에 대해 당신은?",
+      "choices": [
+        { "id": "q3a", "label": "어떤 사람인지 알 것 같다", "value": 1 },
+        { "id": "q3b", "label": "그날 그랬을 뿐이라고 본다", "value": -1 }
+      ]
+    },
+    {
+      "id": "q4",
+      "axis": "B",
+      "work": "frankenstein",
+      "character": "victor",
+      "scene": "2년을 매달려 만든 것이 눈을 떴다. 그는 보자마자 방을 뛰쳐나갔다.",
+      "prompt": "그 2년은?",
+      "choices": [
+        { "id": "q4a", "label": "그래도 뜻이 있는 시간이었다", "value": 1 },
+        { "id": "q4b", "label": "되는지 알아본 시간이었다", "value": -1 }
+      ]
+    }
+  ]
+}

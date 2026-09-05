@@ -34,7 +34,12 @@ export interface WorkStats {
   title: string;
   pages: number;
   started: number;
+  /** 문항을 하나라도 답한 세션. 표지만 보고 나간 사람과 가른다. */
+  entered: number;
   completed: number;
+  /** 시작한 사람 중 첫 문항까지 간 비율 — 문 앞에서 얼마나 잃는가 */
+  entry_rate: number | null;
+  /** 읽기 시작한 사람 중 끝낸 비율. 이쪽이 글의 문제고, 위쪽이 입구의 문제다. */
   completion_rate: number | null;
   /** 미완독 세션이 마지막으로 답한 페이지 → 인원 */
   dropoff: { page_no: number; count: number }[];
@@ -83,6 +88,17 @@ export function workStats(slug: string): WorkStats {
   if (!row) throw new Error(`works에 ${slug} 없음`);
 
   const started = (db.prepare("SELECT COUNT(*) c FROM sessions WHERE work_id = ?").get(row.id) as { c: number }).c;
+  // 표지를 넘어 첫 문항까지 간 사람. 완독률을 이 수로 나눠야 글의 문제가 보인다 —
+  // 시작 수로 나누면 문 앞에서 나간 사람이 글 탓으로 잡힌다.
+  const entered = (
+    db
+      .prepare(
+        `SELECT COUNT(DISTINCT s.id) c FROM sessions s
+           JOIN answers a ON a.session_id = s.id
+          WHERE s.work_id = ?`,
+      )
+      .get(row.id) as { c: number }
+  ).c;
   const completed = (
     db.prepare("SELECT COUNT(*) c FROM sessions WHERE work_id = ? AND completed_at IS NOT NULL").get(row.id) as { c: number }
   ).c;
@@ -157,8 +173,10 @@ export function workStats(slug: string): WorkStats {
     title: work.title,
     pages: work.pages.length,
     started,
+    entered,
     completed,
-    completion_rate: started ? completed / started : null,
+    entry_rate: started ? entered / started : null,
+    completion_rate: entered ? completed / entered : null,
     dropoff,
     questions,
     types: Object.entries(work.types).map(([key, t]) => ({

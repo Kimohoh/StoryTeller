@@ -1,5 +1,6 @@
 import { publishedWorks, works } from "@/lib/works";
 import { workStats, dbInfo, DWELL_FLOOR_MS, type WorkStats } from "@/lib/stats";
+import { quickStat } from "@/lib/quick";
 import { adminOk } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
@@ -46,6 +47,7 @@ export default async function Admin({
   }
 
   const db = dbInfo();
+  const quick = quickStat();
   const all = works().works;
   const stats: WorkStats[] = [];
   for (const w of all) {
@@ -69,9 +71,11 @@ export default async function Admin({
           <h2>{s.title}</h2>
 
           <div className="kpi">
+            {/* 두 깔때기를 갈라 놓는다. 앞은 입구의 문제, 뒤는 글의 문제다. */}
             <div><b>{s.started}</b><span>시작</span></div>
+            <div><b>{pct(s.entry_rate)}</b><span>첫 문항까지</span></div>
             <div><b>{s.completed}</b><span>완독</span></div>
-            <div><b>{pct(s.completion_rate)}</b><span>완독률</span></div>
+            <div><b>{pct(s.completion_rate)}</b><span>읽은 사람 중 완독</span></div>
             {/* 완독자 중 몇 명이 원작을 보러 나갔는가 (docs/bm.md) */}
             <div><b>{pct(s.original.rate)}</b><span>원작 클릭률</span></div>
             <div><b>{s.pages}</b><span>장</span></div>
@@ -143,6 +147,18 @@ export default async function Admin({
       ))}
 
       {publishedWorks().length === 0 ? <p className="note">공개된 작품이 없습니다.</p> : null}
+
+      {/* 입구의 유일한 성적표. 여기를 지난 사람 중 몇 명이 한 편을 펼쳤는가. */}
+      {quick.runs > 0 ? (
+        <section className="admin-work">
+          <h2>60초 입구</h2>
+          <div className="admin-nums">
+            <div><b>{quick.runs}</b><span>입구를 지남</span></div>
+            <div><b>{quick.converted}</b><span>그 뒤 한 편 펼침</span></div>
+            <div><b>{pct(quick.rate)}</b><span>전환율</span></div>
+          </div>
+        </section>
+      ) : null}
 
       {/* 위 숫자가 0인데 여기 총계가 크면 작품 연결이 어긋난 것이고, 여기까지
           0이면 앱이 다른 파일을 보고 있는 것이다. 화면에서 바로 구분되게 둔다. */}

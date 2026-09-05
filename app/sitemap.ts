@@ -16,6 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   return [
     { url: origin, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${origin}/quick`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${origin}/about`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${origin}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
     ...publishedWorks().flatMap((w) => [
