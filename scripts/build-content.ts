@@ -14,6 +14,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { WorkSource, WorkBuild, BuiltPage, AxisKey, QuestionSource } from "../lib/content-types";
 import { works, resolveLocale, sourcePath, buildPath, globalAxes } from "../lib/works";
+import { characters } from "../lib/characters";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK_ONLY = process.argv.includes("--check");
@@ -381,6 +382,38 @@ for (const entry of works().works) {
       `${slug}/${resolved}: ${pages.length}장, 문항 ${pages.reduce((n, p) => n + p.questions.length, 0)}개` +
         (CHECK_ONLY ? " (검증만)" : " → content/.build/"),
     );
+  }
+}
+
+/* ---------- 인물 눈금 ---------- */
+
+// 누적 좌표 위에 찍히는 인물들. 콘텐츠와 같이 검증한다 — 작품 슬러그가 바뀌거나
+// 좌표가 판 밖으로 나가면 그림이 조용히 망가지고, 화면에서는 알아채기 어렵다.
+{
+  const slugs = new Set(works().works.map((w) => w.slug));
+  const seen = new Set<string>();
+  for (const c of characters()) {
+    const at = `[인물 ${c.name}]`;
+    if (seen.has(c.key)) fail(`${at} key "${c.key}"가 둘이다`);
+    seen.add(c.key);
+    if (!slugs.has(c.work)) fail(`${at} works.json에 없는 작품 "${c.work}"`);
+    for (const axis of ["A", "B"] as const) {
+      const v = c.axis[axis];
+      if (!(typeof v === "number" && v >= -1 && v <= 1)) {
+        fail(`${at} ${axis} 값이 -1~1 밖이다 (${v})`);
+      }
+    }
+    // 왜 저기 있는지 없으면 "쟤가 왜 저기야"에 답할 수 없다
+    if (!c.note?.trim()) fail(`${at} note가 없다`);
+  }
+  // 한 사분면에만 몰리면 눈금 노릇을 못 한다
+  const quad = new Map<string, number>();
+  for (const c of characters()) {
+    const k = `${c.axis.A > 0 ? "A+" : "A-"}${c.axis.B > 0 ? "B+" : "B-"}`;
+    quad.set(k, (quad.get(k) ?? 0) + 1);
+  }
+  for (const k of ["A+B+", "A+B-", "A-B+", "A-B-"]) {
+    if (!quad.get(k)) warn(`인물이 한 명도 없는 사분면이 있다 (${k}) — 그쪽 자리는 눈금 없이 뜬다`);
   }
 }
 

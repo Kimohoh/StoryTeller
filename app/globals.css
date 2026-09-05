@@ -502,3 +502,24 @@ a { color: var(--gold); }
   color: var(--bronze);
 }
 .admin-db code { font-size: .95em; word-break: break-all; }
+
+/* 누적 좌표 옆에 서는 인물 둘. 축 이름이 못 하는 설명을 대신한다. */
+.neighbours {
+  margin: 1.1rem 0 1.6rem;
+  font-size: .9rem;
+  line-height: 1.75;
+  color: var(--paper-dim);
+}
+.neighbours b { color: var(--gold); font-weight: 500; }
+.neighbours-label {
+  display: block;
+  font-size: .7rem;
+  letter-spacing: .16em;
+  color: var(--bronze);
+  margin-bottom: .35rem;
+}
+.neighbours-why {
+  font-size: .78rem;
+  color: var(--bronze);
+  line-height: 1.7;
+}

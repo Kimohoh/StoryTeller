@@ -6,6 +6,7 @@ import { readWorks, accumulatedCoordinate, accumulatedCAxis } from "@/lib/reader
 import { Illustration } from "@/components/Illustration";
 import { AccumPlot } from "@/components/AccumPlot";
 import { epithetWords, epithetParts } from "@/lib/epithet";
+import { characters, neighbours } from "@/lib/characters";
 import { LocalLibrary } from "@/components/LocalLibrary";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -23,6 +24,9 @@ export default async function Library() {
   const axes = globalAxes();
   // 읽어서 얻은 칭호 — 작품마다 받은 유형 이름을 한 줄로 엮는다
   const epithet = userId ? epithetParts(epithetWords(userId)) : [];
+  // 누적 좌표 위의 눈금. 읽은 작품의 인물만 이름이 뜬다.
+  const readSlugs = [...read.keys()];
+  const near = readCount >= 2 ? neighbours(coordinate, readSlugs) : null;
 
   const shelf = publishedWorks().map((entry) => {
     const work = loadWork(entry.slug);
@@ -76,7 +80,26 @@ export default async function Library() {
 
           {readCount >= 2 ? (
             <>
-          <AccumPlot coordinate={coordinate} axes={axes} c={acc.value} />
+          <AccumPlot
+            coordinate={coordinate}
+            axes={axes}
+            c={acc.value}
+            characters={characters()}
+            readSlugs={readSlugs}
+          />
+
+          {/* 축 이름은 추상어라 읽어도 감이 안 온다. 인물 둘이 그 자리에서
+              설명을 대신한다 — 왜 저기 있는지까지 한 줄로 붙인다. */}
+          {near ? (
+            <p className="neighbours">
+              <span className="neighbours-label">지금 서 있는 곳</span>
+              <b>{near.near.name}</b> 쪽에 가깝고, <b>{near.far.name}</b>에게서 멀리 있습니다.
+              <br />
+              <span className="neighbours-why">
+                {near.near.name} — {near.near.note}
+              </span>
+            </p>
+          ) : null}
 
           <dl className="accum-legend">
             <div>
@@ -99,7 +122,10 @@ export default async function Library() {
             ) : null}
           </dl>
 
-          <p className="note">작품을 더 읽을수록 이 자리는 조금씩 움직입니다.</p>
+          <p className="note">
+            작품을 더 읽을수록 이 자리는 조금씩 움직입니다. 이름 없는 점들은 아직
+            읽지 않은 작품의 인물입니다.
+          </p>
             </>
           ) : null}
         </section>
