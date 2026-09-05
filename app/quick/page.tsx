@@ -3,6 +3,8 @@ import { quickQuestions } from "@/lib/quick";
 import { publishedWorks } from "@/lib/works";
 import { loadWork } from "@/lib/work-repo";
 import { QuickFlow } from "@/components/QuickFlow";
+import { Illustration } from "@/components/Illustration";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "1분이면 대충 나옵니다",
@@ -45,11 +47,27 @@ export default function Quick() {
 
       <QuickFlow
         questions={quickQuestions()}
-        firstWork={{
-          slug: shortest.slug,
-          title: shortest.title,
-          pages: shortest.pages.length,
-        }}
+        firstWork={{ slug: shortest.slug, title: shortest.title }}
+        /* 삽화는 파일을 읽어야 해서 서버에서만 그릴 수 있다. 다 그려서
+           넘긴다 — 서재의 카드와 같은 것이 나와야 한다. */
+        firstWorkCard={
+          <ul className="shelf">
+            <li>
+              <Link href={`/w/${shortest.slug}`} className="shelf-item">
+                <Illustration
+                  work={shortest.slug}
+                  k={shortest.pages[0]?.illustration_key ?? null}
+                  className="shelf-art"
+                />
+                <div className="shelf-text">
+                  <h2>{shortest.title}</h2>
+                  <p className="sub">{shortest.subtitle}</p>
+                  <p className="meta">{shortest.pages.length}장</p>
+                </div>
+              </Link>
+            </li>
+          </ul>
+        }
       />
     </main>
   );

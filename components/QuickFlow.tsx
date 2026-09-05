@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { AccumPlot } from "@/components/AccumPlot";
 import type { QuickQuestion } from "@/lib/quick";
@@ -18,11 +18,13 @@ interface Answer {
 
 interface Props {
   questions: QuickQuestion[];
-  /** 여기서 한 편을 읽으러 보낸다. 가장 짧은 작품이 열린다. */
-  firstWork: { slug: string; title: string; pages: number };
+  /** 채점이 안 될 때의 비상구. 가장 짧은 작품이 열린다. */
+  firstWork: { slug: string; title: string };
+  /** 서재와 같은 모양의 카드. 삽화가 있어야 해서 서버에서 그려 받는다. */
+  firstWorkCard: ReactNode;
 }
 
-export function QuickFlow({ questions, firstWork }: Props) {
+export function QuickFlow({ questions, firstWork, firstWorkCard }: Props) {
   const [picks, setPicks] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Answer | null>(null);
@@ -96,9 +98,8 @@ export function QuickFlow({ questions, firstWork }: Props) {
           묻고, 그때 이 점이 또렷해집니다. 이름 없는 점들에도 이름이 붙습니다.
         </p>
 
-        <Link className="next" href={`/w/${firstWork.slug}`}>
-          『{firstWork.title}』 읽기 · {firstWork.pages}장
-        </Link>
+        <p className="quick-lead">여기서 시작하면 가볍습니다</p>
+        {firstWorkCard}
         <p className="quick-alt">
           <Link href="/">다른 작품도 보기</Link>
         </p>

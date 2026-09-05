@@ -552,3 +552,11 @@ a { color: var(--gold); }
 .quick-q .prompt { margin: 0 0 1.25rem; color: var(--gold); }
 .quick-alt { margin-top: 1.1rem; font-size: .82rem; }
 .quick-alt a { color: var(--bronze); }
+/* 입구 끝에서 한 편을 권하는 자리. 카드는 서재와 같은 것을 쓴다. */
+.quick-lead {
+  margin: 2.25rem 0 .9rem;
+  font-size: .72rem;
+  letter-spacing: .16em;
+  color: var(--bronze);
+}
+.quick .shelf { margin-bottom: 0; }

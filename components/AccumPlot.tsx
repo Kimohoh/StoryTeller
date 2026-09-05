@@ -31,8 +31,12 @@ interface Props {
 
 const S = 340;
 const PAD = 46;
-const toX = (a: number) => PAD + ((a + 1) / 2) * (S - PAD * 2);
-const toY = (b: number) => S - PAD - ((b + 1) / 2) * (S - PAD * 2);
+// 판 끝에서 조금 들여 그린다. ±1이 테두리에 걸치면 점이 밖으로 새 보이는데,
+// 입구는 네 번만 물어서 값이 -1·0·+1 셋뿐이라 모서리에 자주 앉는다.
+const INSET = 9;
+const span = S - PAD * 2 - INSET * 2;
+const toX = (a: number) => PAD + INSET + ((a + 1) / 2) * span;
+const toY = (b: number) => S - PAD - INSET - ((b + 1) / 2) * span;
 
 export function AccumPlot({ coordinate, axes, c, characters, namedKeys }: Props) {
   const x = toX(coordinate.A);
