@@ -412,10 +412,18 @@ a { color: var(--gold); }
 
 /* ── 읽어서 얻은 칭호 ── */
 .epithet {
-  margin: 0 0 1.75rem;
+  /* 좌표 블록 아래로 내려왔다. 축 설명과 붙어 보이지 않게 위를 띄운다. */
+  margin: 2.25rem 0 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ink-2);
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+}
+.epithet[data-solo="true"] {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 .epithet-label {
   font-size: 0.72rem;

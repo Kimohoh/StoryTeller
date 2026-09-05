@@ -50,8 +50,10 @@ export default async function Library() {
         </p>
       </header>
 
-      {/* 칭호는 한 편부터 준다 — 다음 편을 읽을 이유가 된다.
-          좌표는 두 편부터다. 한 작품만으론 아직 말할 게 없다 (spec §3). */}
+      {/* 좌표가 먼저 온다. 「마틸드 쪽에 가깝다」가 「불꽃 곁의 영수증」보다
+          먼저 와닿기 때문이다 — 하나는 지금 서 있는 자리이고 하나는 읽은
+          이력이라, 사람이 먼저 궁금해하는 쪽이 위에 있어야 한다.
+          칭호는 한 편부터 주고 좌표는 두 편부터다 (spec §3). */}
       {readCount >= 1 ? (
         <section className="accum">
           <h2>
@@ -59,24 +61,6 @@ export default async function Library() {
               ? `지금까지 읽은 ${readCount}편이 찾은 나의 자리`
               : "첫 편에서 얻은 것"}
           </h2>
-
-          {epithet.length ? (
-            <p className="epithet">
-              <span className="epithet-label">읽어서 얻은 칭호</span>
-              <span className="epithet-line">
-                {epithet.map((part, i) =>
-                  part.word ? <b key={i}>{part.text}</b> : <span key={i}>{part.text}</span>,
-                )}
-              </span>
-            </p>
-          ) : null}
-
-          {readCount < 2 ? (
-            <p className="note">
-              한 편을 더 읽으면 두 편이 모인 자리가 좌표로 나옵니다. 작품이 늘수록
-              칭호도 한 낱말씩 길어집니다.
-            </p>
-          ) : null}
 
           {readCount >= 2 ? (
             <>
@@ -122,12 +106,32 @@ export default async function Library() {
             ) : null}
           </dl>
 
-          <p className="note">
-            작품을 더 읽을수록 이 자리는 조금씩 움직입니다. 이름 없는 점들은 아직
-            읽지 않은 작품의 인물입니다.
-          </p>
             </>
           ) : null}
+
+          {epithet.length ? (
+            // 좌표가 없는 첫 편에는 위에 아무것도 없으므로 구분선을 긋지 않는다
+            <p className="epithet" data-solo={readCount < 2}>
+              <span className="epithet-label">읽어서 얻은 칭호</span>
+              <span className="epithet-line">
+                {epithet.map((part, i) =>
+                  part.word ? <b key={i}>{part.text}</b> : <span key={i}>{part.text}</span>,
+                )}
+              </span>
+            </p>
+          ) : null}
+
+          {readCount >= 2 ? (
+            <p className="note">
+              작품을 더 읽을수록 이 자리는 조금씩 움직입니다. 이름 없는 점들은 아직
+              읽지 않은 작품의 인물입니다.
+            </p>
+          ) : (
+            <p className="note">
+              한 편을 더 읽으면 두 편이 모인 자리가 좌표로 나옵니다. 작품이 늘수록
+              칭호도 한 낱말씩 길어집니다.
+            </p>
+          )}
         </section>
       ) : null}
 
