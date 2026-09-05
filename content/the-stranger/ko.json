@@ -239,16 +239,16 @@
           "weight": 1.0,
           "pair_id": "c2",
           "phase": "post",
-          "prompt": "이제 그 네 발의 총성을, 당신은 어떻게 보는가?",
+          "prompt": "검사는 첫 발과 그다음 사이에 시간이 있었다고 했다. 그 말은?",
           "choices": [
             {
               "id": "the-stranger-q9a",
-              "label": "첫 발과 같은, 공포와 당황이 시킨 일이었다",
+              "label": "재판을 위해 만들어 낸 말이다",
               "value": -1
             },
             {
               "id": "the-stranger-q9b",
-              "label": "공포도 당황도 아닌, 다른 의도가 담긴 일이었다",
+              "label": "그 사이에 실제로 무언가 있었다",
               "value": 1
             }
           ]

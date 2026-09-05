@@ -214,16 +214,16 @@
           "weight": 1.0,
           "pair_id": "c2",
           "phase": "post",
-          "prompt": "그때 사실대로 말했어야 했다고 보는가?",
+          "prompt": "십 년이 지나서야 마틸드는 잔에게 전부 말했다. 그 십 년은?",
           "choices": [
             {
               "id": "the-necklace-q8a",
-              "label": "말했어야 했다",
+              "label": "말할 수 있었는데 미룬 시간이다",
               "value": 1
             },
             {
               "id": "the-necklace-q8b",
-              "label": "말하지 않은 것도 하나의 선택이었다",
+              "label": "말하지 않기로 하고 살아낸 시간이다",
               "value": -1
             }
           ]
