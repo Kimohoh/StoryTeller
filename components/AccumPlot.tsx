@@ -53,7 +53,8 @@ export function AccumPlot({ coordinate, axes, c, characters, namedKeys }: Props)
     ...ch,
     cx: toX(ch.axis.A),
     cy: toY(ch.axis.B),
-    known: namedKeys.includes(ch.key),
+    // anchor는 읽지 않아도 이름이 뜬다 — 축을 설명하고, 미끼가 된다
+    known: ch.anchor === true || namedKeys.includes(ch.key),
   }));
 
   return (

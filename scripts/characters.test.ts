@@ -18,6 +18,26 @@ test("인물은 모두 실재하는 작품에서 오고, 판 안에 있다", () 
   }
 });
 
+test("늘 이름을 보이는 인물이 네 사분면을 하나씩 잡는다", () => {
+  // 아무것도 안 읽은 사람에게 보이는 유일한 이름들이다. 한 사분면이라도 비면
+  // 그쪽은 이름 없는 점만 남아 축을 설명하지 못한다.
+  const quad = new Set(
+    characters()
+      .filter((c) => c.anchor)
+      .map((c) => `${c.axis.A > 0 ? "A+" : "A-"}${c.axis.B > 0 ? "B+" : "B-"}`),
+  );
+  assert.equal(quad.size, 4);
+});
+
+test("인물마다 원작 이름이 붙는다", () => {
+  // 「『이방인』의 뫼르소」로 부르려면 필요하다. 작품 부제에서 가져오므로
+  // 부제 형식이 바뀌면 여기서 걸린다.
+  for (const c of characters()) {
+    assert.ok(c.source.trim().length > 0, `${c.name}: source가 비었다`);
+    assert.ok(!c.source.includes("『"), `${c.name}: 『 』가 안 벗겨졌다 (${c.source})`);
+  }
+});
+
 test("네 사분면에 모두 인물이 있다", () => {
   const quad = new Set(
     characters().map((c) => `${c.axis.A > 0 ? "A+" : "A-"}${c.axis.B > 0 ? "B+" : "B-"}`),

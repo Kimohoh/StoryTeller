@@ -4,64 +4,131 @@
   "_rule": "배치는 '그 인물이 세상을 어떻게 보는가'다. 우리가 그를 어떻게 평가하는가가 아니다. note는 반드시 각색 본문에 있는 것으로만 쓴다 — 없는 말을 근거로 대면 '쟤가 왜 저기야'에 답할 수 없다.",
   "characters": [
     {
-      "key": "prosecutor", "name": "검사", "work": "the-stranger",
-      "axis": { "A": 0.9, "B": 0.8 },
+      "key": "prosecutor",
+      "name": "검사",
+      "work": "the-stranger",
+      "axis": {
+        "A": 0.9,
+        "B": 0.8
+      },
       "note": "장례식에서 울지 않은 일과 네 발의 총성을 한 사람의 성격으로 엮었다"
     },
     {
-      "key": "sisyphus", "name": "시지프", "work": "sisyphus",
-      "axis": { "A": 0.6, "B": 0.9 },
-      "note": "신들이 준 바위지만 미는 것은 자기라고 했다"
+      "key": "sisyphus",
+      "name": "시지프",
+      "work": "sisyphus",
+      "axis": {
+        "A": 0.6,
+        "B": 0.9
+      },
+      "note": "신들이 준 바위지만 미는 것은 자기라고 했다",
+      "anchor": true
     },
     {
-      "key": "victor", "name": "빅터", "work": "frankenstein",
-      "axis": { "A": 0.7, "B": 0.6 },
-      "note": "2년을 혼자 붙들었고, 그 뒤로도 아무에게도 말하지 않았다"
+      "key": "victor",
+      "name": "빅터",
+      "work": "frankenstein",
+      "axis": {
+        "A": 0.7,
+        "B": 0.6
+      },
+      "note": "2년을 혼자 붙들었고, 그 뒤로도 아무에게도 말하지 않았다",
+      "anchor": true
     },
     {
-      "key": "mathilde", "name": "마틸드", "work": "the-necklace",
-      "axis": { "A": 0.8, "B": 0.4 },
-      "note": "빌린 것을 제 손으로 갚기로 하고 십 년을 냈다"
+      "key": "mathilde",
+      "name": "마틸드",
+      "work": "the-necklace",
+      "axis": {
+        "A": 0.8,
+        "B": 0.4
+      },
+      "note": "빌린 것을 제 손으로 갚기로 하고 십 년을 냈다",
+      "anchor": true
     },
     {
-      "key": "grete", "name": "그레테", "work": "metamorphosis",
-      "axis": { "A": 0.5, "B": 0.6 },
+      "key": "grete",
+      "name": "그레테",
+      "work": "metamorphosis",
+      "axis": {
+        "A": 0.5,
+        "B": 0.6
+      },
       "note": "저것이 정말 오빠였다면 스스로 나갔을 것이라고 했다"
     },
     {
-      "key": "gregor", "name": "그레고르", "work": "metamorphosis",
-      "axis": { "A": 0.7, "B": -0.6 },
-      "note": "벌레가 된 첫 아침에도 회사에 늦는 것을 걱정했다"
+      "key": "gregor",
+      "name": "그레고르",
+      "work": "metamorphosis",
+      "axis": {
+        "A": 0.7,
+        "B": -0.6
+      },
+      "note": "벌레가 된 첫 아침에도 회사에 늦는 것을 걱정했다",
+      "anchor": true
     },
     {
-      "key": "raymond", "name": "레몽", "work": "the-stranger",
-      "axis": { "A": 0.6, "B": -0.4 },
+      "key": "raymond",
+      "name": "레몽",
+      "work": "the-stranger",
+      "axis": {
+        "A": 0.6,
+        "B": -0.4
+      },
       "note": "여자가 자기를 속였다고 했고, 그래서 손을 봐줬다고 했다"
     },
     {
-      "key": "loisel", "name": "마틸드의 남편", "work": "the-necklace",
-      "axis": { "A": 0.4, "B": -0.8 },
+      "key": "loisel",
+      "name": "마틸드의 남편",
+      "work": "the-necklace",
+      "axis": {
+        "A": 0.4,
+        "B": -0.8
+      },
       "note": "탓하지 않고 아버지가 남긴 만 팔천부터 셈해 넣었다"
     },
     {
-      "key": "creature", "name": "그", "work": "frankenstein",
-      "axis": { "A": -0.7, "B": 0.6 },
-      "note": "사람에게서 아무것도 받지 못했기 때문이라고 말했다"
+      "key": "creature",
+      "name": "그",
+      "work": "frankenstein",
+      "axis": {
+        "A": -0.7,
+        "B": 0.6
+      },
+      "note": "사람에게서 아무것도 받지 못했기 때문이라고 말했다",
+      "anchor": true
     },
     {
-      "key": "magistrate", "name": "예심판사", "work": "the-stranger",
-      "axis": { "A": -0.3, "B": 0.9 },
+      "key": "magistrate",
+      "name": "예심판사",
+      "work": "the-stranger",
+      "axis": {
+        "A": -0.3,
+        "B": 0.9
+      },
       "note": "아무리 죄를 지은 사람도 하느님 앞에서는 용서를 구한다고 했다"
     },
     {
-      "key": "caretaker", "name": "양로원 관리인", "work": "the-stranger",
-      "axis": { "A": -0.2, "B": -0.9 },
+      "key": "caretaker",
+      "name": "양로원 관리인",
+      "work": "the-stranger",
+      "axis": {
+        "A": -0.2,
+        "B": -0.9
+      },
       "note": "본 것만 말했다 — 관을 열지 않았고, 커피를 마셨고, 담배를 피웠다고"
     },
     {
-      "key": "meursault", "name": "뫼르소", "work": "the-stranger",
-      "axis": { "A": -0.8, "B": -0.9 },
-      "note": "왜 그렇게 했는지 댈 이유가 없다고 했다"
+      "key": "meursault",
+      "name": "뫼르소",
+      "work": "the-stranger",
+      "axis": {
+        "A": -0.8,
+        "B": -0.9
+      },
+      "note": "왜 그렇게 했는지 댈 이유가 없다고 했다",
+      "anchor": true
     }
-  ]
+  ],
+  "_anchor": "anchor는 읽지 않아도 이름이 보이는 인물이다. 네 사분면을 하나씩 잡아 축을 대신 설명하고, 모르는 이름이 하나쯤 떠 있는 것이 다음 편을 읽을 미끼가 된다. 나머지는 그 작품을 읽어야 이름이 붙는다."
 }

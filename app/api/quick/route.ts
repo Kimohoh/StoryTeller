@@ -36,6 +36,8 @@ export async function POST(req: Request) {
     // 장면이 나온 인물만. 이 목록에 없는 인물은 이름 없는 점으로 그려진다.
     // 작품 단위로 열면 그 작품의 안 나온 인물까지 이름이 뜬다.
     shownKeys: result.shown.map((c) => c.key),
-    near: result.near ? { name: result.near.name, note: result.near.note } : null,
+    near: result.near
+      ? { name: result.near.name, source: result.near.source, note: result.near.note }
+      : null,
   });
 }

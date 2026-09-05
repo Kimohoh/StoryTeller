@@ -13,7 +13,7 @@ interface Answer {
   axes: Record<AxisKey, AxisSource>;
   characters: Character[];
   shownKeys: string[];
-  near: { name: string; note: string } | null;
+  near: { name: string; source: string; note: string } | null;
 }
 
 interface Props {
@@ -84,7 +84,7 @@ export function QuickFlow({ questions, firstWork, firstWorkCard }: Props) {
         {result.near ? (
           <p className="neighbours">
             <span className="neighbours-label">지금 서 있는 곳</span>
-            <b>{result.near.name}</b> 쪽에 가깝습니다.
+            『{result.near.source}』의 <b>{result.near.name}</b> 쪽에 가깝습니다.
             <br />
             <span className="neighbours-why">
               {result.near.name} — {result.near.note}

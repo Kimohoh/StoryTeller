@@ -80,7 +80,8 @@ export default async function Library() {
           {near ? (
             <p className="neighbours">
               <span className="neighbours-label">지금 서 있는 곳</span>
-              <b>{near.near.name}</b> 쪽에 가깝고, <b>{near.far.name}</b>에게서 멀리 있습니다.
+              『{near.near.source}』의 <b>{near.near.name}</b> 쪽에 가깝고,{" "}
+              『{near.far.source}』의 <b>{near.far.name}</b>에게서 멀리 있습니다.
               <br />
               <span className="neighbours-why">
                 {near.near.name} — {near.near.note}

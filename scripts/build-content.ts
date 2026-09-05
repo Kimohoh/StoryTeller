@@ -415,6 +415,16 @@ for (const entry of works().works) {
   for (const k of ["A+B+", "A+B-", "A-B+", "A-B-"]) {
     if (!quad.get(k)) warn(`인물이 한 명도 없는 사분면이 있다 (${k}) — 그쪽 자리는 눈금 없이 뜬다`);
   }
+  // anchor는 아무것도 안 읽은 사람에게 보이는 유일한 이름이다. 한 사분면이라도
+  // 비면 그쪽은 이름 없는 점만 남아 축을 설명하지 못한다.
+  const anchorQuad = new Map<string, number>();
+  for (const c of characters().filter((x) => x.anchor)) {
+    const k = `${c.axis.A > 0 ? "A+" : "A-"}${c.axis.B > 0 ? "B+" : "B-"}`;
+    anchorQuad.set(k, (anchorQuad.get(k) ?? 0) + 1);
+  }
+  for (const k of ["A+B+", "A+B-", "A-B+", "A-B-"]) {
+    if (!anchorQuad.get(k)) fail(`늘 이름을 보이는 인물이 없는 사분면이 있다 (${k})`);
+  }
 }
 
 if (warnings.length) {
