@@ -19,8 +19,14 @@ interface Props {
   /** −1(지켰다) ~ +1(고쳤다). 측정되지 않았으면 null — 번짐을 그리지 않는다. */
   c: number | null;
   characters: Character[];
-  /** 이 사람이 읽은 작품. 여기 없는 작품의 인물은 이름을 가린다. */
-  readSlugs: string[];
+  /**
+   * 이름을 보일 인물. 여기 없는 인물은 이름 없는 점으로 남는다.
+   *
+   * 서재에서는 읽은 작품의 인물 전부이고, 입구에서는 장면이 나온 넷뿐이다.
+   * 부르는 쪽이 정하게 둔다 — 모르는 이름을 들이대지 않는 것이 규칙이지,
+   * 작품 단위로 여는 것이 규칙은 아니다.
+   */
+  namedKeys: string[];
 }
 
 const S = 340;
@@ -28,7 +34,7 @@ const PAD = 46;
 const toX = (a: number) => PAD + ((a + 1) / 2) * (S - PAD * 2);
 const toY = (b: number) => S - PAD - ((b + 1) / 2) * (S - PAD * 2);
 
-export function AccumPlot({ coordinate, axes, c, characters, readSlugs }: Props) {
+export function AccumPlot({ coordinate, axes, c, characters, namedKeys }: Props) {
   const x = toX(coordinate.A);
   const y = toY(coordinate.B);
 
@@ -43,7 +49,7 @@ export function AccumPlot({ coordinate, axes, c, characters, readSlugs }: Props)
     ...ch,
     cx: toX(ch.axis.A),
     cy: toY(ch.axis.B),
-    known: readSlugs.includes(ch.work),
+    known: namedKeys.includes(ch.key),
   }));
 
   return (

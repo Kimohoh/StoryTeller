@@ -12,7 +12,7 @@ interface Answer {
   b: number;
   axes: Record<AxisKey, AxisSource>;
   characters: Character[];
-  shownWorks: string[];
+  shownKeys: string[];
   near: { name: string; note: string } | null;
 }
 
@@ -29,7 +29,9 @@ export function QuickFlow({ questions, firstWork }: Props) {
   const [failed, setFailed] = useState(false);
 
   const at = picks.length;
-  const q = questions[at];
+  // 마지막 답을 고른 뒤 채점이 돌아오기까지 한 프레임이 빈다. 그 사이에
+  // questions[at]을 읽으면 undefined다 — 화면이 통째로 죽는 자리였다.
+  const done = at >= questions.length;
 
   async function choose(choiceId: string) {
     if (busy) return;
@@ -62,6 +64,10 @@ export function QuickFlow({ questions, firstWork }: Props) {
     );
   }
 
+  if (!result && done) {
+    return <p className="note">자리를 내는 중입니다…</p>;
+  }
+
   if (result) {
     return (
       <>
@@ -70,7 +76,7 @@ export function QuickFlow({ questions, firstWork }: Props) {
           axes={result.axes}
           c={null}
           characters={result.characters}
-          readSlugs={result.shownWorks}
+          namedKeys={result.shownKeys}
         />
 
         {result.near ? (
@@ -99,6 +105,8 @@ export function QuickFlow({ questions, firstWork }: Props) {
       </>
     );
   }
+
+  const q = questions[at];
 
   return (
     <>

@@ -26,6 +26,9 @@ export default async function Library() {
   const epithet = userId ? epithetParts(epithetWords(userId)) : [];
   // 누적 좌표 위의 눈금. 읽은 작품의 인물만 이름이 뜬다.
   const readSlugs = [...read.keys()];
+  const namedKeys = characters()
+    .filter((c) => readSlugs.includes(c.work))
+    .map((c) => c.key);
   const near = readCount >= 2 ? neighbours(coordinate, readSlugs) : null;
 
   const shelf = publishedWorks().map((entry) => {
@@ -69,7 +72,7 @@ export default async function Library() {
             axes={axes}
             c={acc.value}
             characters={characters()}
-            readSlugs={readSlugs}
+            namedKeys={namedKeys}
           />
 
           {/* 축 이름은 추상어라 읽어도 감이 안 온다. 인물 둘이 그 자리에서
