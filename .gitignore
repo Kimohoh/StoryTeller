@@ -19,3 +19,6 @@ preview/
 
 # 비밀이 든다. 절대 커밋되면 안 된다 — ADMIN_TOKEN이 여기 있다.
 .env*.local
+
+# 맥이 폴더마다 만들어 두는 것. 레포에 들어갈 이유가 없다.
+.DS_Store

@@ -40,13 +40,27 @@ const launchctl = (verb: "load" | "unload") => {
   }
 };
 
-/** 고친 것을 커밋도 안 한 채 pull하면 충돌한다. 먼저 막는다. */
-const dirty = run("git", ["status", "--porcelain"], true).stdout?.trim();
-if (dirty) {
+/**
+ * 고친 것을 커밋도 안 한 채 pull하면 충돌한다. 먼저 막는다.
+ *
+ * 다만 추적되지 않는 파일까지 막지는 않는다. .DS_Store 하나 때문에 배포가
+ * 멈추면 안 되고, 그런 파일은 pull과 부딪히지도 않는다 — 같은 이름이 새로
+ * 들어올 때만 부딪히고 그건 아래 pull이 실패로 잡는다.
+ */
+const status = run("git", ["status", "--porcelain"], true).stdout?.trim() ?? "";
+const lines = status ? status.split("\n") : [];
+const tracked = lines.filter((l) => !l.startsWith("??"));
+const untracked = lines.filter((l) => l.startsWith("??"));
+
+if (tracked.length) {
   console.error("\n커밋하지 않은 변경이 있다. 받기 전에 정리한다:\n");
-  console.error(dirty.split("\n").map((l) => "  " + l).join("\n"));
+  console.error(tracked.map((l) => "  " + l).join("\n"));
   console.error("");
   process.exit(1);
+}
+if (untracked.length) {
+  console.log("\n추적되지 않는 파일이 있다 (그대로 두고 진행한다):");
+  console.log(untracked.map((l) => "  " + l).join("\n"));
 }
 
 const branch = run("git", ["rev-parse", "--abbrev-ref", "HEAD"], true).stdout?.trim();
